@@ -36,6 +36,7 @@
         android:layout_marginRight="32dp"
         android:backgroundTint="@color/spotify_Green"
         android:elevation="0dp"
+        android:onClick="onButton2Clicked"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
