@@ -1,123 +1,282 @@
 package com.aloy.aloy;
-import android.app.Activity;
+
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.telecom.Call;
 import android.util.Log;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationRequest;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
-import com.spotify.sdk.android.player.Config;
-import com.spotify.sdk.android.player.ConnectionStateCallback;
-import com.spotify.sdk.android.player.Error;
-import com.spotify.sdk.android.player.Player;
-import com.spotify.sdk.android.player.PlayerEvent;
-import com.spotify.sdk.android.player.Spotify;
-import com.spotify.sdk.android.player.SpotifyPlayer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
+import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.AlbumsPager;
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
+import kaaes.spotify.webapi.android.models.ArtistsPager;
+import kaaes.spotify.webapi.android.models.AudioFeaturesTrack;
+import kaaes.spotify.webapi.android.models.CategoriesPager;
+import kaaes.spotify.webapi.android.models.Category;
+import kaaes.spotify.webapi.android.models.Image;
+import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.Playlist;
+import kaaes.spotify.webapi.android.models.PlaylistSimple;
+import kaaes.spotify.webapi.android.models.SavedTrack;
+import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.TrackSimple;
+import kaaes.spotify.webapi.android.models.Tracks;
+import kaaes.spotify.webapi.android.models.TracksPager;
+import kaaes.spotify.webapi.android.models.UserPrivate;
+import kaaes.spotify.webapi.android.models.UserPublic;
+import retrofit.client.Response;
 
-public class MainActivity extends Activity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
 
-    // Request code that will be used to verify if the result comes from correct activity
-    // Can be any integer
-    private static final int REQUEST_CODE = 1337;
+/**
+ * Created by Max on 27/09/2017.
+ */
 
-    // TODO: Replace with your client ID
-    private static final String CLIENT_ID = "5d7de5e2301441bcba0277763af5c7fe";
-    // TODO: Replace with your redirect URI
-    private static final String REDIRECT_URI = "aloyprotocol://callback";
+public class MainActivity extends AppCompatActivity {
 
-    private Player mPlayer;
+    static final String EXTRA_TOKEN = "EXTRA_TOKEN";
+
+    public static Intent createIntent(Context context) {
+        return new Intent(context, MainActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = getIntent();
+        String token = intent.getStringExtra(EXTRA_TOKEN);
+        SpotifyApi api = new SpotifyApi();
+        api.setAccessToken(token);
+        Log.i("Token",token.toString());
+        SpotifyService spotify = api.getService();
 
-        AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
-                AuthenticationResponse.Type.TOKEN,
-                REDIRECT_URI);
-        builder.setScopes(new String[]{"user-read-private", "streaming"});
-        AuthenticationRequest request = builder.build();
 
-        AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        // Check if result comes from the correct activity
-        if (requestCode == REQUEST_CODE) {
-            AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
-            if (response.getType() == AuthenticationResponse.Type.TOKEN) {
-                Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
-                Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
-                    @Override
-                    public void onInitialized(SpotifyPlayer spotifyPlayer) {
-                        mPlayer = spotifyPlayer;
-                        mPlayer.addConnectionStateCallback(MainActivity.this);
-                        mPlayer.addNotificationCallback(MainActivity.this);
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
-                    }
-                });
+        spotify.getMe(new SpotifyCallback<UserPrivate>() {
+            @Override
+            public void success(UserPrivate u, Response response) {
+                Log.i("id",""+u.id);
+                List<Image> images = u.images;
+                for (Image image : images) {
+                    System.out.println(image.url);
+                }
+                Log.i("","\n");
             }
-        }
+
+            @Override
+            public void failure(SpotifyError error) {
+                Log.i("Error", error.toString());
+            }
+        });
+
+        spotify.getUser("emthma",new SpotifyCallback<UserPublic>() {
+            @Override
+            public void success(UserPublic u, Response response) {
+                Log.i("id",""+u.id);
+                List<Image> images = u.images;
+                for (Image image : images) {
+                    System.out.println(image.url);
+                }
+                Log.i("","\n");
+            }
+
+            @Override
+            public void failure(SpotifyError error) {
+                Log.i("Error", error.toString());
+            }
+        });
+
+
+        //Search ONLY by tracks
+        spotify.searchTracks("Wagon Wheel",new SpotifyCallback<TracksPager>(){
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Tracks", "Could not get tracks");
+
+            }
+
+            @Override
+            public void success(TracksPager p, Response response) {
+                Log.i("Search by tracks","Wagon Wheel");
+                Log.i("","\n");
+
+                Pager<Track> trackPager = p.tracks;
+                List<Track> trackList = trackPager.items;
+                Log.i("Number of results",""+trackPager.total);
+                //Log.i("previous",trackPager.previous);
+                Log.i("next",trackPager.next);
+                Log.i("Limit",""+trackPager.limit);
+                Log.i("","\n");
+                for(Track song : trackList){
+                    Log.i("Track", song.name);
+                    List<ArtistSimple> artistList = song.artists;
+                    AlbumSimple album = song.album;
+                    List<Image> imageList = album.images;
+                    for(ArtistSimple artist : artistList){
+                        Log.i("Artist",artist.name);
+                    }
+                    Log.i("Album",album.name);
+                    for(Image image : imageList){
+                        Log.i("Album Cover",image.url);
+                    }
+                    Log.i("Popularity", ""+song.popularity);
+                    Log.i("Type", song.type);
+                    Log.i("Uri", song.uri);
+                    Log.i("href", song.href);
+                    Log.i("","\n");
+                }
+                Log.i("","\n");
+
+
+            }
+        });
+
+        //Search ONLY by artists
+        spotify.searchArtists("Darius Rucker",new SpotifyCallback<ArtistsPager>(){
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Artists", "Could not get playlists");
+
+            }
+
+            @Override
+            public void success(ArtistsPager p, Response response) {
+                Log.i("Search by artists","The Commitments");
+                Log.i("","\n");
+                Pager<Artist> artistPager = p.artists;
+                List<Artist> artistList = artistPager.items;
+                Log.i("Number of results",""+artistPager.total);
+                //Log.i("previous",artistPager.previous);
+                //Log.i("next",artistPager.next);
+                Log.i("Limit",""+artistPager.limit);
+                Log.i("","\n");
+                for(Artist artist : artistList){
+                    List<String> genresList = artist.genres;
+                    List<Image> imageList = artist.images;
+                    Log.i("Artist", artist.name);
+                    for(String genre :genresList){
+                        Log.i("Genre",genre);
+                    }
+                    for(Image image : imageList){
+                        Log.i("Image",image.url);
+                    }
+                    Log.i("Type", artist.type);
+                    Log.i("Popularity", ""+artist.popularity);
+                    Log.i("Uri", artist.uri);
+                    Log.i("href", artist.href);
+                    Log.i("","\n");
+                }
+                Log.i("","\n");
+
+            }
+        });
+
+        //Search ONLY by Albums
+        spotify.searchAlbums("Division Bell",new SpotifyCallback<AlbumsPager>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Albums", "Could not get albums");
+
+            }
+
+            @Override
+            public void success(AlbumsPager p, Response response) {
+                Log.i("Search by albums","Division Bell");
+                Log.i("","\n");
+                Pager<AlbumSimple> albumPager = p.albums;
+                List<AlbumSimple> albumList = albumPager.items;
+                Log.i("Number of results",""+albumPager.total);
+                //Log.i("previous",albumPager.previous);
+                //Log.i("next",albumPager.next);
+                Log.i("Limit",""+albumPager.limit);
+                Log.i("","\n");
+                for(AlbumSimple album : albumList){
+                    List<Image> albumCovers =album.images;
+                    Log.i("Album", album.name);
+                    for(Image i: albumCovers){
+                        Log.i("Image",i.url);
+                    }
+                    Log.i("Type", album.type);
+                    Log.i("Album_Type", album.album_type);
+                    Log.i("Uri", album.uri);
+                    Log.i("href", album.href);
+                    Log.i("","\n");
+
+                }
+                Log.i("","\n");
+
+
+            }
+        });
+
+
+        Map<String, Object> options = new HashMap();
+        options.put(SpotifyService.COUNTRY,"US");
+        spotify.getCategories(options, new SpotifyCallback<CategoriesPager>(){
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Categories", "Could not get categories");
+
+            }
+
+            @Override
+            public void success(CategoriesPager p, Response response) {
+                Log.i("","\n");
+                Pager<Category> categoryPager= p.categories;
+                List<Category>categoryList=categoryPager.items;
+                for(Category category :categoryList){
+                    List<Image> imageList=category.icons;
+                    Log.i("Category",category.name);
+                    Log.i("Category id",category.id);
+                    for(Image image : imageList){
+                        Log.i("Image",image.url);
+                    }
+                    Log.i("href",category.href);
+                    Log.i("","\n");
+                }
+                Log.i("","\n");
+            }
+
+        });
+
+
+        spotify.getCategory("jazz", options, new SpotifyCallback<Category>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Category", "Could not get category");
+
+            }
+
+            @Override
+            public void success(Category p, Response response) {
+
+                Log.i("get categories","Jazz");
+                Log.i("","\n");
+                Log.i("Category",p.name);
+                List<Image> imageList = p.icons;
+                for(Image image : imageList){
+                    Log.i("Image",image.url);
+                }
+                Log.i("href",p.href);
+                Log.i("","\n");
+            }
+        });
+
     }
+
 
     @Override
     protected void onDestroy() {
-        Spotify.destroyPlayer(this);
         super.onDestroy();
     }
 
-    @Override
-    public void onPlaybackEvent(PlayerEvent playerEvent) {
-        Log.d("MainActivity", "Playback event received: " + playerEvent.name());
-        switch (playerEvent) {
-            // Handle event type as necessary
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onPlaybackError(Error error) {
-        Log.d("MainActivity", "Playback error received: " + error.name());
-        switch (error) {
-            // Handle error type as necessary
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onLoggedIn() {
-        Log.d("MainActivity", "User logged in");
-
-        mPlayer.playUri(null, "spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 0, 0);
-    }
-
-    @Override
-    public void onLoggedOut() {
-        Log.d("MainActivity", "User logged out");
-    }
-
-    @Override
-    public void onTemporaryError() {
-        Log.d("MainActivity", "Temporary error occurred");
-    }
-
-    @Override
-    public void onConnectionMessage(String message) {
-        Log.d("MainActivity", "Received connection message: " + message);
-    }
-
-    @Override
-    public void onLoginFailed(Error e) {
-        Log.d("MainActivity", "Login Failed: " + e);
-    }
 }

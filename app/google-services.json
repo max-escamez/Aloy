@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "15039852613",
+    "firebase_url": "https://aloy-1995.firebaseio.com",
+    "project_id": "aloy-1995",
+    "storage_bucket": "aloy-1995.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:15039852613:android:c72823924378f0d9",
+        "android_client_info": {
+          "package_name": "com.aloy.aloy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "15039852613-hf22ndq5fq7ous4qtupqdfq7440qdgdm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aloy.aloy",
+            "certificate_hash": "a8076b952b7ac7f1656a76aece9d2a89e2cf29d6"
+          }
+        },
+        {
+          "client_id": "15039852613-lvjufsgss99l5937sc3n1djr38lhquto.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVmsnXVEfvW7iOdB84Ocqr06BWEq8YKZw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "15039852613-lvjufsgss99l5937sc3n1djr38lhquto.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
