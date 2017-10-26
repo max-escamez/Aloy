@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private NoSwipePager viewPager;
     private BottomBarAdapter pagerAdapter;
     private BottomBar bottomBar;
+    private int previousTab;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, MainActivity.class);
@@ -70,8 +73,18 @@ public class MainActivity extends AppCompatActivity {
         pagerAdapter.addFragments(new Profile());
 
         viewPager.setAdapter(pagerAdapter);
+    }
 
+    @Override
+    public void onBackPressed() {
 
+        if (previousTab!=viewPager.getCurrentItem()) {
+            viewPager.setCurrentItem(previousTab, false);
+            bottomBar.selectTabAtPosition(previousTab,true);
+
+        }else{
+            finish();
+        }
 
     }
 
@@ -87,13 +100,12 @@ public class MainActivity extends AppCompatActivity {
         SpotifyService spotify = api.getService();
 
         setupViewPager();
-
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         //viewPager.setCurrentItem(profileTabId);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-
+                previousTab = viewPager.getCurrentItem();
                 viewPager.setCurrentItem(bottomBar.findPositionForTabWithId(tabId));
 
             }
