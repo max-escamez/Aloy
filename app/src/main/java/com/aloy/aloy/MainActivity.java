@@ -2,10 +2,18 @@ package com.aloy.aloy;
 
 import android.content.Context;
 import android.content.Intent;
-import android.telecom.Call;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.aloy.aloy.Fragments.Feed;
+import com.aloy.aloy.Fragments.Inbox;
+import com.aloy.aloy.Fragments.Interests;
+import com.aloy.aloy.Fragments.Profile;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,23 +22,16 @@ import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.AlbumsPager;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
-import kaaes.spotify.webapi.android.models.AudioFeaturesTrack;
 import kaaes.spotify.webapi.android.models.CategoriesPager;
 import kaaes.spotify.webapi.android.models.Category;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Playlist;
-import kaaes.spotify.webapi.android.models.PlaylistSimple;
-import kaaes.spotify.webapi.android.models.SavedTrack;
 import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TrackSimple;
-import kaaes.spotify.webapi.android.models.Tracks;
 import kaaes.spotify.webapi.android.models.TracksPager;
 import kaaes.spotify.webapi.android.models.UserPrivate;
 import kaaes.spotify.webapi.android.models.UserPublic;
@@ -44,9 +45,34 @@ import retrofit.client.Response;
 public class MainActivity extends AppCompatActivity {
 
     static final String EXTRA_TOKEN = "EXTRA_TOKEN";
+    static final int profileTabId = 3;
+    private NoSwipePager viewPager;
+    private BottomBarAdapter pagerAdapter;
+    private BottomBar bottomBar;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, MainActivity.class);
+    }
+
+    /*public void switchToProfile() {
+        FragmentManager manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.profile_layout, new Profile()).commit();}*/
+
+
+    private void setupViewPager() {
+        viewPager = (NoSwipePager) findViewById(R.id.viewpager);
+        viewPager.setPagingEnabled(false);
+        pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
+
+        pagerAdapter.addFragments(new Feed());
+        pagerAdapter.addFragments(new Interests());
+        pagerAdapter.addFragments(new Inbox());
+        pagerAdapter.addFragments(new Profile());
+
+        viewPager.setAdapter(pagerAdapter);
+
+
+
     }
 
     @Override
@@ -59,6 +85,22 @@ public class MainActivity extends AppCompatActivity {
         api.setAccessToken(token);
         Log.i("Token",token.toString());
         SpotifyService spotify = api.getService();
+
+        setupViewPager();
+
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        //viewPager.setCurrentItem(profileTabId);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+
+                viewPager.setCurrentItem(bottomBar.findPositionForTabWithId(tabId));
+
+            }
+
+        });
+
+
 
 
         spotify.getMe(new SpotifyCallback<UserPrivate>() {
@@ -78,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        spotify.getUser("emthma",new SpotifyCallback<UserPublic>() {
+       spotify.getUser("emthma",new SpotifyCallback<UserPublic>() {
             @Override
             public void success(UserPublic u, Response response) {
                 Log.i("id",""+u.id);
@@ -272,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
 
 
     @Override

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <tabs>
+
+        <tab
+            id="@+id/tab_feed"
+            icon="@drawable/public_white"
+            title="Feed" />
+        <tab
+            id="@+id/tab_interests"
+            icon="@drawable/library_white"
+            title="Interests" />
+        <tab
+            id="@+id/tab_inbox"
+            icon="@drawable/inbox_white"
+            title="Inbox" />
+        <tab
+            id="@+id/tab_profile"
+            icon="@drawable/profile_white"
+            title="Profile" />
+
+    </tabs>
+
+</PreferenceScreen>

@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="com.github.kaaes:spotify-web-api-android-0.4.1">
     <CLASSES>
-      <root url="file://$USER_HOME$/.android/build-cache/c4c84ed0ebe73ea83c36352d3fa6a6b3b11d0e67/output/res" />
-      <root url="jar://$USER_HOME$/.android/build-cache/c4c84ed0ebe73ea83c36352d3fa6a6b3b11d0e67/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/spotify-web-api-android-0.4.1.aar/cfb6b3b273d129b39022f0e2fc56ebab/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/spotify-web-api-android-0.4.1.aar/cfb6b3b273d129b39022f0e2fc56ebab/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
