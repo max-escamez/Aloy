@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "15039852613-qgfnl9cnud66r73ntvm9halnj27540fs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aloy.aloy",
+            "certificate_hash": "70f0f50ca8ee3846f3cd9238de0fa67e3f6265c1"
+          }
+        },
+        {
           "client_id": "15039852613-hf22ndq5fq7ous4qtupqdfq7440qdgdm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

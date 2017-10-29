@@ -3,13 +3,16 @@ package com.aloy.aloy;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
+
+import com.aloy.aloy.Adapters.BottomBarAdapter;
 import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Fragments.Inbox;
 import com.aloy.aloy.Fragments.Interests;
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomBarAdapter pagerAdapter;
     private BottomBar bottomBar;
     private int previousTab;
+    public static SpotifyService service;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, MainActivity.class);
@@ -62,15 +66,21 @@ public class MainActivity extends AppCompatActivity {
         manager.beginTransaction().replace(R.id.profile_layout, new Profile()).commit();}*/
 
 
-    private void setupViewPager() {
+    private void setupViewPager(String token) {
+        Bundle args = new Bundle();
+        args.putString("token",token );
+
         viewPager = (NoSwipePager) findViewById(R.id.viewpager);
         viewPager.setPagingEnabled(false);
-        pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
 
+        Fragment profile = new Profile();
+        profile.setArguments(args);
+
+        pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
         pagerAdapter.addFragments(new Feed());
         pagerAdapter.addFragments(new Interests());
         pagerAdapter.addFragments(new Inbox());
-        pagerAdapter.addFragments(new Profile());
+        pagerAdapter.addFragments(profile);
 
         viewPager.setAdapter(pagerAdapter);
     }
@@ -88,6 +98,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
+
+    public static SpotifyService getService() {
+        return service;
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,8 +117,11 @@ public class MainActivity extends AppCompatActivity {
         api.setAccessToken(token);
         Log.i("Token",token.toString());
         SpotifyService spotify = api.getService();
+        service = api.getService();
 
-        setupViewPager();
+
+
+        setupViewPager(token);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         //viewPager.setCurrentItem(profileTabId);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
@@ -112,6 +134,19 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+
+         /*       spotify.getMe(new SpotifyCallback<UserPrivate>() {
+                    @Override
+                    public void success(UserPrivate u, Response response) {
+                        Log.i("id",""+u.id);
+
+                    }
+
+                    @Override
+                    public void failure(SpotifyError error) {
+                        Log.i("Error", error.toString());
+                    }
+                });
 
 
 
@@ -323,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("href",p.href);
                 Log.i("","\n");
             }
-        });
+        });*/
 
     }
 

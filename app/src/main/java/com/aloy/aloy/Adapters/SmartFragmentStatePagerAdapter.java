@@ -1,4 +1,4 @@
-package com.aloy.aloy;
+package com.aloy.aloy.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
