@@ -1,4 +1,4 @@
-package com.aloy.aloy;
+package com.aloy.aloy.Util;
 
 /**
  * Created by Max on 29/09/2017.

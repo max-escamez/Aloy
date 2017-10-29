@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Aloy</string>
+    <string name="AppLogo">Logo</string>
+    <string name="hello_blank_fragment">Profile fragment</string>
+    <string name="hello_feed">Feed Fragment</string>
+    <string name="hello_interests">Interests Fragment</string>
+    <string name="hello_inbox">Inbox Fragment</string>
 </resources>

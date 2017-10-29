@@ -2,37 +2,21 @@ package com.aloy.aloy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.IdRes;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.aloy.aloy.Adapters.BottomBarAdapter;
+import com.aloy.aloy.Fragments.Feed;
+import com.aloy.aloy.Fragments.Inbox;
+import com.aloy.aloy.Fragments.Interests;
+import com.aloy.aloy.Fragments.Profile;
+import com.aloy.aloy.Util.NoSwipePager;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyCallback;
-import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Album;
-import kaaes.spotify.webapi.android.models.AlbumSimple;
-import kaaes.spotify.webapi.android.models.AlbumsPager;
-import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.ArtistSimple;
-import kaaes.spotify.webapi.android.models.ArtistsPager;
-import kaaes.spotify.webapi.android.models.AudioFeaturesTrack;
-import kaaes.spotify.webapi.android.models.CategoriesPager;
-import kaaes.spotify.webapi.android.models.Category;
-import kaaes.spotify.webapi.android.models.Image;
-import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Playlist;
-import kaaes.spotify.webapi.android.models.PlaylistSimple;
-import kaaes.spotify.webapi.android.models.SavedTrack;
-import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TrackSimple;
-import kaaes.spotify.webapi.android.models.Tracks;
-import kaaes.spotify.webapi.android.models.TracksPager;
-import kaaes.spotify.webapi.android.models.UserPrivate;
-import kaaes.spotify.webapi.android.models.UserPublic;
-import retrofit.client.Response;
 
 
 /**
@@ -42,10 +26,62 @@ import retrofit.client.Response;
 public class MainActivity extends AppCompatActivity {
 
     static final String EXTRA_TOKEN = "EXTRA_TOKEN";
+    static final int profileTabId = 3;
+    private NoSwipePager viewPager;
+    private BottomBarAdapter pagerAdapter;
+    private BottomBar bottomBar;
+    private int previousTab;
+    public static SpotifyService service;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, MainActivity.class);
     }
+
+    /*public void switchToProfile() {
+        FragmentManager manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.profile_layout, new Profile()).commit();}*/
+
+
+    private void setupViewPager(String token) {
+        Bundle args = new Bundle();
+        args.putString("token",token );
+
+        viewPager = (NoSwipePager) findViewById(R.id.viewpager);
+        viewPager.setPagingEnabled(false);
+
+        Fragment profile = new Profile();
+        profile.setArguments(args);
+
+        pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragments(new Feed());
+        pagerAdapter.addFragments(new Interests());
+        pagerAdapter.addFragments(new Inbox());
+        pagerAdapter.addFragments(profile);
+
+        viewPager.setAdapter(pagerAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (previousTab!=viewPager.getCurrentItem()) {
+            viewPager.setCurrentItem(previousTab, false);
+            bottomBar.selectTabAtPosition(previousTab,true);
+
+        }else{
+            finish();
+        }
+
+    }
+
+
+
+
+    public static SpotifyService getService() {
+        return service;
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +92,37 @@ public class MainActivity extends AppCompatActivity {
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
         SpotifyService spotify = api.getService();
+        service = api.getService();
+
+
+
+        setupViewPager(token);
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        //viewPager.setCurrentItem(profileTabId);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                previousTab = viewPager.getCurrentItem();
+                viewPager.setCurrentItem(bottomBar.findPositionForTabWithId(tabId));
+
+            }
+
+        });
+
+
+         /*       spotify.getMe(new SpotifyCallback<UserPrivate>() {
+                    @Override
+                    public void success(UserPrivate u, Response response) {
+                        Log.i("id",""+u.id);
+
+                    }
+
+                    @Override
+                    public void failure(SpotifyError error) {
+                        Log.i("Error", error.toString());
+                    }
+                });
+
 
         spotify.getMe(new SpotifyCallback<UserPrivate>() {
             @Override
@@ -74,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        spotify.getUser("emthma",new SpotifyCallback<UserPublic>() {
+       spotify.getUser("emthma",new SpotifyCallback<UserPublic>() {
             @Override
             public void success(UserPublic u, Response response) {
                 Log.i("id",""+u.id);
@@ -268,9 +335,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("href",p.href);
                 Log.i("","\n");
             }
-        });
+        });*/
 
     }
+
 
 
     @Override
