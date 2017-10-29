@@ -2,11 +2,9 @@ package com.aloy.aloy;
 
 import android.content.Context;
 import android.content.Intent;
-import android.telecom.Call;
 import android.util.Log;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,9 +55,7 @@ public class MainActivity extends AppCompatActivity {
         String token = intent.getStringExtra(EXTRA_TOKEN);
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
-        Log.i("Token",token.toString());
         SpotifyService spotify = api.getService();
-
 
         spotify.getMe(new SpotifyCallback<UserPrivate>() {
             @Override
@@ -95,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+        
 
         //Search ONLY by tracks
         spotify.searchTracks("Wagon Wheel",new SpotifyCallback<TracksPager>(){
@@ -150,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void success(ArtistsPager p, Response response) {
-                Log.i("Search by artists","The Commitments");
+                Log.i("Search by artists","Darius Rucker");
                 Log.i("","\n");
                 Pager<Artist> artistPager = p.artists;
                 List<Artist> artistList = artistPager.items;
