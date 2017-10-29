@@ -1,4 +1,4 @@
-package com.aloy.aloy;
+package com.aloy.aloy.Util;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
