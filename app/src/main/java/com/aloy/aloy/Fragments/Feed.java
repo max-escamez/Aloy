@@ -1,6 +1,8 @@
 package com.aloy.aloy.Fragments;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -8,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -35,11 +38,16 @@ public class Feed extends Fragment implements FeedContract.View {
 
     }
 
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View feedView = inflater.inflate(R.layout.fragment_feed, container, false);
+        final View feedView = inflater.inflate(R.layout.fragment_feed, container, false);
         addQuestionFab = (FloatingActionButton) feedView.findViewById(R.id.addQuestionButton);
         addQuestionField = (EditText) feedView.findViewById(R.id.addQuestionField);
         addQuestionFab.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +62,8 @@ public class Feed extends Fragment implements FeedContract.View {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     question = addQuestionField.getText().toString();
                     System.out.println(question);
-                    myRef.setValue(question);
+                    myRef.push().setValue(question);
+                    hideKeyboardFrom(getContext(),feedView);
                     hideAddQuestion();
                     return true;
                 }
@@ -79,5 +88,8 @@ public class Feed extends Fragment implements FeedContract.View {
     @Override
     public void hideAddQuestion() {
         addQuestionField.setVisibility(View.GONE);
+        addQuestionField.setText(null);
     }
+
+
 }

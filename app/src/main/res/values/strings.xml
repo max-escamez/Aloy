@@ -5,4 +5,6 @@
     <string name="hello_feed">Feed Fragment</string>
     <string name="hello_interests">Interests Fragment</string>
     <string name="hello_inbox">Inbox Fragment</string>
+    <string name="askHint">Ask a question</string>
+    <string name="submit">Submit</string>
 </resources>
