@@ -10,7 +10,6 @@ public interface FeedContract {
 
     interface View extends BaseView<Presenter> {
         void showAddQuestion();
-        void hideAddQuestion();
 
     }
 

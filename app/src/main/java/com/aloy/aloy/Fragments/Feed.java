@@ -2,9 +2,15 @@ package com.aloy.aloy.Fragments;
 
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.support.v4.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,10 +44,7 @@ public class Feed extends Fragment implements FeedContract.View {
 
     }
 
-    public static void hideKeyboardFrom(Context context, View view) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+
 
 
     @Override
@@ -49,25 +52,10 @@ public class Feed extends Fragment implements FeedContract.View {
                              Bundle savedInstanceState) {
         final View feedView = inflater.inflate(R.layout.fragment_feed, container, false);
         addQuestionFab = (FloatingActionButton) feedView.findViewById(R.id.addQuestionButton);
-        addQuestionField = (EditText) feedView.findViewById(R.id.addQuestionField);
         addQuestionFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAddQuestion();
-            }
-        });
-
-        addQuestionField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    question = addQuestionField.getText().toString();
-                    System.out.println(question);
-                    myRef.push().setValue(question);
-                    hideKeyboardFrom(getContext(),feedView);
-                    hideAddQuestion();
-                    return true;
-                }
-                return false;
             }
         });
         return feedView;
@@ -81,15 +69,13 @@ public class Feed extends Fragment implements FeedContract.View {
 
     @Override
     public void showAddQuestion() {
-        addQuestionField.setVisibility(View.VISIBLE);
+        FragmentManager fragmentManager = getFragmentManager();
+        Ask askDialog = new Ask();
+        askDialog.show(fragmentManager,"ask");
 
     }
 
-    @Override
-    public void hideAddQuestion() {
-        addQuestionField.setVisibility(View.GONE);
-        addQuestionField.setText(null);
-    }
+
 
 
 }

@@ -42,21 +42,5 @@
             fab:fab_colorPressed="@color/accent_material_dark_Aloy"
             fab:fab_colorRipple="@color/background_dark" />
 
-        <EditText
-            android:id="@+id/addQuestionField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="71dp"
-            android:layout_marginStart="72dp"
-            android:layout_marginTop="32dp"
-            android:ems="10"
-            android:hint="Ask a Question"
-            android:inputType="text"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:imeOptions="actionDone" />
-
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

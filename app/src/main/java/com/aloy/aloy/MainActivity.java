@@ -7,8 +7,6 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
-
 import com.aloy.aloy.Adapters.BottomBarAdapter;
 import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Fragments.Inbox;
@@ -17,7 +15,6 @@ import com.aloy.aloy.Fragments.Profile;
 import com.aloy.aloy.Util.NoSwipePager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
-
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 
@@ -94,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         String token = intent.getStringExtra(EXTRA_TOKEN);
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
-        Log.i("Token",token.toString());
         SpotifyService spotify = api.getService();
         service = api.getService();
 
@@ -126,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("Error", error.toString());
                     }
                 });
-
 
 
         spotify.getMe(new SpotifyCallback<UserPrivate>() {
@@ -163,6 +158,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+        
 
         //Search ONLY by tracks
         spotify.searchTracks("Wagon Wheel",new SpotifyCallback<TracksPager>(){
@@ -218,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void success(ArtistsPager p, Response response) {
-                Log.i("Search by artists","The Commitments");
+                Log.i("Search by artists","Darius Rucker");
                 Log.i("","\n");
                 Pager<Artist> artistPager = p.artists;
                 List<Artist> artistList = artistPager.items;
