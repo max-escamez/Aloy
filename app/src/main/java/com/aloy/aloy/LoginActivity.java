@@ -14,6 +14,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.aloy.aloy.Util.CredentialsHandler;
+import com.aloy.aloy.Util.DataHandler;
+import com.aloy.aloy.Util.SpotifyHandler;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -43,6 +47,11 @@ public class LoginActivity extends Activity {
     private static  String refresh_token = null;
     public static  String access_token = null;
     private static final int REQUEST_CODE = 1337;
+    private static int a=1;
+    private DataHandler dataHandler;
+    private SpotifyHandler spotifyHandler;
+    private FirebaseAuth mAuth;
+
 
 
     public static Intent createIntent(Context context) {
@@ -101,7 +110,14 @@ public class LoginActivity extends Activity {
                         preferences.edit().putString("refresh_token", refresh_token).apply();
                         new refreshToAccess().execute().get();
                         CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
-                        startMainActivity(CredentialsHandler.getAccessToken(this), CredentialsHandler.getExpiresAt(this));
+                        dataHandler = new DataHandler();
+                        spotifyHandler = new SpotifyHandler(CredentialsHandler.getAccessToken(this));
+                        spotifyHandler.getMyUsername();
+                        System.out.println("**********\n\n"+spotifyHandler.getUsername()+"\n\n***********");
+                        dataHandler.saveUser(spotifyHandler.getUsername());
+
+                        startMainActivity(CredentialsHandler.getAccessToken(this),CredentialsHandler.getExpiresAt(this));
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {

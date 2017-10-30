@@ -64,8 +64,10 @@ public class Profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View myInflatedView = inflater.inflate(R.layout.fragment_profile, container, false);
-        Bundle args = getArguments();
-        String token = args.getString("token");
+        //Bundle args = getArguments();
+        //String token = args.getString("token");
+        String token = CredentialsHandler.getAccessToken(getContext());
+
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
         SpotifyService spotify = api.getService();
@@ -86,7 +88,6 @@ public class Profile extends Fragment {
                     Picasso.with(getContext()).load(image.url).into(profilePicture);
                 }
             }
-
             @Override
             public void failure(SpotifyError error) {
                 Log.i("Error", error.toString());

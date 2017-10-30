@@ -11,22 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/HelloFeed"
-            android:layout_width="300dp"
-            android:layout_height="55dp"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/feedRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/hello_feed"
-            android:textAlignment="center"
-            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.786" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/addQuestionButton"
@@ -41,22 +37,6 @@
             fab:fab_colorNormal="@color/accent_material_dark_Aloy"
             fab:fab_colorPressed="@color/accent_material_dark_Aloy"
             fab:fab_colorRipple="@color/background_dark" />
-
-        <EditText
-            android:id="@+id/addQuestionField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="71dp"
-            android:layout_marginStart="72dp"
-            android:layout_marginTop="32dp"
-            android:ems="10"
-            android:hint="Ask a Question"
-            android:inputType="text"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:imeOptions="actionDone" />
 
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

@@ -14,7 +14,10 @@ import com.aloy.aloy.Fragments.Inbox;
 import com.aloy.aloy.Fragments.Interests;
 import com.aloy.aloy.Fragments.Profile;
 import com.aloy.aloy.Util.CredentialsHandler;
+import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.NoSwipePager;
+import com.aloy.aloy.Util.SpotifyHandler;
+import com.google.firebase.database.FirebaseDatabase;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 import java.util.List;
@@ -45,13 +48,15 @@ public class MainActivity extends AppCompatActivity {
     static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     static final String EXTRA_EXPIRES_AT = "EXTRA_EXPIRES_AT";
     static final int profileTabId = 3;
+    private static DataHandler dataHandler;
+    private static SpotifyHandler spotifyHandler;
+    private static FirebaseDatabase database;
     private NoSwipePager viewPager;
     private BottomBarAdapter pagerAdapter;
     private BottomBar bottomBar;
     private int previousTab;
     public static SpotifyService service;
     private static boolean countdownIsRunning;
-
 
 
 
@@ -83,9 +88,14 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(pagerAdapter);
     }
 
+    public static DataHandler getDataHandler(){
+        return dataHandler;
+    }
+
+    public static SpotifyHandler getSpotifyHandler() { return spotifyHandler;}
+
     @Override
     public void onBackPressed() {
-
         if (previousTab!=viewPager.getCurrentItem()) {
             viewPager.setCurrentItem(previousTab, false);
             bottomBar.selectTabAtPosition(previousTab,true);
@@ -93,16 +103,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             finish();
         }
-
     }
-
-
-
-
-    public static SpotifyService getService() {
-        return service;
-    }
-
 
 
     @Override
@@ -116,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
         api.setAccessToken(token);
         SpotifyService spotify = api.getService();
         service = api.getService();
+        dataHandler = new DataHandler();
+        spotifyHandler = new SpotifyHandler(service);
 
         setupViewPager(token);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
@@ -130,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        /*
         //Search ONLY by tracks
         spotify.searchTracks("Darius rucker true believers",new SpotifyCallback<TracksPager>(){
             @Override
@@ -168,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.i("","\n");
             }
-        });
+        });*/
 
         if(!countdownIsRunning) {
             new CountDownTimer(expiresAt-System.currentTimeMillis()-300000, 1000) {
