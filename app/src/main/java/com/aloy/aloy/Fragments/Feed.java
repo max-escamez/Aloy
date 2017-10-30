@@ -40,6 +40,7 @@ public class Feed extends Fragment implements FeedContract.View {
     private MyRecyclerAdapter myRecyclerAdapter;
     private ArrayList<Question> adapterQuestions;
     private ArrayList<String> adapterKeys;
+    private LinearLayoutManager layoutManager;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("questions");
 
@@ -55,7 +56,7 @@ public class Feed extends Fragment implements FeedContract.View {
         final View feedView = inflater.inflate(R.layout.fragment_feed, container, false);
         feedPresenter = new FeedPresenter(this,MainActivity.getDataHandler());
         query = feedPresenter.getQuery();
-        //setupRecyclerView(feedView);
+        setupRecyclerView(feedView);
         addQuestionFab = (FloatingActionButton) feedView.findViewById(R.id.addQuestionButton);
         addQuestionFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,9 +71,12 @@ public class Feed extends Fragment implements FeedContract.View {
 
     @Override
     public void setupRecyclerView(View feedView) {
-        RecyclerView recyclerView = feedView.findViewById(R.id.feedRecyclerView) ;
-        myRecyclerAdapter = new MyRecyclerAdapter(query, adapterQuestions, adapterKeys);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecyclerView recyclerView = (RecyclerView) feedView.findViewById(R.id.feedRecyclerView);
+        myRecyclerAdapter = new MyRecyclerAdapter(myRef, adapterQuestions, adapterKeys);
+        layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(myRecyclerAdapter);
     }
 

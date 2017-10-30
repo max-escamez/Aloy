@@ -10,11 +10,25 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class DataHandler {
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("questions");
+    private FirebaseDatabase database;
+    private DatabaseReference refQuestionFeed;
+    private DatabaseReference refUser;
 
-    public void saveQuestion(Question question) {
-        myRef.push().setValue(question);
+    public DataHandler(){
+        database = FirebaseDatabase.getInstance();
+        refQuestionFeed = database.getReference("questions");
+        refUser = database.getReference("users");
+
 
     }
+
+    public void saveQuestion(Question question) {
+        refQuestionFeed.push().setValue(question);
+    }
+
+    public void saveUser(String user){
+        refUser.push().setValue(user);
+
+    }
+
 }

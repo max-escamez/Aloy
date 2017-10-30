@@ -21,11 +21,13 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView question;
+        TextView questionBody;
+        TextView questionUsername;
 
         public ViewHolder(View view) {
             super(view);
-            question = (TextView) view.findViewById(R.id.question);
+            questionBody = (TextView) view.findViewById(R.id.questionBody);
+            questionUsername = (TextView) view.findViewById(R.id.questionUsername);
         }
     }
 
@@ -44,8 +46,10 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
 
     @Override
     public void onBindViewHolder(MyRecyclerAdapter.ViewHolder holder, int position) {
+        //Question question = getItem(getItemCount()-position-1);
         Question question = getItem(position);
-        holder.question.setText(question.getBody());
+        holder.questionBody.setText(question.getBody());
+        holder.questionUsername.setText(question.getUsername());
     }
 
 

@@ -14,6 +14,8 @@ import com.aloy.aloy.Fragments.Interests;
 import com.aloy.aloy.Fragments.Profile;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.NoSwipePager;
+import com.aloy.aloy.Util.SpotifyHandler;
+import com.google.firebase.database.FirebaseDatabase;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -29,11 +31,14 @@ public class MainActivity extends AppCompatActivity {
     static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     static final int profileTabId = 3;
     private static DataHandler dataHandler;
+    private static SpotifyHandler spotifyHandler;
+    private static FirebaseDatabase database;
     private NoSwipePager viewPager;
     private BottomBarAdapter pagerAdapter;
     private BottomBar bottomBar;
     private int previousTab;
-    public static SpotifyService service;
+    private static SpotifyService service;
+
 
     public static Intent createIntent(Context context) {
         return new Intent(context, MainActivity.class);
@@ -67,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         return dataHandler;
     }
 
+    public static SpotifyHandler getSpotifyHandler() { return spotifyHandler;}
+
     @Override
     public void onBackPressed() {
         if (previousTab!=viewPager.getCurrentItem()) {
@@ -91,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         service = api.getService();
 
         dataHandler = new DataHandler();
+        spotifyHandler = new SpotifyHandler(service);
 
         setupViewPager(token);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);

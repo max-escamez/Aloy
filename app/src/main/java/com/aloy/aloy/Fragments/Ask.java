@@ -37,7 +37,7 @@ public class Ask extends DialogFragment implements AskContract.View{
     private EditText askQuestionField;
     private Button submitButton;
     private ImageButton close;
-    private String question;
+    private String questionBody;
     private AskContract.Presenter askPresenter;
     private DataHandler dataHandler;
 
@@ -58,7 +58,7 @@ public class Ask extends DialogFragment implements AskContract.View{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View askView = inflater.inflate(R.layout.fragment_ask, container, false);
-        askPresenter = new AskPresenter(this,MainActivity.getDataHandler() );
+        askPresenter = new AskPresenter(this,MainActivity.getDataHandler(),MainActivity.getSpotifyHandler() );
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         askQuestionField = (EditText) askView.findViewById(R.id.askQuestionField);
@@ -68,8 +68,8 @@ public class Ask extends DialogFragment implements AskContract.View{
         askQuestionField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    question = askQuestionField.getText().toString();
-                    askPresenter.createQuestion(question);
+                    questionBody = askQuestionField.getText().toString();
+                    askPresenter.createQuestion(questionBody);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         hideKeyboardFrom(getContext(),askView);
                     }
@@ -90,8 +90,8 @@ public class Ask extends DialogFragment implements AskContract.View{
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                question = askQuestionField.getText().toString();
-                askPresenter.createQuestion(question);
+                questionBody = askQuestionField.getText().toString();
+                askPresenter.createQuestion(questionBody);
                 hideAskQuestion();
             }
         });
