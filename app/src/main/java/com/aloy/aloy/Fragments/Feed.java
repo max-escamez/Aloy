@@ -1,30 +1,32 @@
 package com.aloy.aloy.Fragments;
 
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.TextView;
 
+
+import com.aloy.aloy.Adapters.MyRecyclerAdapter;
 import com.aloy.aloy.Contracts.FeedContract;
+import com.aloy.aloy.MainActivity;
+import com.aloy.aloy.Models.Question;
+import com.aloy.aloy.Presenters.FeedPresenter;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.DataHandler;
 import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+
+import java.util.ArrayList;
 
 
 /**
@@ -33,24 +35,27 @@ import com.google.firebase.database.FirebaseDatabase;
 public class Feed extends Fragment implements FeedContract.View {
 
     private FeedContract.Presenter feedPresenter;
-    private EditText addQuestionField;
     private FloatingActionButton addQuestionFab;
-    private String question;
+    private Query query;
+    private MyRecyclerAdapter myRecyclerAdapter;
+    private ArrayList<Question> adapterQuestions;
+    private ArrayList<String> adapterKeys;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("questions");
 
 
     public Feed() {
-
+        // Required empty public constructor
     }
-
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View feedView = inflater.inflate(R.layout.fragment_feed, container, false);
+        feedPresenter = new FeedPresenter(this,MainActivity.getDataHandler());
+        query = feedPresenter.getQuery();
+        //setupRecyclerView(feedView);
         addQuestionFab = (FloatingActionButton) feedView.findViewById(R.id.addQuestionButton);
         addQuestionFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +64,16 @@ public class Feed extends Fragment implements FeedContract.View {
             }
         });
         return feedView;
+    }
+
+
+
+    @Override
+    public void setupRecyclerView(View feedView) {
+        RecyclerView recyclerView = feedView.findViewById(R.id.feedRecyclerView) ;
+        myRecyclerAdapter = new MyRecyclerAdapter(query, adapterQuestions, adapterKeys);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(myRecyclerAdapter);
     }
 
 

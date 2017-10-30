@@ -12,6 +12,7 @@ import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Fragments.Inbox;
 import com.aloy.aloy.Fragments.Interests;
 import com.aloy.aloy.Fragments.Profile;
+import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.NoSwipePager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     static final int profileTabId = 3;
+    private static DataHandler dataHandler;
     private NoSwipePager viewPager;
     private BottomBarAdapter pagerAdapter;
     private BottomBar bottomBar;
@@ -61,9 +63,12 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(pagerAdapter);
     }
 
+    public static DataHandler getDataHandler(){
+        return dataHandler;
+    }
+
     @Override
     public void onBackPressed() {
-
         if (previousTab!=viewPager.getCurrentItem()) {
             viewPager.setCurrentItem(previousTab, false);
             bottomBar.selectTabAtPosition(previousTab,true);
@@ -71,16 +76,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             finish();
         }
-
     }
-
-
-
-
-    public static SpotifyService getService() {
-        return service;
-    }
-
 
 
     @Override
@@ -94,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         SpotifyService spotify = api.getService();
         service = api.getService();
 
-
+        dataHandler = new DataHandler();
 
         setupViewPager(token);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);

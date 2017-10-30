@@ -22,8 +22,10 @@ import android.widget.TextView;
 
 import com.aloy.aloy.Contracts.AskContract;
 import com.aloy.aloy.Contracts.FeedContract;
+import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Presenters.AskPresenter;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.DataHandler;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -37,12 +39,15 @@ public class Ask extends DialogFragment implements AskContract.View{
     private ImageButton close;
     private String question;
     private AskContract.Presenter askPresenter;
+    private DataHandler dataHandler;
 
 
 
     public Ask() {
         // Required empty public constructor
     }
+
+
 
     public static void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -53,7 +58,7 @@ public class Ask extends DialogFragment implements AskContract.View{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View askView = inflater.inflate(R.layout.fragment_ask, container, false);
-        askPresenter = new AskPresenter(this);
+        askPresenter = new AskPresenter(this,MainActivity.getDataHandler() );
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         askQuestionField = (EditText) askView.findViewById(R.id.askQuestionField);
@@ -64,7 +69,7 @@ public class Ask extends DialogFragment implements AskContract.View{
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     question = askQuestionField.getText().toString();
-                    askPresenter.addQuestion(question);
+                    askPresenter.createQuestion(question);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         hideKeyboardFrom(getContext(),askView);
                     }
@@ -86,7 +91,7 @@ public class Ask extends DialogFragment implements AskContract.View{
             @Override
             public void onClick(View v) {
                 question = askQuestionField.getText().toString();
-                askPresenter.addQuestion(question);
+                askPresenter.createQuestion(question);
                 hideAskQuestion();
             }
         });

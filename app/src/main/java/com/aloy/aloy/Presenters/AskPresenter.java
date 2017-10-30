@@ -2,6 +2,8 @@ package com.aloy.aloy.Presenters;
 
 import com.aloy.aloy.Contracts.AskContract;
 import com.aloy.aloy.Fragments.Ask;
+import com.aloy.aloy.Models.Question;
+import com.aloy.aloy.Util.DataHandler;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -15,17 +17,19 @@ public class AskPresenter implements AskContract.Presenter {
     DatabaseReference myRef = database.getReference("questions");
     private AskContract.View askView;
     private String question;
+    private DataHandler dataHandler;
 
-    public AskPresenter(AskContract.View askView) {
+    public AskPresenter(AskContract.View askView, DataHandler dataHandler) {
+        this.dataHandler = dataHandler;
         this.askView = askView;
     }
 
 
 
-
     @Override
-    public void addQuestion(String question) {
-        myRef.push().setValue(question);
+    public void createQuestion(String body) {
+        Question newQuestion = new Question(body);
+        dataHandler.saveQuestion(newQuestion);
 
     }
 }

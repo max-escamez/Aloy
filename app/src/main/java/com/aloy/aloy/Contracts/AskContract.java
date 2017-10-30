@@ -1,6 +1,6 @@
 package com.aloy.aloy.Contracts;
 
-import com.aloy.aloy.BaseView;
+import com.aloy.aloy.Models.Question;
 
 /**
  * Created by tldonne on 29/10/2017.
@@ -14,6 +14,7 @@ public interface AskContract {
     }
 
     interface Presenter {
-        void addQuestion(String question);
+        void createQuestion(String question);
+
     }
 }
