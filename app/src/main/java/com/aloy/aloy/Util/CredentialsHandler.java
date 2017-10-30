@@ -6,6 +6,7 @@ package com.aloy.aloy.Util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +36,13 @@ public class CredentialsHandler {
             return null;
         }
         return token;
+    }
+
+    public static long getExpiresAt(Context context) {
+        Context appContext = context.getApplicationContext();
+        SharedPreferences sharedPref = getSharedPreferences(appContext);
+        long expiresAt = sharedPref.getLong(EXPIRES_AT, 0L);
+        return expiresAt;
     }
 
     private static SharedPreferences getSharedPreferences(Context appContext) {

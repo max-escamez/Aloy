@@ -2,6 +2,7 @@ package com.aloy.aloy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,11 +13,27 @@ import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Fragments.Inbox;
 import com.aloy.aloy.Fragments.Interests;
 import com.aloy.aloy.Fragments.Profile;
+import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.NoSwipePager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.AlbumsPager;
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
+import kaaes.spotify.webapi.android.models.ArtistsPager;
+import kaaes.spotify.webapi.android.models.Image;
+import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.TracksPager;
+import retrofit.client.Response;
 
 
 /**
@@ -26,12 +43,17 @@ import kaaes.spotify.webapi.android.SpotifyService;
 public class MainActivity extends AppCompatActivity {
 
     static final String EXTRA_TOKEN = "EXTRA_TOKEN";
+    static final String EXTRA_EXPIRES_AT = "EXTRA_EXPIRES_AT";
     static final int profileTabId = 3;
     private NoSwipePager viewPager;
     private BottomBarAdapter pagerAdapter;
     private BottomBar bottomBar;
     private int previousTab;
     public static SpotifyService service;
+    private static boolean countdownIsRunning;
+
+
+
 
     public static Intent createIntent(Context context) {
         return new Intent(context, MainActivity.class);
@@ -89,12 +111,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Intent intent = getIntent();
         String token = intent.getStringExtra(EXTRA_TOKEN);
+        long expiresAt=intent.getLongExtra(EXTRA_EXPIRES_AT,3600);
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
         SpotifyService spotify = api.getService();
         service = api.getService();
-
-
 
         setupViewPager(token);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
@@ -108,6 +129,144 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        //Search ONLY by tracks
+        spotify.searchTracks("Darius rucker true believers",new SpotifyCallback<TracksPager>(){
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Tracks", "Could not get tracks");
+            }
+            @Override
+            public void success(TracksPager p, Response response) {
+                Log.i("Search by tracks","Wagon Wheel");
+                Log.i("","\n");
+
+                Pager<Track> trackPager = p.tracks;
+                List<Track> trackList = trackPager.items;
+                Log.i("Number of results",""+trackPager.total);
+                //Log.i("previous",trackPager.previous);
+                Log.i("next",trackPager.next);
+                Log.i("Limit",""+trackPager.limit);
+                Log.i("","\n");
+                for(Track song : trackList){
+                    Log.i("Track", song.name);
+                    List<ArtistSimple> artistList = song.artists;
+                    AlbumSimple album = song.album;
+                    List<Image> imageList = album.images;
+                    for(ArtistSimple artist : artistList){
+                        Log.i("Artist",artist.name);
+                    }
+                    Log.i("Album",album.name);
+                    for(Image image : imageList){
+                        Log.i("Album Cover",image.url);
+                    }
+                    Log.i("Popularity", ""+song.popularity);
+                    Log.i("Type", song.type);
+                    Log.i("Uri", song.uri);
+                    Log.i("href", song.href);
+                    Log.i("","\n");
+                }
+                Log.i("","\n");
+            }
+        });
+
+        if(!countdownIsRunning) {
+            new CountDownTimer(expiresAt-System.currentTimeMillis()-300000, 1000) {
+
+                public void onTick(long millisUntilFinished) {
+                    Log.i("seconds remaining", "" + millisUntilFinished / 1000);
+                }
+
+                public void onFinish() {
+                    Log.i("Token", "Refresh");
+                    try {
+                        new LoginActivity.refreshToAccess().execute().get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    CredentialsHandler.setAccessToken(getApplicationContext(), LoginActivity.access_token, 3600, TimeUnit.SECONDS);
+                    this.start();
+                }
+            }.start();
+            countdownIsRunning = true;
+        }
+
+        /*
+        //Search ONLY by artists
+        spotify.searchArtists("Bad Company",new SpotifyCallback<ArtistsPager>(){
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Artists", "Could not get playlists");
+            }
+            @Override
+            public void success(ArtistsPager p, Response response) {
+                Log.i("Search by artists","Darius Rucker");
+                Log.i("","\n");
+                Pager<Artist> artistPager = p.artists;
+                List<Artist> artistList = artistPager.items;
+                Log.i("Number of results",""+artistPager.total);
+                //Log.i("previous",artistPager.previous);
+                //Log.i("next",artistPager.next);
+                Log.i("Limit",""+artistPager.limit);
+                Log.i("","\n");
+                for(Artist artist : artistList){
+                    List<String> genresList = artist.genres;
+                    List<Image> imageList = artist.images;
+                    Log.i("Artist", artist.name);
+                    for(String genre :genresList){
+                        Log.i("Genre",genre);
+                    }
+                    for(Image image : imageList){
+                        Log.i("Image",image.url);
+                    }
+                    Log.i("Type", artist.type);
+                    Log.i("Popularity", ""+artist.popularity);
+                    Log.i("Uri", artist.uri);
+                    Log.i("href", artist.href);
+                    Log.i("","\n");
+                }
+                Log.i("","\n");
+
+            }
+        });
+
+
+        //Search ONLY by Albums
+        spotify.searchAlbums("Bad Company",new SpotifyCallback<AlbumsPager>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Albums", "Could not get albums");
+            }
+            @Override
+            public void success(AlbumsPager p, Response response) {
+                Log.i("Search by albums","Division Bell");
+                Log.i("","\n");
+                Pager<AlbumSimple> albumPager = p.albums;
+                List<AlbumSimple> albumList = albumPager.items;
+                Log.i("Number of results",""+albumPager.total);
+                //Log.i("previous",albumPager.previous);
+                //Log.i("next",albumPager.next);
+                Log.i("Limit",""+albumPager.limit);
+                Log.i("","\n");
+                for(AlbumSimple album : albumList){
+                    List<Image> albumCovers =album.images;
+                    Log.i("Album", album.name);
+                    for(Image i: albumCovers){
+                        Log.i("Image",i.url);
+                    }
+                    Log.i("Type", album.type);
+                    Log.i("Album_Type", album.album_type);
+                    Log.i("Uri", album.uri);
+                    Log.i("href", album.href);
+                    Log.i("","\n");
+                }
+                Log.i("","\n");
+            }
+        });
+
+
 
 
          /*       spotify.getMe(new SpotifyCallback<UserPrivate>() {
@@ -158,132 +317,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-        
-
-        //Search ONLY by tracks
-        spotify.searchTracks("Wagon Wheel",new SpotifyCallback<TracksPager>(){
+        spotify.getCategory("jazz", options, new SpotifyCallback<Category>() {
             @Override
             public void failure(SpotifyError spotifyError) {
-                Log.e("Tracks", "Could not get tracks");
+                Log.e("Category", "Could not get category");
 
             }
 
             @Override
-            public void success(TracksPager p, Response response) {
-                Log.i("Search by tracks","Wagon Wheel");
-                Log.i("","\n");
+            public void success(Category p, Response response) {
 
-                Pager<Track> trackPager = p.tracks;
-                List<Track> trackList = trackPager.items;
-                Log.i("Number of results",""+trackPager.total);
-                //Log.i("previous",trackPager.previous);
-                Log.i("next",trackPager.next);
-                Log.i("Limit",""+trackPager.limit);
+                Log.i("get categories","Jazz");
                 Log.i("","\n");
-                for(Track song : trackList){
-                    Log.i("Track", song.name);
-                    List<ArtistSimple> artistList = song.artists;
-                    AlbumSimple album = song.album;
-                    List<Image> imageList = album.images;
-                    for(ArtistSimple artist : artistList){
-                        Log.i("Artist",artist.name);
-                    }
-                    Log.i("Album",album.name);
-                    for(Image image : imageList){
-                        Log.i("Album Cover",image.url);
-                    }
-                    Log.i("Popularity", ""+song.popularity);
-                    Log.i("Type", song.type);
-                    Log.i("Uri", song.uri);
-                    Log.i("href", song.href);
-                    Log.i("","\n");
+                Log.i("Category",p.name);
+                List<Image> imageList = p.icons;
+                for(Image image : imageList){
+                    Log.i("Image",image.url);
                 }
+                Log.i("href",p.href);
                 Log.i("","\n");
-
-
             }
         });
-
-        //Search ONLY by artists
-        spotify.searchArtists("Darius Rucker",new SpotifyCallback<ArtistsPager>(){
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Artists", "Could not get playlists");
-
-            }
-
-            @Override
-            public void success(ArtistsPager p, Response response) {
-                Log.i("Search by artists","Darius Rucker");
-                Log.i("","\n");
-                Pager<Artist> artistPager = p.artists;
-                List<Artist> artistList = artistPager.items;
-                Log.i("Number of results",""+artistPager.total);
-                //Log.i("previous",artistPager.previous);
-                //Log.i("next",artistPager.next);
-                Log.i("Limit",""+artistPager.limit);
-                Log.i("","\n");
-                for(Artist artist : artistList){
-                    List<String> genresList = artist.genres;
-                    List<Image> imageList = artist.images;
-                    Log.i("Artist", artist.name);
-                    for(String genre :genresList){
-                        Log.i("Genre",genre);
-                    }
-                    for(Image image : imageList){
-                        Log.i("Image",image.url);
-                    }
-                    Log.i("Type", artist.type);
-                    Log.i("Popularity", ""+artist.popularity);
-                    Log.i("Uri", artist.uri);
-                    Log.i("href", artist.href);
-                    Log.i("","\n");
-                }
-                Log.i("","\n");
-
-            }
-        });
-
-        //Search ONLY by Albums
-        spotify.searchAlbums("Division Bell",new SpotifyCallback<AlbumsPager>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Albums", "Could not get albums");
-
-            }
-
-            @Override
-            public void success(AlbumsPager p, Response response) {
-                Log.i("Search by albums","Division Bell");
-                Log.i("","\n");
-                Pager<AlbumSimple> albumPager = p.albums;
-                List<AlbumSimple> albumList = albumPager.items;
-                Log.i("Number of results",""+albumPager.total);
-                //Log.i("previous",albumPager.previous);
-                //Log.i("next",albumPager.next);
-                Log.i("Limit",""+albumPager.limit);
-                Log.i("","\n");
-                for(AlbumSimple album : albumList){
-                    List<Image> albumCovers =album.images;
-                    Log.i("Album", album.name);
-                    for(Image i: albumCovers){
-                        Log.i("Image",i.url);
-                    }
-                    Log.i("Type", album.type);
-                    Log.i("Album_Type", album.album_type);
-                    Log.i("Uri", album.uri);
-                    Log.i("href", album.href);
-                    Log.i("","\n");
-
-                }
-                Log.i("","\n");
-
-
-            }
-        });
-
 
         Map<String, Object> options = new HashMap();
         options.put(SpotifyService.COUNTRY,"US");
@@ -312,34 +366,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("","\n");
             }
 
-        });
-
-
-        spotify.getCategory("jazz", options, new SpotifyCallback<Category>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Category", "Could not get category");
-
-            }
-
-            @Override
-            public void success(Category p, Response response) {
-
-                Log.i("get categories","Jazz");
-                Log.i("","\n");
-                Log.i("Category",p.name);
-                List<Image> imageList = p.icons;
-                for(Image image : imageList){
-                    Log.i("Image",image.url);
-                }
-                Log.i("href",p.href);
-                Log.i("","\n");
-            }
         });*/
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     @Override
     protected void onDestroy() {

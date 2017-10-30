@@ -41,7 +41,7 @@ public class LoginActivity extends Activity {
     @SuppressWarnings("SpellCheckingInspection")
     private static  String AUTHCODE = "";
     private static  String refresh_token = null;
-    private static  String access_token = null;
+    public static  String access_token = null;
     private static final int REQUEST_CODE = 1337;
 
 
@@ -50,7 +50,6 @@ public class LoginActivity extends Activity {
     }
 
     @Override
-    //need to store the refresh token when you get it via the authorization code flow.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences preferences = getSharedPreferences("Auth", MODE_PRIVATE);
@@ -66,7 +65,7 @@ public class LoginActivity extends Activity {
                     Log.i("Token State","Expired");
                     new refreshToAccess().execute().get();
                     CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
-                    startMainActivity(CredentialsHandler.getAccessToken(this));
+                    startMainActivity(CredentialsHandler.getAccessToken(this), CredentialsHandler.getExpiresAt(this));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -75,7 +74,7 @@ public class LoginActivity extends Activity {
             }
         } else {
             Log.i("Token State","Not yet expired");
-            startMainActivity(token);
+            startMainActivity(token,CredentialsHandler.getExpiresAt(this));
         }
     }
 
@@ -102,7 +101,7 @@ public class LoginActivity extends Activity {
                         preferences.edit().putString("refresh_token", refresh_token).apply();
                         new refreshToAccess().execute().get();
                         CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
-                        startMainActivity(CredentialsHandler.getAccessToken(this));
+                        startMainActivity(CredentialsHandler.getAccessToken(this), CredentialsHandler.getExpiresAt(this));
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
@@ -120,9 +119,10 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private void startMainActivity(String token) {
+    protected void startMainActivity(String token,long expires_at) {
         Intent intent = MainActivity.createIntent(this);
         intent.putExtra(MainActivity.EXTRA_TOKEN, token);
+        intent.putExtra(MainActivity.EXTRA_EXPIRES_AT, expires_at);
         startActivity(intent);
         finish();
     }

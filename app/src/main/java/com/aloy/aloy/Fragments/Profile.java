@@ -1,17 +1,25 @@
 package com.aloy.aloy.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.CredentialsHandler;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -42,12 +50,15 @@ public class Profile extends Fragment {
 
     private TextView username;
     private com.mikhaellopez.circularimageview.CircularImageView profilePicture;
+    private ImageView cover;
+    private  String link="";
+    private String image_url="";
+    private String search_query;
+    private EditText search_bar;
 
     public Profile(){
 
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,12 +68,15 @@ public class Profile extends Fragment {
         String token = args.getString("token");
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
-        Log.i("Token",token.toString());
         SpotifyService spotify = api.getService();
 
 
         username = (TextView) myInflatedView.findViewById(R.id.username);
         profilePicture = (com.mikhaellopez.circularimageview.CircularImageView) myInflatedView.findViewById(R.id.profilePicture);
+        cover = (ImageView) myInflatedView.findViewById(R.id.cover);
+        search_bar = (EditText) myInflatedView.findViewById(R.id.search_bar);
+        search_bar.setVisibility(View.VISIBLE);
+
         spotify.getMe(new SpotifyCallback<UserPrivate>() {
             @Override
             public void success(UserPrivate u, Response response) {
@@ -71,8 +85,6 @@ public class Profile extends Fragment {
                 for (Image image : images) {
                     Picasso.with(getContext()).load(image.url).into(profilePicture);
                 }
-
-
             }
 
             @Override
@@ -81,7 +93,52 @@ public class Profile extends Fragment {
             }
         });
 
+        search_bar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    search_query = search_bar.getText().toString();
+                    search_bar.setText("");
+                    SpotifyApi api = new SpotifyApi();
+                    api.setAccessToken(CredentialsHandler.getAccessToken(getContext()));
+                    SpotifyService spotify = api.getService();
+                    spotify.searchTracks(search_query, new SpotifyCallback<TracksPager>() {
+                        @Override
+                        public void failure(SpotifyError spotifyError) {
+                            Log.e("Tracks", "Could not get tracks");
+                        }
+                        @Override
+                        public void success(TracksPager p, Response response) {
+                            Pager<Track> trackPager = p.tracks;
+                            List<Track> trackList = trackPager.items;
+                            Track song = trackList.get(0);
+                            AlbumSimple album = song.album;
+                            List<Image> imageList = album.images;
+                            image_url = imageList.get(0).url;
+                            Picasso.with(getContext()).load(image_url).into(cover);
+                            link = song.uri;
+                            cover.setOnClickListener(new View.OnClickListener() {
+
+                                public void onClick(View arg0) {
+                                    Intent viewIntent =
+                                            new Intent("android.intent.action.VIEW",
+                                                    Uri.parse(link));
+                                    startActivity(viewIntent);
+                                }
+                            });
+                        }
+
+                    });
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+
         return myInflatedView;
     }
+
+
 
 }
