@@ -117,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
         api.setAccessToken(token);
         SpotifyService spotify = api.getService();
         service = api.getService();
-        dataHandler = new DataHandler();
-        spotifyHandler = new SpotifyHandler(service);
+        dataHandler = new DataHandler(this);
+        spotifyHandler = new SpotifyHandler(service, this);
 
         setupViewPager(token);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);

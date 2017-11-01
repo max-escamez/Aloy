@@ -20,7 +20,6 @@ public interface AskContract {
     }
 
     interface Presenter {
-
         void createQuestion(String body);
 
     }

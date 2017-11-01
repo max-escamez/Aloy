@@ -9,6 +9,7 @@ public class MainUser {
     private String username;
     private String pic;
 
+
     public MainUser() {
 
     }

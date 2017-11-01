@@ -33,7 +33,8 @@ public class AskPresenter implements AskContract.Presenter {
     private SpotifyHandler spotifyHandler;
     private SharedPreferenceHelper sharedPreferenceHelper;
 
-    public AskPresenter(AskContract.View askView, DataHandler dataHandler, SpotifyHandler spotifyHandler) {
+    public AskPresenter(AskContract.View askView, DataHandler dataHandler, SpotifyHandler spotifyHandler, Context context) {
+        sharedPreferenceHelper = new SharedPreferenceHelper(context);
         this.dataHandler = dataHandler;
         this.spotifyHandler = spotifyHandler;
         this.askView = askView;
@@ -41,7 +42,7 @@ public class AskPresenter implements AskContract.Presenter {
 
     @Override
     public void createQuestion(String body) {
-        sharedPreferenceHelper = new SharedPreferenceHelper(context);
+
         Question newQuestion = new Question(sharedPreferenceHelper.getCurrentUserId(),body,sharedPreferenceHelper.getProfilePicture());
         //newQuestion.setBody(body);
         dataHandler.saveQuestion(newQuestion);

@@ -14,6 +14,7 @@ public class SharedPreferenceHelper {
     public static final String CURRENT_SPOTIFY_TOKEN_KEY = "CurrentSpotifyToken";
     public static final String CURRENT_USER_SPOTIFY_ID_KEY = "CurrentSpotifyID";
     public static final String CURRENT_USER_SPOTIFY_PROFILE_PIC = "currentSpotifyProfilePic";
+    public static final String CURRENT_USER_FIREBASE_ID = "currentFirebaseID";
 
     private Context mContext;
     private SharedPreferences mSharedPreferences;
@@ -34,6 +35,7 @@ public class SharedPreferenceHelper {
         editor.putString(CURRENT_USER_SPOTIFY_ID_KEY, id);
         editor.apply();
     }
+
     public void saveProfilePicture(String id) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(CURRENT_USER_SPOTIFY_PROFILE_PIC, id);
@@ -42,6 +44,16 @@ public class SharedPreferenceHelper {
 
     public String getCurrentSpotifyToken() {
         return mSharedPreferences.getString(CURRENT_SPOTIFY_TOKEN_KEY, "");
+    }
+
+    public void saveFirebaseID(String id) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(CURRENT_USER_FIREBASE_ID, id);
+        editor.apply();
+    }
+
+    public String getFirebaseID() {
+        return mSharedPreferences.getString(CURRENT_USER_FIREBASE_ID, "");
     }
 
     public String getProfilePicture() {
