@@ -72,7 +72,7 @@ public class Feed extends Fragment implements FeedContract.View {
     @Override
     public void setupRecyclerView(View feedView) {
         RecyclerView recyclerView = (RecyclerView) feedView.findViewById(R.id.feedRecyclerView);
-        myRecyclerAdapter = new MyRecyclerAdapter(myRef, adapterQuestions, adapterKeys);
+        myRecyclerAdapter = new MyRecyclerAdapter(myRef, adapterQuestions, adapterKeys,getContext());
         layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
