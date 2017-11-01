@@ -2,6 +2,8 @@ package com.aloy.aloy.Util;
 
 import android.util.Log;
 
+import com.aloy.aloy.Models.MainUser;
+import com.aloy.aloy.Models.Question;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,42 +24,57 @@ public class SpotifyHandler {
 
     private String username;
     private SpotifyService service;
-    //private String username ;
+    private DataHandler dataHandler;
+    private MainUser mainUser;
 
     public SpotifyHandler(String token){
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
         this.service = api.getService();
+        dataHandler = new DataHandler();
     }
 
     public SpotifyHandler(SpotifyService service) {
         this.service = service;
+        dataHandler = new DataHandler();
     }
 
-    public void getMyUsername() {
+    public void createMainUser() {
         service.getMe(new SpotifyCallback<UserPrivate>() {
             @Override
             public void success(UserPrivate u, Response response) {
-                setUsername(u.id);
+                mainUser = new MainUser(u.id);
+                dataHandler.saveUser(mainUser);
+            }
+            @Override
+            public void failure(SpotifyError error) {
+                Log.i("Error", error.toString());
+            }
+
+        }
+        );
+    }
+
+    public void createQuestion(final String body) {
+        service.getMe(new SpotifyCallback<UserPrivate>() {
+            @Override
+            public void success(UserPrivate u, Response response) {
+                Question question = new Question(u.id,body);
+                dataHandler.saveQuestion(question);
             }
             @Override
             public void failure(SpotifyError error) {
                 Log.i("Error", error.toString());
             }
         }
-
         );
     }
 
-    public  void setUsername(String arg) {
-        username = arg;
-        System.out.println("AAAAAAAAAAA : "+username);
-    }
 
-    public String getUsername() {
-        System.out.println("BBBBBBBBBBBB : "+username);
-        return username;
-    }
+
+
+
+
 
 
 }

@@ -175,10 +175,10 @@ public class MainActivity extends AppCompatActivity {
         });*/
 
         if(!countdownIsRunning) {
-            new CountDownTimer(expiresAt-System.currentTimeMillis()-300000, 1000) {
+            new CountDownTimer(expiresAt-System.currentTimeMillis()-30000, 1000) {
 
                 public void onTick(long millisUntilFinished) {
-                    Log.i("seconds remaining", "" + millisUntilFinished / 1000);
+                    //Log.i("seconds remaining", "" + millisUntilFinished / 1000);
                 }
 
                 public void onFinish() {

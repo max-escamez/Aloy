@@ -24,13 +24,9 @@ import retrofit.client.Response;
  */
 
 public class AskPresenter implements AskContract.Presenter {
-
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("questions");
+    
     private AskContract.View askView;
-    private String question;
     private DataHandler dataHandler;
-    private String username;
     private SpotifyHandler spotifyHandler;
 
     public AskPresenter(AskContract.View askView, DataHandler dataHandler, SpotifyHandler spotifyHandler) {
@@ -43,10 +39,8 @@ public class AskPresenter implements AskContract.Presenter {
 
     @Override
     public void createQuestion(String body) {
-        Question newQuestion = new Question(spotifyHandler.getUsername(),body);
-        //newQuestion.setBody(body);
-        dataHandler.saveQuestion(newQuestion);
-
-
+        spotifyHandler.createQuestion(body);
     }
+
+
 }
