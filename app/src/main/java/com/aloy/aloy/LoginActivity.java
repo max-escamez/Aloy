@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.DataHandler;
+import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.aloy.aloy.Util.SpotifyHandler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -31,6 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Iterator;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.HttpsURLConnection;
@@ -48,9 +50,9 @@ public class LoginActivity extends Activity {
     public static  String access_token = null;
     private static final int REQUEST_CODE = 1337;
     private static int a=1;
-    private DataHandler dataHandler;
     private SpotifyHandler spotifyHandler;
     private FirebaseAuth mAuth;
+    private SharedPreferenceHelper mSharedPreferenceHelper;
 
 
 
@@ -61,12 +63,12 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences preferences = getSharedPreferences("Auth", MODE_PRIVATE);
-        refresh_token = preferences.getString("refresh_token", "");
+        mSharedPreferenceHelper = new SharedPreferenceHelper(this);
+        refresh_token = mSharedPreferenceHelper.getCurrentSpotifyToken();
         String token = CredentialsHandler.getAccessToken(this);
 
-        if (token==null) {
-            if(refresh_token==null) {
+        if (token==null||a==1) {
+            if(refresh_token==null||a==1) {
                 Log.i("Token State","Never logged in");
                 setContentView(R.layout.activity_login);
             }else{
@@ -97,7 +99,7 @@ public class LoginActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        SharedPreferences preferences = getSharedPreferences("Auth", MODE_PRIVATE);
+        //SharedPreferences preferences = getSharedPreferences("Auth", MODE_PRIVATE);
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
@@ -107,17 +109,12 @@ public class LoginActivity extends Activity {
                     AUTHCODE=response.getCode();
                     try {
                         new codeToRefresh().execute().get();
-                        preferences.edit().putString("refresh_token", refresh_token).apply();
+                        mSharedPreferenceHelper.saveSpotifyToken(refresh_token);
                         new refreshToAccess().execute().get();
                         CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
-                        dataHandler = new DataHandler();
-                        spotifyHandler = new SpotifyHandler(CredentialsHandler.getAccessToken(this));
+                        spotifyHandler = new SpotifyHandler(CredentialsHandler.getAccessToken(this),this);
                         spotifyHandler.getMyUsername();
-                        System.out.println("**********\n\n"+spotifyHandler.getUsername()+"\n\n***********");
-                        dataHandler.saveUser(spotifyHandler.getUsername());
-
                         startMainActivity(CredentialsHandler.getAccessToken(this),CredentialsHandler.getExpiresAt(this));
-
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {

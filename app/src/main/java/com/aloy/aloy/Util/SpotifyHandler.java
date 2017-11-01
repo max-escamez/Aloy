@@ -1,7 +1,10 @@
 package com.aloy.aloy.Util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.aloy.aloy.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,12 +25,14 @@ public class SpotifyHandler {
 
     private String username;
     private SpotifyService service;
-    //private String username ;
+    private DataHandler dataHandler;
+    private SharedPreferenceHelper msharedPreferenceHelper;
 
-    public SpotifyHandler(String token){
+    public SpotifyHandler(String token, Context context){
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
         this.service = api.getService();
+        msharedPreferenceHelper=new SharedPreferenceHelper(context);
     }
 
     public SpotifyHandler(SpotifyService service) {
@@ -38,24 +43,25 @@ public class SpotifyHandler {
         service.getMe(new SpotifyCallback<UserPrivate>() {
             @Override
             public void success(UserPrivate u, Response response) {
-                setUsername(u.id);
+                msharedPreferenceHelper.saveCurrentUserId(u.id);
+                dataHandler = new DataHandler();
+                dataHandler.saveUser(u.id);
             }
             @Override
             public void failure(SpotifyError error) {
                 Log.i("Error", error.toString());
             }
-        }
 
-        );
+
+        });
+
     }
 
-    public  void setUsername(String arg) {
+    public void setUsername(String arg) {
         username = arg;
-        System.out.println("AAAAAAAAAAA : "+username);
     }
 
     public String getUsername() {
-        System.out.println("BBBBBBBBBBBB : "+username);
         return username;
     }
 

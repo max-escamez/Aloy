@@ -1,11 +1,13 @@
 package com.aloy.aloy.Presenters;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.aloy.aloy.Contracts.AskContract;
 import com.aloy.aloy.Fragments.Ask;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Util.DataHandler;
+import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.aloy.aloy.Util.SpotifyHandler;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,6 +34,7 @@ public class AskPresenter implements AskContract.Presenter {
     private DataHandler dataHandler;
     private String username;
     private SpotifyHandler spotifyHandler;
+    SharedPreferenceHelper sharedPreferenceHelper;
 
     public AskPresenter(AskContract.View askView, DataHandler dataHandler, SpotifyHandler spotifyHandler) {
         this.dataHandler = dataHandler;
@@ -43,7 +46,7 @@ public class AskPresenter implements AskContract.Presenter {
 
     @Override
     public void createQuestion(String body) {
-        Question newQuestion = new Question(spotifyHandler.getUsername(),body);
+        Question newQuestion = new Question(sharedPreferenceHelper.getCurrentUserId(),body);
         //newQuestion.setBody(body);
         dataHandler.saveQuestion(newQuestion);
 
