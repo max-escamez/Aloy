@@ -1,5 +1,6 @@
 package com.aloy.aloy.Presenters;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -26,13 +27,9 @@ import retrofit.client.Response;
  */
 
 public class AskPresenter implements AskContract.Presenter {
-
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("questions");
+    
     private AskContract.View askView;
-    private String question;
     private DataHandler dataHandler;
-    private String username;
     private SpotifyHandler spotifyHandler;
     SharedPreferenceHelper sharedPreferenceHelper;
 
@@ -42,14 +39,13 @@ public class AskPresenter implements AskContract.Presenter {
         this.askView = askView;
     }
 
-
-
     @Override
-    public void createQuestion(String body) {
-        Question newQuestion = new Question(sharedPreferenceHelper.getCurrentUserId(),body);
+    public void createQuestion(String body, Context context) {
+        sharedPreferenceHelper = new SharedPreferenceHelper(context);
+        Question newQuestion = new Question(sharedPreferenceHelper.getCurrentUserId(),body,sharedPreferenceHelper.getProfilePicture());
         //newQuestion.setBody(body);
         dataHandler.saveQuestion(newQuestion);
-
-
     }
+
+
 }

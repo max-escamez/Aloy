@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
@@ -37,6 +39,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.HttpsURLConnection;
 
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.UserPrivate;
+import retrofit.client.Response;
+
+import static com.aloy.aloy.MainActivity.service;
+
 public class LoginActivity extends Activity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -51,9 +62,13 @@ public class LoginActivity extends Activity {
     private static final int REQUEST_CODE = 1337;
     private static int a=1;
     private SpotifyHandler spotifyHandler;
+    private final MainUser mainUser = new MainUser();
+    private String username ;
     private FirebaseAuth mAuth;
     private SharedPreferenceHelper mSharedPreferenceHelper;
 
+    public LoginActivity() {
+    }
 
 
     public static Intent createIntent(Context context) {
@@ -67,8 +82,9 @@ public class LoginActivity extends Activity {
         refresh_token = mSharedPreferenceHelper.getCurrentSpotifyToken();
         String token = CredentialsHandler.getAccessToken(this);
 
-        if (token==null||a==1) {
-            if(refresh_token==null||a==1) {
+
+        if (token==null || a==1) {
+            if(refresh_token==null || a==1) {
                 Log.i("Token State","Never logged in");
                 setContentView(R.layout.activity_login);
             }else{
@@ -113,7 +129,24 @@ public class LoginActivity extends Activity {
                         new refreshToAccess().execute().get();
                         CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
                         spotifyHandler = new SpotifyHandler(CredentialsHandler.getAccessToken(this),this);
-                        spotifyHandler.getMyUsername();
+                        spotifyHandler.createMainUser();
+                        /*dataHandler = new DataHandler();
+                        SpotifyApi api = new SpotifyApi();
+                        api.setAccessToken(CredentialsHandler.getAccessToken(this));
+                        SpotifyService service = api.getService();
+
+                        service.getMe(new SpotifyCallback<UserPrivate>() {
+                                          @Override
+                                          public void success(UserPrivate u, Response response) {
+                                              username=u.id;
+                                          }
+                                          @Override
+                                          public void failure(SpotifyError error) {
+                                              Log.i("Error", error.toString());
+                                          }
+                                      }
+
+                        );*/
                         startMainActivity(CredentialsHandler.getAccessToken(this),CredentialsHandler.getExpiresAt(this));
                     } catch (InterruptedException e) {
                         e.printStackTrace();

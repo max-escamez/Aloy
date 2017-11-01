@@ -1,5 +1,7 @@
 package com.aloy.aloy.Contracts;
 
+import android.content.Context;
+
 import com.aloy.aloy.Models.Question;
 
 /**
@@ -14,7 +16,7 @@ public interface AskContract {
     }
 
     interface Presenter {
-        void createQuestion(String body);
+        void createQuestion(String body, Context context);
 
     }
 }

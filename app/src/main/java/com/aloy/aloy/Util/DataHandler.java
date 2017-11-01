@@ -1,5 +1,6 @@
 package com.aloy.aloy.Util;
 
+import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,14 +20,13 @@ public class DataHandler {
         refQuestionFeed = database.getReference("questions");
         refUser = database.getReference("users");
 
-
     }
 
     public void saveQuestion(Question question) {
         refQuestionFeed.push().setValue(question);
     }
 
-    public void saveUser(String user){
+    public void saveUser(MainUser user){
         refUser.push().setValue(user);
 
     }
