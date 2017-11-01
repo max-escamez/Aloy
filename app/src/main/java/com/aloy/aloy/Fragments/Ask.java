@@ -58,7 +58,7 @@ public class Ask extends DialogFragment implements AskContract.View{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View askView = inflater.inflate(R.layout.fragment_ask, container, false);
-        askPresenter = new AskPresenter(this,MainActivity.getDataHandler(),MainActivity.getSpotifyHandler() );
+        askPresenter = new AskPresenter(this,MainActivity.getDataHandler(),MainActivity.getSpotifyHandler(),getContext());
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         askQuestionField = (EditText) askView.findViewById(R.id.askQuestionField);
@@ -69,7 +69,7 @@ public class Ask extends DialogFragment implements AskContract.View{
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     questionBody = askQuestionField.getText().toString();
-                    askPresenter.createQuestion(questionBody,getContext());
+                    askPresenter.createQuestion(questionBody);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         hideKeyboardFrom(getContext(),askView);
                     }
@@ -91,7 +91,7 @@ public class Ask extends DialogFragment implements AskContract.View{
             @Override
             public void onClick(View v) {
                 questionBody = askQuestionField.getText().toString();
-                askPresenter.createQuestion(questionBody,getContext());
+                askPresenter.createQuestion(questionBody);
                 hideAskQuestion();
             }
         });

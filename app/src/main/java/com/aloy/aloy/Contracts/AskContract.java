@@ -16,7 +16,7 @@ public interface AskContract {
     }
 
     interface Presenter {
-        void createQuestion(String body, Context context);
+        void createQuestion(String body);
 
     }
 }

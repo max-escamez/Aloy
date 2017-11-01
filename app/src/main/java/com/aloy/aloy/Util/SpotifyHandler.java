@@ -34,12 +34,12 @@ public class SpotifyHandler {
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
         this.service = api.getService();
-        dataHandler = new DataHandler();
+        dataHandler = new DataHandler(context);
     }
 
-    public SpotifyHandler(SpotifyService service) {
+    public SpotifyHandler(SpotifyService service, Context context) {
         this.service = service;
-        dataHandler = new DataHandler();
+        dataHandler = new DataHandler(context);
     }
 
     public void createMainUser() {
