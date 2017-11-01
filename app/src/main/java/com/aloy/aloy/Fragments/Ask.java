@@ -72,7 +72,7 @@ public class Ask extends DialogFragment implements AskContract.View{
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     questionBody = askQuestionField.getText().toString();
-                    askPresenter.createQuestion(questionBody);
+                    askPresenter.createQuestion(questionBody,getContext());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         hideKeyboardFrom(getContext(),askView);
                     }
@@ -94,7 +94,7 @@ public class Ask extends DialogFragment implements AskContract.View{
             @Override
             public void onClick(View v) {
                 questionBody = askQuestionField.getText().toString();
-                askPresenter.createQuestion(questionBody);
+                askPresenter.createQuestion(questionBody,getContext());
                 hideAskQuestion();
             }
         });

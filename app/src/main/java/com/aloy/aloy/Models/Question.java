@@ -9,15 +9,17 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 public class Question {
     private String username;
     private String body;
+    private String pic;
     private CircularImageView profilePicture;
 
     public Question() {
 
     }
 
-    public Question(String username, String body) {
+    public Question(String username, String body, String pic) {
         this.username = username;
         this.body = body;
+        this.pic = pic;
     }
 
     public String getBody(){
@@ -25,6 +27,8 @@ public class Question {
     }
 
     public String getUsername() {return username; }
+
+    public String getPic(){return pic;}
 
     public void setBody(String body) {
         this.body=body;

@@ -3,6 +3,7 @@ package com.aloy.aloy.Contracts;
 import android.content.Context;
 import android.view.View;
 
+
 import com.aloy.aloy.Models.Question;
 
 /**
@@ -19,6 +20,8 @@ public interface AskContract {
     }
 
     interface Presenter {
+
         void createQuestion(String body);
+
     }
 }

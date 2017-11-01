@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.CredentialsHandler;
+import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -55,6 +56,7 @@ public class Profile extends Fragment {
     private String image_url="";
     private String search_query;
     private EditText search_bar;
+    private SharedPreferenceHelper mSharedPreferenceHelper;
 
     public Profile(){
 
@@ -64,6 +66,7 @@ public class Profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View myInflatedView = inflater.inflate(R.layout.fragment_profile, container, false);
+        mSharedPreferenceHelper=new SharedPreferenceHelper(getContext());
         //Bundle args = getArguments();
         //String token = args.getString("token");
         String token = CredentialsHandler.getAccessToken(getContext());
@@ -79,7 +82,10 @@ public class Profile extends Fragment {
         search_bar = (EditText) myInflatedView.findViewById(R.id.search_bar);
         search_bar.setVisibility(View.VISIBLE);
 
-        spotify.getMe(new SpotifyCallback<UserPrivate>() {
+        username.setText(mSharedPreferenceHelper.getCurrentUserId());
+        Picasso.with(getContext()).load(mSharedPreferenceHelper.getProfilePicture()).into(profilePicture);
+
+        /*spotify.getMe(new SpotifyCallback<UserPrivate>() {
             @Override
             public void success(UserPrivate u, Response response) {
                 username.setText(u.id);
@@ -93,7 +99,7 @@ public class Profile extends Fragment {
                 Log.i("Error", error.toString());
             }
         });
-
+        */
         search_bar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -134,6 +140,7 @@ public class Profile extends Fragment {
                 return false;
             }
         });
+
 
 
 
