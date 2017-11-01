@@ -1,5 +1,8 @@
 package com.aloy.aloy.Contracts;
 
+import android.content.Context;
+import android.view.View;
+
 import com.aloy.aloy.Models.Question;
 
 /**
@@ -10,11 +13,12 @@ public interface AskContract {
 
     interface View  {
         void hideAskQuestion();
+        void showFind(String type);
+        void hideKeyboardFrom(Context context, android.view.View view);
 
     }
 
     interface Presenter {
         void createQuestion(String body);
-
     }
 }

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ public class Ask extends DialogFragment implements AskContract.View{
 
     private EditText askQuestionField;
     private Button submitButton;
+    private Button findTracks;
     private ImageButton close;
     private String questionBody;
     private AskContract.Presenter askPresenter;
@@ -49,7 +51,7 @@ public class Ask extends DialogFragment implements AskContract.View{
 
 
 
-    public static void hideKeyboardFrom(Context context, View view) {
+    public void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
@@ -64,6 +66,7 @@ public class Ask extends DialogFragment implements AskContract.View{
         askQuestionField = (EditText) askView.findViewById(R.id.askQuestionField);
         submitButton = (Button) askView.findViewById(R.id.submitQuestion);
         close = (ImageButton) askView.findViewById(R.id.closeButton);
+        findTracks = (Button) askView.findViewById(R.id.findTracks);
 
         askQuestionField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -96,6 +99,14 @@ public class Ask extends DialogFragment implements AskContract.View{
             }
         });
 
+        findTracks.setOnClickListener(new View.OnClickListener() {
+            String track = "track";
+            @Override
+            public void onClick(View v) {
+                showFind(track);
+            }
+        });
+
 
         return askView;
     }
@@ -107,4 +118,16 @@ public class Ask extends DialogFragment implements AskContract.View{
         this.dismiss();
 
     }
+
+    @Override
+    public void showFind(String type) {
+        FragmentManager fragmentManager = getFragmentManager();
+        Find findTracksDialog = new Find();
+        Bundle args = new Bundle();
+        args.putString("type", type);
+        findTracksDialog.setArguments(args);
+        findTracksDialog.show(fragmentManager,"find");
+    }
+
+
 }

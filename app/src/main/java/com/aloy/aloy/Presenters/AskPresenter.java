@@ -24,7 +24,7 @@ import retrofit.client.Response;
  */
 
 public class AskPresenter implements AskContract.Presenter {
-    
+
     private AskContract.View askView;
     private DataHandler dataHandler;
     private SpotifyHandler spotifyHandler;
