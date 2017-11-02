@@ -45,7 +45,8 @@ public class Search extends DialogFragment implements SearchContract.View {
     private String searchQuery;
     private Button validateSearch;
     private SearchAdapter searchAdapter;
-    private GridLayoutManager layoutManager;
+    private TextView tracksSelected;
+    private Ask callingFragment;
 
 
     public Search() {
@@ -64,6 +65,7 @@ public class Search extends DialogFragment implements SearchContract.View {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         validateSearch = (Button) searchView.findViewById(R.id.validateSearch);
         searchField = (EditText) searchView.findViewById(R.id.searchSpotify);
+        callingFragment = (Ask) getTargetFragment();
 
         Bundle args = getArguments();
         type = args.getString("type");
@@ -90,6 +92,7 @@ public class Search extends DialogFragment implements SearchContract.View {
         validateSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                callingFragment.setSelectedTracks(searchAdapter.getSelectedTracksCount());
                 hideSearch();
             }
         });
@@ -111,8 +114,9 @@ public class Search extends DialogFragment implements SearchContract.View {
         RecyclerView recyclerView = (RecyclerView) searchView.findViewById(R.id.searchGrid);
         int numberOfColumns = 3;
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
-        searchAdapter = new SearchAdapter(getContext(), searchPresenter, searchQuery);
+        searchAdapter = new SearchAdapter(searchView,getContext(), searchPresenter, searchQuery);
         recyclerView.setAdapter(searchAdapter);
+
 
     }
 

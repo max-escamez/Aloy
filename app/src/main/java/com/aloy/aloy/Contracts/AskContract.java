@@ -6,6 +6,8 @@ import android.view.View;
 
 import com.aloy.aloy.Models.Question;
 
+import java.util.ArrayList;
+
 /**
  * Created by tldonne on 29/10/2017.
  */
@@ -16,6 +18,7 @@ public interface AskContract {
         void hideAskQuestion();
         void showSearch(String type);
         void hideKeyboardFrom(Context context, android.view.View view);
+        void setSelectedTracks( ArrayList<Integer> selectedTracks);
 
     }
 

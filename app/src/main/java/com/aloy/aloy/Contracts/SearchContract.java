@@ -25,10 +25,12 @@ public interface SearchContract {
 
 
 
+
     }
 
     interface Presenter {
         void bindTrack(String query, SearchAdapter.ViewHolder holder,int position, Context context);
+        ArrayList<SearchResult> updateSelectedTracks (int position, android.view.View searchView, String query);
         int getCount();
 
 

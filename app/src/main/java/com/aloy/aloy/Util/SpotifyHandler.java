@@ -7,11 +7,14 @@ import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
+import com.aloy.aloy.Contracts.SearchContract;
 import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Models.SearchResult;
+import com.aloy.aloy.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,6 +25,8 @@ import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Track;
@@ -82,7 +87,6 @@ public class SpotifyHandler {
     }
 
     public void bindTrack(String query, final SearchAdapter.ViewHolder holder, final int position, final Context context) {
-        final ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
         service.searchTracks(query, new SpotifyCallback<TracksPager>() {
             @Override
             public void failure(SpotifyError spotifyError) {
@@ -93,22 +97,51 @@ public class SpotifyHandler {
                 Pager<Track> trackPager = p.tracks;
                 List<Track> trackList = trackPager.items;
                 Track song = trackList.get(position);
+                List<ArtistSimple> artists = song.artists;
+                ArtistSimple artist = artists.get(0);
                 AlbumSimple album = song.album;
                 List<Image> imageList = album.images;
                 String image_url = imageList.get(0).url;
                 //Picasso.with(getContext()).load(image_url).into(cover);
                 //link = song.uri;
-                SearchResult result = new SearchResult(image_url,song.name,album.name);
+                SearchResult result = new SearchResult(image_url,song.name,artist.name);
                 holder.primaryText.setText(result.getPrimaryText());
                 holder.secondaryText.setText(result.getSecondaryText());
                 Picasso.with(context).load(image_url).into(holder.cover);
 
+            }
+
+        });
+    }
+
+    public void updateSelectedTracks(final int position, final ArrayList<SearchResult> searchResults, final String query, final View searchView) {
+        service.searchTracks(query, new SpotifyCallback<TracksPager>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Tracks", "Could not get tracks");
+            }
+            @Override
+            public void success(TracksPager p, Response response) {
+                Pager<Track> trackPager = p.tracks;
+                List<Track> trackList = trackPager.items;
+                Track song = trackList.get(position);
+                List<ArtistSimple> artists = song.artists;
+                ArtistSimple artist = artists.get(0);
+                AlbumSimple album = song.album;
+                List<Image> imageList = album.images;
+                String image_url = imageList.get(0).url;
+                //Picasso.with(getContext()).load(image_url).into(cover);
+                //link = song.uri;
+                SearchResult result = new SearchResult(image_url,song.name,artist.name);
+                searchResults.add(result);
+                TextView tracksSelected = (TextView) searchView.findViewById(R.id.elementsSelected);
+                tracksSelected.setText(searchResults.size() + " tracks selected");
 
 
             }
 
         });
-        //System.out.println(" +++++++++++++++++ : " +searchResults.get(1).getPrimaryText());
+        System.out.println(searchResults);
 
     }
 

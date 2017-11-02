@@ -4,6 +4,7 @@ package com.aloy.aloy.Fragments;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;;
 import android.content.Context;
 import android.os.Build;
@@ -27,6 +28,8 @@ import com.aloy.aloy.Presenters.AskPresenter;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -38,6 +41,8 @@ public class Ask extends DialogFragment implements AskContract.View{
     private ImageButton close;
     private String questionBody;
     private AskContract.Presenter askPresenter;
+    private TextView tracksSelectedTextView;
+    private ArrayList<Integer> tracksSelected;
     private DataHandler dataHandler;
 
 
@@ -53,6 +58,14 @@ public class Ask extends DialogFragment implements AskContract.View{
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    @Override
+    public void setSelectedTracks(ArrayList<Integer> selectedTracks) {
+        tracksSelectedTextView.setText(selectedTracks.size() + " tracks selected");
+        tracksSelected=selectedTracks;
+    }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,6 +77,8 @@ public class Ask extends DialogFragment implements AskContract.View{
         submitButton = (Button) askView.findViewById(R.id.submitQuestion);
         close = (ImageButton) askView.findViewById(R.id.closeButton);
         searchTracks = (Button) askView.findViewById(R.id.findTracks);
+        tracksSelectedTextView = (TextView) askView.findViewById(R.id.tracksSelected);
+
 
         askQuestionField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -120,6 +135,7 @@ public class Ask extends DialogFragment implements AskContract.View{
     public void showSearch(String type) {
         FragmentManager fragmentManager = getFragmentManager();
         Search searchTracksDialog = new Search();
+        searchTracksDialog.setTargetFragment(this,0);
         Bundle args = new Bundle();
         args.putString("type", type);
         searchTracksDialog.setArguments(args);

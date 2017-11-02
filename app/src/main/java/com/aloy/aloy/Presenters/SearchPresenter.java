@@ -2,6 +2,7 @@ package com.aloy.aloy.Presenters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
@@ -32,6 +33,15 @@ public class SearchPresenter implements SearchContract.Presenter {
     public void bindTrack(String query, SearchAdapter.ViewHolder holder, int position, Context context) {
         spotifyHandler.bindTrack(query,holder,position,context);
     }
+
+
+    @Override
+    public ArrayList<SearchResult> updateSelectedTracks(int position, View searchView, String query) {
+        ArrayList<SearchResult> searchResults = new ArrayList<>(getCount());
+        spotifyHandler.updateSelectedTracks(position,searchResults,query, searchView);
+        return searchResults;
+    }
+
 
     @Override
     public int getCount() {
