@@ -108,6 +108,7 @@ public class Profile extends Fragment {
                     SpotifyApi api = new SpotifyApi();
                     api.setAccessToken(CredentialsHandler.getAccessToken(getContext()));
                     SpotifyService spotify = api.getService();
+
                     spotify.searchTracks(search_query, new SpotifyCallback<TracksPager>() {
                         @Override
                         public void failure(SpotifyError spotifyError) {
