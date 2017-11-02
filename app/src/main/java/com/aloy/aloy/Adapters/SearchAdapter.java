@@ -10,7 +10,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aloy.aloy.Models.SearchResult;
+import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.SpotifyHandler;
+
+import java.util.ArrayList;
 
 /**
  * Created by tldonne on 02/11/2017.
@@ -19,13 +24,20 @@ import com.aloy.aloy.R;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     private String[] mData = new String[0];
+    private ArrayList<SearchResult> searchResults;
     private LayoutInflater mInflater;
+    private SearchPresenter searchPresenter;
+    private String searchQuery;
+    private Context context;
 
     // data is passed into the constructor
-    public SearchAdapter(Context context, String[] data) {
+    public SearchAdapter(Context context, SearchPresenter searchPresenter, String query) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData = data;
+        this.searchPresenter=searchPresenter;
+        this.searchQuery=query;
+        this.context=context;
     }
+
 
     // inflates the cell layout from xml when needed
     @Override
@@ -37,22 +49,22 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     // binds the data to the textview in each cell
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData[position];
-        holder.primaryText.setText(animal);
+        searchPresenter.bindTrack(searchQuery,holder,position,context);
     }
 
     // total number of cells
     @Override
     public int getItemCount() {
-        return mData.length;
+        return searchPresenter.getCount();
+        //return searchResults.size();
     }
 
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView primaryText;
-        TextView secondaryText;
-        ImageView cover;
+        public TextView primaryText;
+        public TextView secondaryText;
+        public ImageView cover;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -68,14 +80,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         }
     }
 
-    // convenience method for getting data at click position
-    String getItem(int id) {
-        return mData[id];
-    }
+    
 
     // Method that executes your code for the action received
     public void onItemClick(View view, int position) {
-        Log.i("TAG", "You clicked number " + getItem(position).toString() + ", which is at cell position " + position);
+        Log.i("TAG", "You clicked number " +  position);
     }
 
 

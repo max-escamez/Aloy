@@ -17,6 +17,7 @@
         android:layout_marginStart="64dp"
         android:layout_marginTop="8dp"
         android:ems="10"
+        android:imeOptions="actionDone"
         android:hint="Browse Spotify"
         android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/searchGrid"
