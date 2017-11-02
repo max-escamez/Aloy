@@ -38,7 +38,7 @@ public class SearchPresenter implements SearchContract.Presenter {
     @Override
     public ArrayList<SearchResult> updateSelectedTracks(int position, View searchView, String query) {
         ArrayList<SearchResult> searchResults = new ArrayList<>(getCount());
-        spotifyHandler.updateSelectedTracks(position,searchResults,query, searchView);
+        //spotifyHandler.updateSelectedTracks(position,searchResults,query, searchView);
         return searchResults;
     }
 

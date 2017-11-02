@@ -18,12 +18,13 @@ public interface AskContract {
         void hideAskQuestion();
         void showSearch(String type);
         void hideKeyboardFrom(Context context, android.view.View view);
-        void setSelectedTracks( ArrayList<Integer> selectedTracks);
+        void setSelectedTracks( ArrayList<Integer> selectedTracks, String searchQuery);
 
     }
 
     interface Presenter {
         void createQuestion(String body);
+        void createQuestion(String body,ArrayList<Integer> tracksSelected,String tracksQuery);
 
     }
 }

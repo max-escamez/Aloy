@@ -92,7 +92,7 @@ public class Search extends DialogFragment implements SearchContract.View {
         validateSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callingFragment.setSelectedTracks(searchAdapter.getSelectedTracksCount());
+                callingFragment.setSelectedTracks(searchAdapter.getSelectedTracksCount(),searchQuery);
                 hideSearch();
             }
         });

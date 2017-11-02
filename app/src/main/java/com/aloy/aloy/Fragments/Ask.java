@@ -44,6 +44,7 @@ public class Ask extends DialogFragment implements AskContract.View{
     private TextView tracksSelectedTextView;
     private ArrayList<Integer> tracksSelected;
     private DataHandler dataHandler;
+    private String tracksQuery;
 
 
 
@@ -59,9 +60,10 @@ public class Ask extends DialogFragment implements AskContract.View{
     }
 
     @Override
-    public void setSelectedTracks(ArrayList<Integer> selectedTracks) {
+    public void setSelectedTracks(ArrayList<Integer> selectedTracks, String searchQuery) {
         tracksSelectedTextView.setText(selectedTracks.size() + " tracks selected");
         tracksSelected=selectedTracks;
+        tracksQuery=searchQuery;
     }
 
 
@@ -80,11 +82,11 @@ public class Ask extends DialogFragment implements AskContract.View{
         tracksSelectedTextView = (TextView) askView.findViewById(R.id.tracksSelected);
 
 
-        askQuestionField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        /*askQuestionField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     questionBody = askQuestionField.getText().toString();
-                    askPresenter.createQuestion(questionBody);
+                    askPresenter.createQuestion(questionBody,tracksSelected);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         hideKeyboardFrom(getContext(),askView);
                     }
@@ -93,7 +95,7 @@ public class Ask extends DialogFragment implements AskContract.View{
                 }
                 return false;
             }
-        });
+        });*/
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +108,7 @@ public class Ask extends DialogFragment implements AskContract.View{
             @Override
             public void onClick(View v) {
                 questionBody = askQuestionField.getText().toString();
-                askPresenter.createQuestion(questionBody);
+                askPresenter.createQuestion(questionBody,tracksSelected,tracksQuery);
                 hideAskQuestion();
             }
         });
