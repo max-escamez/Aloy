@@ -22,13 +22,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.aloy.aloy.Contracts.AskContract;
-import com.aloy.aloy.Contracts.FeedContract;
 import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Presenters.AskPresenter;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,7 +34,7 @@ public class Ask extends DialogFragment implements AskContract.View{
 
     private EditText askQuestionField;
     private Button submitButton;
-    private Button findTracks;
+    private Button searchTracks;
     private ImageButton close;
     private String questionBody;
     private AskContract.Presenter askPresenter;
@@ -66,7 +63,7 @@ public class Ask extends DialogFragment implements AskContract.View{
         askQuestionField = (EditText) askView.findViewById(R.id.askQuestionField);
         submitButton = (Button) askView.findViewById(R.id.submitQuestion);
         close = (ImageButton) askView.findViewById(R.id.closeButton);
-        findTracks = (Button) askView.findViewById(R.id.findTracks);
+        searchTracks = (Button) askView.findViewById(R.id.findTracks);
 
         askQuestionField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -99,11 +96,11 @@ public class Ask extends DialogFragment implements AskContract.View{
             }
         });
 
-        findTracks.setOnClickListener(new View.OnClickListener() {
+        searchTracks.setOnClickListener(new View.OnClickListener() {
             String track = "track";
             @Override
             public void onClick(View v) {
-                showFind(track);
+                showSearch(track);
             }
         });
 
@@ -120,13 +117,13 @@ public class Ask extends DialogFragment implements AskContract.View{
     }
 
     @Override
-    public void showFind(String type) {
+    public void showSearch(String type) {
         FragmentManager fragmentManager = getFragmentManager();
-        Find findTracksDialog = new Find();
+        Search searchTracksDialog = new Search();
         Bundle args = new Bundle();
         args.putString("type", type);
-        findTracksDialog.setArguments(args);
-        findTracksDialog.show(fragmentManager,"find");
+        searchTracksDialog.setArguments(args);
+        searchTracksDialog.show(fragmentManager,"search");
     }
 
 

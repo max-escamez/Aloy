@@ -14,7 +14,7 @@ public interface AskContract {
 
     interface View  {
         void hideAskQuestion();
-        void showFind(String type);
+        void showSearch(String type);
         void hideKeyboardFrom(Context context, android.view.View view);
 
     }
