@@ -23,8 +23,9 @@ public interface AskContract {
     }
 
     interface Presenter {
-        void createQuestion(String body);
         void createQuestion(String body,ArrayList<Integer> tracksSelected,String tracksQuery);
+
+        void createAnswer(String body, String questionID);
 
     }
 }

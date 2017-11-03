@@ -47,7 +47,7 @@ public class SpotifyHandler {
     SharedPreferenceHelper sharedPreferenceHelper;
 
 
-    public SpotifyHandler(String token, Context context){
+    public SpotifyHandler(String token, Context context) {
         sharedPreferenceHelper = new SharedPreferenceHelper(context);
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
@@ -60,31 +60,39 @@ public class SpotifyHandler {
         dataHandler = new DataHandler(context);
     }
 
-    public void createMainUser() {
+
+    public void getMyInfo() {
         service.getMe(new SpotifyCallback<UserPrivate>() {
             @Override
             public void success(UserPrivate u, Response response) {
                 sharedPreferenceHelper.saveCurrentUserId(u.id);
                 sharedPreferenceHelper.saveProfilePicture(u.images.get(0).url);
-                mainUser = new MainUser(u.id, u.images.get(0).url);
-                dataHandler.saveUser(mainUser);
             }
+
             @Override
             public void failure(SpotifyError error) {
                 Log.i("Error", error.toString());
             }
 
         });
-
     }
 
-    public void setUsername(String arg) {
-        username = arg;
+    public void createMainUser() {
+        service.getMe(new SpotifyCallback<UserPrivate>() {
+            @Override
+            public void success(UserPrivate u, Response response) {
+                mainUser = new MainUser(u.id, u.images.get(0).url);
+                dataHandler.saveUser(mainUser);
+            }
+
+            @Override
+            public void failure(SpotifyError error) {
+                Log.i("Error", error.toString());
+            }
+
+        });
     }
 
-    public String getUsername() {
-        return username;
-    }
 
     public void bindTrack(String query, final SearchAdapter.ViewHolder holder, final int position, final Context context) {
         service.searchTracks(query, new SpotifyCallback<TracksPager>() {
@@ -92,6 +100,7 @@ public class SpotifyHandler {
             public void failure(SpotifyError spotifyError) {
                 Log.e("Tracks", "Could not get tracks");
             }
+
             @Override
             public void success(TracksPager p, Response response) {
                 Pager<Track> trackPager = p.tracks;
@@ -104,7 +113,7 @@ public class SpotifyHandler {
                 String image_url = imageList.get(0).url;
                 //Picasso.with(getContext()).load(image_url).into(cover);
                 //link = song.uri;
-                SearchResult result = new SearchResult(image_url,song.name,artist.name);
+                SearchResult result = new SearchResult(image_url, song.name, artist.name);
                 holder.primaryText.setText(result.getPrimaryText());
                 holder.secondaryText.setText(result.getSecondaryText());
                 Picasso.with(context).load(image_url).into(holder.cover);
@@ -120,22 +129,23 @@ public class SpotifyHandler {
             public void failure(SpotifyError spotifyError) {
                 Log.e("Tracks", "Could not get tracks");
             }
+
             @Override
             public void success(TracksPager p, Response response) {
-                Question newQuestion = new Question(uid,body,profilePic);
+                Question newQuestion = new Question(uid, body, profilePic);
                 System.out.println("++++++++++++++" + tracksSelected.size());
 
 
                 Pager<Track> trackPager = p.tracks;
                 List<Track> trackList = trackPager.items;
-                for (int i = 0; i<tracksSelected.size();i++) {
+                for (int i = 0; i < tracksSelected.size(); i++) {
                     Track song = trackList.get(i);
                     List<ArtistSimple> artists = song.artists;
                     ArtistSimple artist = artists.get(0);
                     AlbumSimple album = song.album;
                     List<Image> imageList = album.images;
                     String image_url = imageList.get(0).url;
-                    SearchResult result = new SearchResult(image_url,song.name,artist.name);
+                    SearchResult result = new SearchResult(image_url, song.name, artist.name);
                     newQuestion.addTrack(result);
                 }
 
@@ -156,6 +166,7 @@ public class SpotifyHandler {
             public void failure(SpotifyError spotifyError) {
                 Log.e("Tracks", "Could not get tracks");
             }
+
             @Override
             public void success(TracksPager p, Response response) {
                 //Question newQuestion = new Question(uid,body,profilePic);
@@ -186,6 +197,8 @@ public class SpotifyHandler {
 
 
     }
+
+}
 
 
 
@@ -219,24 +232,5 @@ public class SpotifyHandler {
         System.out.println(searchResults);
 
     }*/
+    /*public void createQuestion(final String body) {*/
 
-
-    /*public void createQuestion(final String body) {
-
-
-        service.getMe(new SpotifyCallback<UserPrivate>() {
-                          @Override
-                          public void success(UserPrivate u, Response response) {
-                              Question question = new Question(u.id,body);
-                              dataHandler.saveQuestion(question);
-                          }
-                          @Override
-                          public void failure(SpotifyError error) {
-                              Log.i("Error", error.toString());
-                          }
-                      }
-        );
-
-    }*/
-
-}

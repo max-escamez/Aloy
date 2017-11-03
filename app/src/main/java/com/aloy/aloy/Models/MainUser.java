@@ -6,7 +6,6 @@ package com.aloy.aloy.Models;
 
 public class MainUser {
 
-    private String username;
     private String pic;
 
 
@@ -15,17 +14,9 @@ public class MainUser {
     }
 
     public MainUser(String username, String pic) {
-        this.username=username;
         this.pic=pic;
     }
 
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username=username;
-    }
 
     public String getPic() {
         return this.pic;
