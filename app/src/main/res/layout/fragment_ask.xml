@@ -11,18 +11,13 @@
         android:id="@+id/askQuestionField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="369dp"
-        android:layout_marginEnd="71dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="@string/askHint"
         android:imeOptions="actionDone"
         android:inputType="text"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/submitQuestion"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.296"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,6 +44,34 @@
         android:text="@string/submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/findTracks"
+        android:layout_width="96dp"
+        android:layout_height="37dp"
+        android:layout_marginBottom="200dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="57dp"
+        android:layout_marginTop="76dp"
+        android:background="@color/accent_material_dark_Aloy"
+        android:text="Find Tracks"
+        app:layout_constraintBottom_toTopOf="@+id/submitQuestion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/tracksSelected"
+        app:layout_constraintTop_toBottomOf="@+id/askQuestionField"
+        app:layout_constraintVertical_bias="0.038" />
+
+    <TextView
+        android:id="@+id/tracksSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="88dp"
+        android:text="X Tracks Selected"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/askQuestionField" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyCallback;
@@ -28,7 +29,7 @@ import retrofit.client.Response;
  */
 
 public class AskPresenter implements AskContract.Presenter {
-    
+
     private AskContract.View askView;
     private DataHandler dataHandler;
     private SpotifyHandler spotifyHandler;
@@ -41,15 +42,16 @@ public class AskPresenter implements AskContract.Presenter {
         this.askView = askView;
     }
 
-    @Override
-    public void createQuestion(String body) {
-        Question newQuestion = new Question(sharedPreferenceHelper.getCurrentUserId(),body,sharedPreferenceHelper.getProfilePicture());
-        dataHandler.saveQuestion(newQuestion);
-    }
 
     @Override
     public void createAnswer(String body, String questionID) {
         Answer newAnswer = new Answer(sharedPreferenceHelper.getCurrentUserId(),body,sharedPreferenceHelper.getProfilePicture());
         dataHandler.saveAnswer(newAnswer, questionID);
     }
+    @Override
+    public void createQuestion(String body, ArrayList<Integer> tracksSelected, String tracksQuery) {
+        spotifyHandler.createQuestion(sharedPreferenceHelper.getCurrentUserId(),body,sharedPreferenceHelper.getProfilePicture(),tracksSelected,tracksQuery);
+    }
+
+
 }
