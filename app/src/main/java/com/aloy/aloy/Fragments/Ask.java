@@ -4,18 +4,14 @@ package com.aloy.aloy.Fragments;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +25,9 @@ import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import kaaes.spotify.webapi.android.models.Track;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,9 +45,8 @@ public class Ask extends DialogFragment implements AskContract.View{
     private TextView tracksSelectedTextView;
     private TextView artistsSelectedTextView;
     private TextView albumsSelectedTextView;
-    private ArrayList<Integer> tracksSelected;
-    private DataHandler dataHandler;
     private String tracksQuery;
+    private HashMap tracksSelected;
 
 
 
@@ -64,13 +62,24 @@ public class Ask extends DialogFragment implements AskContract.View{
     }
 
     @Override
-    public void setSelectedTracks(ArrayList<Integer> selectedTracks, String searchQuery) {
-        tracksSelectedTextView.setText(selectedTracks.size() + " tracks selected");
-        tracksSelected=selectedTracks;
-        tracksQuery=searchQuery;
+    public void update() {
+        tracksSelectedTextView.setText(tracksSelected.size() + " Tracks Selected");
     }
 
+    @Override
+    public void addTrack(Track track) {
+        tracksSelected.put(track.id,track);
+    }
 
+    @Override
+    public void removeTrack(Track track) {
+        tracksSelected.remove(track.id);
+    }
+
+    @Override
+    public HashMap getTracks(){
+        return this.tracksSelected;
+    }
 
 
     @Override
@@ -88,21 +97,8 @@ public class Ask extends DialogFragment implements AskContract.View{
         albumsSelectedTextView = (TextView) askView.findViewById(R.id.albumsSelected);
         searchArtists = (Button) askView.findViewById(R.id.findArtists);
         artistsSelectedTextView = (TextView) askView.findViewById(R.id.artistsSelected);
+        tracksSelected = new HashMap(5);
 
-        /*askQuestionField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    questionBody = askQuestionField.getText().toString();
-                    askPresenter.createQuestion(questionBody,tracksSelected);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        hideKeyboardFrom(getContext(),askView);
-                    }
-                    hideAskQuestion();
-                    return true;
-                }
-                return false;
-            }
-        });*/
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +111,7 @@ public class Ask extends DialogFragment implements AskContract.View{
             @Override
             public void onClick(View v) {
                 questionBody = askQuestionField.getText().toString();
-                askPresenter.createQuestion(questionBody,tracksSelected,tracksQuery);
+                askPresenter.createQuestion(questionBody,tracksSelected);
                 hideAskQuestion();
             }
         });

@@ -36,20 +36,18 @@ public class SearchPresenter implements SearchContract.Presenter {
 
 
     @Override
-    public ArrayList<SearchResult> updateSelectedTracks(int position, View searchView, String query) {
-        ArrayList<SearchResult> searchResults = new ArrayList<>(getCount());
-        //spotifyHandler.updateSelectedTracks(position,searchResults,query, searchView);
-        return searchResults;
-    }
-
-
-    @Override
     public int getCount() {
         return 15;
     }
 
     @Override
     public void addTrack(int position, String query) {
-        spotifyHandler.addTrack(position,query);
+        spotifyHandler.addTrack(position,query,searchView,true);
+
+    }
+
+    @Override
+    public  void removeTrack(int position, String query) {
+        spotifyHandler.addTrack(position,query,searchView,false);
     }
 }

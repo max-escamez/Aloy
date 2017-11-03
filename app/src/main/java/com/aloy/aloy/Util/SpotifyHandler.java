@@ -123,73 +123,26 @@ public class SpotifyHandler {
         });
     }
 
-    public void createQuestion(final String uid, final String body, final String profilePic, final ArrayList<Integer> tracksSelected, String tracksQuery) {
-        service.searchTracks(tracksQuery, new SpotifyCallback<TracksPager>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Tracks", "Could not get tracks");
-            }
 
-            @Override
-            public void success(TracksPager p, Response response) {
-                Question newQuestion = new Question(uid, body, profilePic);
-                System.out.println("++++++++++++++" + tracksSelected.size());
-
-
-                Pager<Track> trackPager = p.tracks;
-                List<Track> trackList = trackPager.items;
-                for (int i = 0; i < tracksSelected.size(); i++) {
-                    Track song = trackList.get(i);
-                    List<ArtistSimple> artists = song.artists;
-                    ArtistSimple artist = artists.get(0);
-                    AlbumSimple album = song.album;
-                    List<Image> imageList = album.images;
-                    String image_url = imageList.get(0).url;
-                    SearchResult result = new SearchResult(image_url, song.name, artist.name);
-                    newQuestion.addTrack(result);
-                }
-
-                //Picasso.with(getContext()).load(image_url).into(cover);
-                //link = song.uri;
-                System.out.println("++++++++++++++" + newQuestion.getTracksNb());
-                dataHandler.saveQuestion(newQuestion);
-
-            }
-
-        });
-
-    }
-
-    public void addTrack(int position, String query) {
+    public void addTrack(final int position, String query, final SearchContract.View searchView, final boolean add) {
         service.searchTracks(query, new SpotifyCallback<TracksPager>() {
             @Override
             public void failure(SpotifyError spotifyError) {
                 Log.e("Tracks", "Could not get tracks");
             }
-
             @Override
             public void success(TracksPager p, Response response) {
                 //Question newQuestion = new Question(uid,body,profilePic);
                 //System.out.println("++++++++++++++" + tracksSelected.size());
-
-
-                /*Pager<Track> trackPager = p.tracks;
+                Pager<Track> trackPager = p.tracks;
                 List<Track> trackList = trackPager.items;
-                for (int i = 0; i<tracksSelected.size();i++) {
-                    Track song = trackList.get(i);
-                    List<ArtistSimple> artists = song.artists;
-                    ArtistSimple artist = artists.get(0);
-                    AlbumSimple album = song.album;
-                    List<Image> imageList = album.images;
-                    String image_url = imageList.get(0).url;
-                    SearchResult result = new SearchResult(image_url,song.name,artist.name);
-                    newQuestion.addTrack(result);
+                Track song = trackList.get(position);
+                if (add == true ) {
+                    searchView.addTrack(song);
                 }
+                else
+                    searchView.removeTrack(song);
 
-                //Picasso.with(getContext()).load(image_url).into(cover);
-                //link = song.uri;
-                System.out.println("++++++++++++++" + newQuestion.getTracksNb());
-                dataHandler.saveQuestion(newQuestion);*/
 
             }
 
@@ -201,36 +154,4 @@ public class SpotifyHandler {
 }
 
 
-
-    /*public void updateSelectedTracks(final int position, final ArrayList<SearchResult> searchResults, final String query, final View searchView) {
-        service.searchTracks(query, new SpotifyCallback<TracksPager>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Tracks", "Could not get tracks");
-            }
-            @Override
-            public void success(TracksPager p, Response response) {
-                Pager<Track> trackPager = p.tracks;
-                List<Track> trackList = trackPager.items;
-                Track song = trackList.get(position);
-                List<ArtistSimple> artists = song.artists;
-                ArtistSimple artist = artists.get(0);
-                AlbumSimple album = song.album;
-                List<Image> imageList = album.images;
-                String image_url = imageList.get(0).url;
-                //Picasso.with(getContext()).load(image_url).into(cover);
-                //link = song.uri;
-                SearchResult result = new SearchResult(image_url,song.name,artist.name);
-                searchResults.add(result);
-                TextView tracksSelected = (TextView) searchView.findViewById(R.id.elementsSelected);
-                tracksSelected.setText(searchResults.size() + " tracks selected");
-
-
-            }
-
-        });
-        System.out.println(searchResults);
-
-    }*/
-    /*public void createQuestion(final String body) {*/
 

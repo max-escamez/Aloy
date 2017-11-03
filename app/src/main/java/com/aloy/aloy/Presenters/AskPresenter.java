@@ -16,11 +16,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.models.Image;
+import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.UserPrivate;
 import retrofit.client.Response;
 
@@ -49,8 +51,9 @@ public class AskPresenter implements AskContract.Presenter {
         dataHandler.saveAnswer(newAnswer, questionID);
     }
     @Override
-    public void createQuestion(String body, ArrayList<Integer> tracksSelected, String tracksQuery) {
-        spotifyHandler.createQuestion(sharedPreferenceHelper.getCurrentUserId(),body,sharedPreferenceHelper.getProfilePicture(),tracksSelected,tracksQuery);
+    public void createQuestion(String body, HashMap<String,Track> tracksSelected) {
+        Question newQuestion = new Question(sharedPreferenceHelper.getCurrentUserId(),sharedPreferenceHelper.getProfilePicture(),body);
+        dataHandler.saveQuestion(newQuestion,tracksSelected);
     }
 
 

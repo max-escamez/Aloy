@@ -36,6 +36,8 @@ import com.aloy.aloy.R;
 
 import java.util.ArrayList;
 
+import kaaes.spotify.webapi.android.models.Track;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -81,7 +83,10 @@ public class Search extends DialogFragment implements SearchContract.View {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         validateSearch = (Button) searchView.findViewById(R.id.validateSearch);
         searchField = (EditText) searchView.findViewById(R.id.searchSpotify);
+        tracksSelected = (TextView) searchView.findViewById(R.id.elementsSelected);
+
         callingFragment = (Ask) getTargetFragment();
+
 
         Bundle args = getArguments();
         type = args.getString("type");
@@ -103,20 +108,27 @@ public class Search extends DialogFragment implements SearchContract.View {
                         return false;
                     }
                 });
+                break;
+            case "artist":
+
+                break;
+            case "album":
+
+                break;
         }
+
 
         validateSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (searchTrack==true)
-                    callingFragment.setSelectedTracks(searchAdapter.getSelectedTracksCount(),searchQuery);
+                    callingFragment.update();
                 hideSearch();
             }
         });
 
 
         return searchView;
-
     }
 
     @Override
@@ -142,17 +154,23 @@ public class Search extends DialogFragment implements SearchContract.View {
 
     }
 
-    /*@Override
-    public void setupRecyclerView(View searchView) {
-        String[] data = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48"};
-        int numberOfColumns = 3;
-        RecyclerView recyclerView = (RecyclerView) searchView.findViewById(R.id.searchGrid);
-        searchAdapter = new SearchAdapter(getContext(), data);
-        layoutManager = new GridLayoutManager(getContext(), numberOfColumns);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(searchAdapter);
+    @Override
+    public void addTrack(Track track) {
+        System.out.println("add : " +track.id);
+        callingFragment.addTrack(track);
+        tracksSelected.setText(callingFragment.getTracks().size() + "Tracks Selected");
+    }
 
-    }*/
+    @Override
+    public void removeTrack(Track track){
+        System.out.println("remove : " +track.id);
+        callingFragment.removeTrack(track);
+        tracksSelected.setText(callingFragment.getTracks().size() + "Tracks Selected");
+
+    }
+
+
+
 
 
 
