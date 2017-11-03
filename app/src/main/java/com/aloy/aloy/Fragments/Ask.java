@@ -96,7 +96,6 @@ public class Ask extends DialogFragment implements AskContract.View{
             }
         });
 
-
         return askView;
     }
 

@@ -18,5 +18,7 @@ public interface AskContract {
     interface Presenter {
         void createQuestion(String body);
 
+        void createAnswer(String body, String questionID);
+
     }
 }

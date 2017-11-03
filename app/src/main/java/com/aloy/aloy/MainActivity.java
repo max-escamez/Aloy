@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.os.Bundle;
@@ -17,6 +18,11 @@ import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.NoSwipePager;
 import com.aloy.aloy.Util.SpotifyHandler;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     static final String EXTRA_EXPIRES_AT = "EXTRA_EXPIRES_AT";
+    private static final String TAG = LoginActivity.class.getSimpleName();
     static final int profileTabId = 3;
     private static DataHandler dataHandler;
     private static SpotifyHandler spotifyHandler;
@@ -57,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private int previousTab;
     public static SpotifyService service;
     private static boolean countdownIsRunning;
-
+    private FirebaseAuth mAuth;
 
 
     public static Intent createIntent(Context context) {
@@ -133,47 +140,6 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        /*
-        //Search ONLY by tracks
-        spotify.searchTracks("Darius rucker true believers",new SpotifyCallback<TracksPager>(){
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Tracks", "Could not get tracks");
-            }
-            @Override
-            public void success(TracksPager p, Response response) {
-                Log.i("Search by tracks","Wagon Wheel");
-                Log.i("","\n");
-
-                Pager<Track> trackPager = p.tracks;
-                List<Track> trackList = trackPager.items;
-                Log.i("Number of results",""+trackPager.total);
-                //Log.i("previous",trackPager.previous);
-                Log.i("next",trackPager.next);
-                Log.i("Limit",""+trackPager.limit);
-                Log.i("","\n");
-                for(Track song : trackList){
-                    Log.i("Track", song.name);
-                    List<ArtistSimple> artistList = song.artists;
-                    AlbumSimple album = song.album;
-                    List<Image> imageList = album.images;
-                    for(ArtistSimple artist : artistList){
-                        Log.i("Artist",artist.name);
-                    }
-                    Log.i("Album",album.name);
-                    for(Image image : imageList){
-                        Log.i("Album Cover",image.url);
-                    }
-                    Log.i("Popularity", ""+song.popularity);
-                    Log.i("Type", song.type);
-                    Log.i("Uri", song.uri);
-                    Log.i("href", song.href);
-                    Log.i("","\n");
-                }
-                Log.i("","\n");
-            }
-        });*/
-
         if(!countdownIsRunning) {
             new CountDownTimer(expiresAt-System.currentTimeMillis()-30000, 1000) {
 
@@ -185,9 +151,21 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("Token", "Refresh");
                     try {
                         new LoginActivity.refreshToAccess().execute().get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
+                        /*mAuth.signInWithCustomToken(LoginActivity.firebase_token)
+                                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            Log.d("", "signInWithCustomToken:success");
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                        } else {
+                                            // If sign in fails, display a message to the user.
+                                            Log.w("", "signInWithCustomToken:failure", task.getException());
+                                        }
+                                    }
+                                });*/
+
+                    } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
                     CredentialsHandler.setAccessToken(getApplicationContext(), LoginActivity.access_token, 3600, TimeUnit.SECONDS);
@@ -196,182 +174,6 @@ public class MainActivity extends AppCompatActivity {
             }.start();
             countdownIsRunning = true;
         }
-
-        /*
-        //Search ONLY by artists
-        spotify.searchArtists("Bad Company",new SpotifyCallback<ArtistsPager>(){
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Artists", "Could not get playlists");
-            }
-            @Override
-            public void success(ArtistsPager p, Response response) {
-                Log.i("Search by artists","Darius Rucker");
-                Log.i("","\n");
-                Pager<Artist> artistPager = p.artists;
-                List<Artist> artistList = artistPager.items;
-                Log.i("Number of results",""+artistPager.total);
-                //Log.i("previous",artistPager.previous);
-                //Log.i("next",artistPager.next);
-                Log.i("Limit",""+artistPager.limit);
-                Log.i("","\n");
-                for(Artist artist : artistList){
-                    List<String> genresList = artist.genres;
-                    List<Image> imageList = artist.images;
-                    Log.i("Artist", artist.name);
-                    for(String genre :genresList){
-                        Log.i("Genre",genre);
-                    }
-                    for(Image image : imageList){
-                        Log.i("Image",image.url);
-                    }
-                    Log.i("Type", artist.type);
-                    Log.i("Popularity", ""+artist.popularity);
-                    Log.i("Uri", artist.uri);
-                    Log.i("href", artist.href);
-                    Log.i("","\n");
-                }
-                Log.i("","\n");
-
-            }
-        });
-
-
-        //Search ONLY by Albums
-        spotify.searchAlbums("Bad Company",new SpotifyCallback<AlbumsPager>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Albums", "Could not get albums");
-            }
-            @Override
-            public void success(AlbumsPager p, Response response) {
-                Log.i("Search by albums","Division Bell");
-                Log.i("","\n");
-                Pager<AlbumSimple> albumPager = p.albums;
-                List<AlbumSimple> albumList = albumPager.items;
-                Log.i("Number of results",""+albumPager.total);
-                //Log.i("previous",albumPager.previous);
-                //Log.i("next",albumPager.next);
-                Log.i("Limit",""+albumPager.limit);
-                Log.i("","\n");
-                for(AlbumSimple album : albumList){
-                    List<Image> albumCovers =album.images;
-                    Log.i("Album", album.name);
-                    for(Image i: albumCovers){
-                        Log.i("Image",i.url);
-                    }
-                    Log.i("Type", album.type);
-                    Log.i("Album_Type", album.album_type);
-                    Log.i("Uri", album.uri);
-                    Log.i("href", album.href);
-                    Log.i("","\n");
-                }
-                Log.i("","\n");
-            }
-        });
-
-
-
-
-         /*       spotify.getMe(new SpotifyCallback<UserPrivate>() {
-                    @Override
-                    public void success(UserPrivate u, Response response) {
-                        Log.i("id",""+u.id);
-
-                    }
-
-                    @Override
-                    public void failure(SpotifyError error) {
-                        Log.i("Error", error.toString());
-                    }
-                });
-
-
-        spotify.getMe(new SpotifyCallback<UserPrivate>() {
-            @Override
-            public void success(UserPrivate u, Response response) {
-                Log.i("id",""+u.id);
-                List<Image> images = u.images;
-                for (Image image : images) {
-                    System.out.println(image.url);
-                }
-                Log.i("","\n");
-            }
-
-            @Override
-            public void failure(SpotifyError error) {
-                Log.i("Error", error.toString());
-            }
-        });
-
-       spotify.getUser("emthma",new SpotifyCallback<UserPublic>() {
-            @Override
-            public void success(UserPublic u, Response response) {
-                Log.i("id",""+u.id);
-                List<Image> images = u.images;
-                for (Image image : images) {
-                    System.out.println(image.url);
-                }
-                Log.i("","\n");
-            }
-
-            @Override
-            public void failure(SpotifyError error) {
-                Log.i("Error", error.toString());
-            }
-        });
-
-        spotify.getCategory("jazz", options, new SpotifyCallback<Category>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Category", "Could not get category");
-
-            }
-
-            @Override
-            public void success(Category p, Response response) {
-
-                Log.i("get categories","Jazz");
-                Log.i("","\n");
-                Log.i("Category",p.name);
-                List<Image> imageList = p.icons;
-                for(Image image : imageList){
-                    Log.i("Image",image.url);
-                }
-                Log.i("href",p.href);
-                Log.i("","\n");
-            }
-        });
-
-        Map<String, Object> options = new HashMap();
-        options.put(SpotifyService.COUNTRY,"US");
-        spotify.getCategories(options, new SpotifyCallback<CategoriesPager>(){
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Categories", "Could not get categories");
-
-            }
-
-            @Override
-            public void success(CategoriesPager p, Response response) {
-                Log.i("","\n");
-                Pager<Category> categoryPager= p.categories;
-                List<Category>categoryList=categoryPager.items;
-                for(Category category :categoryList){
-                    List<Image> imageList=category.icons;
-                    Log.i("Category",category.name);
-                    Log.i("Category id",category.id);
-                    for(Image image : imageList){
-                        Log.i("Image",image.url);
-                    }
-                    Log.i("href",category.href);
-                    Log.i("","\n");
-                }
-                Log.i("","\n");
-            }
-
-        });*/
-
     }
 
     @Override

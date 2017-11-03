@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -19,8 +20,17 @@ import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.aloy.aloy.Util.SpotifyHandler;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -56,15 +66,15 @@ public class LoginActivity extends Activity {
     @SuppressWarnings("SpellCheckingInspection")
     private static final String REDIRECT_URI = "aloyprotocol://callback";
     @SuppressWarnings("SpellCheckingInspection")
-    private static  String AUTHCODE = "";
-    private static  String refresh_token = null;
-    public static  String access_token = null;
+    private static String AUTHCODE = "";
+    private static String refresh_token = null;
+    public static String access_token = null;
+    public static String firebase_token=null;
+    private FirebaseDatabase database;
+    private FirebaseAuth mAuth;
     private static final int REQUEST_CODE = 1337;
     private static int a=1;
     private SpotifyHandler spotifyHandler;
-    private final MainUser mainUser = new MainUser();
-    private String username ;
-    private FirebaseAuth mAuth;
     private SharedPreferenceHelper mSharedPreferenceHelper;
 
     public LoginActivity() {
@@ -78,10 +88,10 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
         mSharedPreferenceHelper = new SharedPreferenceHelper(this);
         refresh_token = mSharedPreferenceHelper.getCurrentSpotifyToken();
         String token = CredentialsHandler.getAccessToken(this);
-
 
         if (token==null||a==1) {
             if(refresh_token==null||a==1) {
@@ -92,7 +102,22 @@ public class LoginActivity extends Activity {
                     Log.i("Token State","Expired");
                     new refreshToAccess().execute().get();
                     CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
-                    startMainActivity(CredentialsHandler.getAccessToken(this), CredentialsHandler.getExpiresAt(this));
+                    /*mAuth.signInWithCustomToken(firebase_token)
+                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d(TAG, "signInWithCustomToken:success");
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        startMainActivity(CredentialsHandler.getAccessToken(LoginActivity.this), CredentialsHandler.getExpiresAt(LoginActivity.this));
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Log.w(TAG, "signInWithCustomToken:failure", task.getException());
+                                    }
+                                }
+                            });*/
+                    startMainActivity(CredentialsHandler.getAccessToken(LoginActivity.this), CredentialsHandler.getExpiresAt(LoginActivity.this));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -115,7 +140,6 @@ public class LoginActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        //SharedPreferences preferences = getSharedPreferences("Auth", MODE_PRIVATE);
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
@@ -129,28 +153,33 @@ public class LoginActivity extends Activity {
                         new refreshToAccess().execute().get();
                         CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
                         spotifyHandler = new SpotifyHandler(CredentialsHandler.getAccessToken(this),this);
-                        spotifyHandler.createMainUser();
-                        /*dataHandler = new DataHandler();
-                        SpotifyApi api = new SpotifyApi();
-                        api.setAccessToken(CredentialsHandler.getAccessToken(this));
-                        SpotifyService service = api.getService();
-
-                        service.getMe(new SpotifyCallback<UserPrivate>() {
-                                          @Override
-                                          public void success(UserPrivate u, Response response) {
-                                              username=u.id;
-                                          }
-                                          @Override
-                                          public void failure(SpotifyError error) {
-                                              Log.i("Error", error.toString());
-                                          }
-                                      }
-
-                        );*/
-                        startMainActivity(CredentialsHandler.getAccessToken(this),CredentialsHandler.getExpiresAt(this));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
+                        mAuth.signInWithCustomToken(firebase_token)
+                                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            DatabaseReference mTheReference = FirebaseDatabase.getInstance().getReference();
+                                            DatabaseReference mUsersReference = mTheReference.child("users").child(mAuth.getCurrentUser().getUid());
+                                            mUsersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    spotifyHandler.getMyInfo();
+                                                    if (!dataSnapshot.exists()) {
+                                                        spotifyHandler.createMainUser();
+                                                    }
+                                                    startMainActivity(CredentialsHandler.getAccessToken(LoginActivity.this),CredentialsHandler.getExpiresAt(LoginActivity.this));
+                                                }
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                        Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+                                                }
+                                            });
+                                        } else {
+                                            Log.w(TAG, "signInWithCustomToken:failure", task.getException());
+                                        }
+                                    }
+                                });
+                    } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
                     break;
@@ -324,7 +353,11 @@ public class LoginActivity extends Activity {
                     }
 
                     in.close();
-                    access_token=sb.toString().replaceAll("^\"|\"$", "");
+                    JSONObject reader = new JSONObject(sb.toString());
+                    access_token=reader.getString("spotify");
+                    firebase_token=reader.getString("firebase");
+                    access_token=access_token.substring(2, access_token.length()-2);
+                    firebase_token=firebase_token.substring(2, firebase_token.length()-2);
                     return null;
                 }else{
                     Log.i("refreshToAccess error",responseCode+"");

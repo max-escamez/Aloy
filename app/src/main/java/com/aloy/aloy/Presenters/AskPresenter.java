@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.aloy.aloy.Contracts.AskContract;
 import com.aloy.aloy.Fragments.Ask;
+import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
@@ -43,9 +44,12 @@ public class AskPresenter implements AskContract.Presenter {
     @Override
     public void createQuestion(String body) {
         Question newQuestion = new Question(sharedPreferenceHelper.getCurrentUserId(),body,sharedPreferenceHelper.getProfilePicture());
-        //newQuestion.setBody(body);
         dataHandler.saveQuestion(newQuestion);
     }
 
-
+    @Override
+    public void createAnswer(String body, String questionID) {
+        Answer newAnswer = new Answer(sharedPreferenceHelper.getCurrentUserId(),body,sharedPreferenceHelper.getProfilePicture());
+        dataHandler.saveAnswer(newAnswer, questionID);
+    }
 }

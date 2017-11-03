@@ -42,12 +42,26 @@ public class SpotifyHandler {
         dataHandler = new DataHandler(context);
     }
 
-    public void createMainUser() {
+
+    public void getMyInfo(){
         service.getMe(new SpotifyCallback<UserPrivate>() {
             @Override
             public void success(UserPrivate u, Response response) {
                 sharedPreferenceHelper.saveCurrentUserId(u.id);
                 sharedPreferenceHelper.saveProfilePicture(u.images.get(0).url);
+            }
+            @Override
+            public void failure(SpotifyError error) {
+                Log.i("Error", error.toString());
+            }
+
+        });
+    }
+
+    public void createMainUser() {
+        service.getMe(new SpotifyCallback<UserPrivate>() {
+            @Override
+            public void success(UserPrivate u, Response response) {
                 mainUser = new MainUser(u.id, u.images.get(0).url);
                 dataHandler.saveUser(mainUser);
             }
@@ -59,32 +73,5 @@ public class SpotifyHandler {
         });
 
     }
-
-    public void setUsername(String arg) {
-        username = arg;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-
-    /*public void createQuestion(final String body) {
-
-
-        service.getMe(new SpotifyCallback<UserPrivate>() {
-                          @Override
-                          public void success(UserPrivate u, Response response) {
-                              Question question = new Question(u.id,body);
-                              dataHandler.saveQuestion(question);
-                          }
-                          @Override
-                          public void failure(SpotifyError error) {
-                              Log.i("Error", error.toString());
-                          }
-                      }
-        );
-
-    }*/
 
 }

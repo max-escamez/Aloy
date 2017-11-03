@@ -3,6 +3,7 @@ package com.aloy.aloy.Util;
 import android.content.Context;
 import android.util.Log;
 
+import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;
 import com.google.firebase.database.DatabaseError;
@@ -34,28 +35,25 @@ public class DataHandler {
             @Override
             public void onComplete(DatabaseError databaseError,
                                    DatabaseReference databaseReference) {
-                //1)sharedPreferenceHelper.getFirebaseID()
-                //2)databaseReference.getKey()
-                //push inside User's key, that key.
-                refUser.child(sharedPreferenceHelper.getFirebaseID()).child("questions").push().setValue(databaseReference.getKey());
-
+                refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").push().setValue(databaseReference.getKey());
             }
         });
 
-        //update the User with the question key
     }
 
     public void saveUser(MainUser user){
-        refUser.push().setValue(user,new DatabaseReference.CompletionListener() {
+        refUser.child(sharedPreferenceHelper.getCurrentUserId()).setValue(user);
+
+    }
+
+    public void saveAnswer(Answer answer, final String questionID) {
+        refQuestionFeed.child(questionID).child("answers").push().setValue(answer,new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError,
                                    DatabaseReference databaseReference) {
-                sharedPreferenceHelper.saveFirebaseID(databaseReference.getKey());
-
-
+                refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("answers").push().setValue(databaseReference.getKey());
             }
         });
-
     }
 
 }

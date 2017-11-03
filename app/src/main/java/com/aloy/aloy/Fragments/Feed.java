@@ -94,7 +94,4 @@ public class Feed extends Fragment implements FeedContract.View {
 
     }
 
-
-
-
 }
