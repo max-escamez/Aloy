@@ -47,4 +47,9 @@ public class SearchPresenter implements SearchContract.Presenter {
     public int getCount() {
         return 15;
     }
+
+    @Override
+    public void addTrack(int position, String query) {
+        spotifyHandler.addTrack(position,query);
+    }
 }

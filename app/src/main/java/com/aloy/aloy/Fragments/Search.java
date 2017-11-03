@@ -2,7 +2,9 @@ package com.aloy.aloy.Fragments;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -47,6 +49,7 @@ public class Search extends DialogFragment implements SearchContract.View {
     private SearchAdapter searchAdapter;
     private TextView tracksSelected;
     private Ask callingFragment;
+    private boolean searchTrack = false;
 
 
     public Search() {
@@ -56,6 +59,19 @@ public class Search extends DialogFragment implements SearchContract.View {
     public void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null)
+        {
+            int width = ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = ViewGroup.LayoutParams.MATCH_PARENT;
+            dialog.getWindow().setLayout(width, height);
+        }
     }
 
     @Override
@@ -92,7 +108,8 @@ public class Search extends DialogFragment implements SearchContract.View {
         validateSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callingFragment.setSelectedTracks(searchAdapter.getSelectedTracksCount(),searchQuery);
+                if (searchTrack==true)
+                    callingFragment.setSelectedTracks(searchAdapter.getSelectedTracksCount(),searchQuery);
                 hideSearch();
             }
         });
@@ -111,9 +128,14 @@ public class Search extends DialogFragment implements SearchContract.View {
 
     @Override
     public void setupRecyclerView(View searchView, String searchQuery) {
+        searchTrack = true;
         RecyclerView recyclerView = (RecyclerView) searchView.findViewById(R.id.searchGrid);
-        int numberOfColumns = 3;
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
+        if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        }
+        else{
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 5));
+        }
         searchAdapter = new SearchAdapter(searchView,getContext(), searchPresenter, searchQuery);
         recyclerView.setAdapter(searchAdapter);
 

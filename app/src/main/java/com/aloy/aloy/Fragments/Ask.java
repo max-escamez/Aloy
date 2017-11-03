@@ -38,10 +38,14 @@ public class Ask extends DialogFragment implements AskContract.View{
     private EditText askQuestionField;
     private Button submitButton;
     private Button searchTracks;
+    private Button searchArtists;
+    private Button searchAlbums;
     private ImageButton close;
     private String questionBody;
     private AskContract.Presenter askPresenter;
     private TextView tracksSelectedTextView;
+    private TextView artistsSelectedTextView;
+    private TextView albumsSelectedTextView;
     private ArrayList<Integer> tracksSelected;
     private DataHandler dataHandler;
     private String tracksQuery;
@@ -80,7 +84,10 @@ public class Ask extends DialogFragment implements AskContract.View{
         close = (ImageButton) askView.findViewById(R.id.closeButton);
         searchTracks = (Button) askView.findViewById(R.id.findTracks);
         tracksSelectedTextView = (TextView) askView.findViewById(R.id.tracksSelected);
-
+        searchAlbums = (Button) askView.findViewById(R.id.findAlbums);
+        albumsSelectedTextView = (TextView) askView.findViewById(R.id.albumsSelected);
+        searchArtists = (Button) askView.findViewById(R.id.findArtists);
+        artistsSelectedTextView = (TextView) askView.findViewById(R.id.artistsSelected);
 
         /*askQuestionField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

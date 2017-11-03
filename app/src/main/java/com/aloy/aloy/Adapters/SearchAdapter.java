@@ -99,6 +99,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 check.setVisibility(View.VISIBLE);
                 selectedTracksCount.add(getAdapterPosition());
                 selectedTracks.setText(selectedTracksCount.size() + " tracks selected");
+                searchPresenter.addTrack(getAdapterPosition(), searchQuery);
 
                 //searchPresenter.updateSelectedTracks(getAdapterPosition(),searchView,searchQuery);
             }

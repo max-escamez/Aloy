@@ -3,6 +3,7 @@ package com.aloy.aloy.Models;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by tldonne on 29/10/2017.
@@ -13,7 +14,7 @@ public class Question {
     private String body;
     private String pic;
     private CircularImageView profilePicture;
-    private ArrayList<SearchResult> tracksAdded;
+    private List<SearchResult> tracksAdded;
 
     public Question() {
 

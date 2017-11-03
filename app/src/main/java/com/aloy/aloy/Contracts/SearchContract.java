@@ -32,6 +32,7 @@ public interface SearchContract {
         void bindTrack(String query, SearchAdapter.ViewHolder holder,int position, Context context);
         ArrayList<SearchResult> updateSelectedTracks (int position, android.view.View searchView, String query);
         int getCount();
+        void addTrack(int position, String query);
 
 
     }
