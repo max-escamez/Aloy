@@ -32,16 +32,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private String searchQuery;
     private Context context;
     private View searchView;
+    private String type;
 
 
 
     // data is passed into the constructor
-    public SearchAdapter(View searchView, Context context, SearchPresenter searchPresenter, String query) {
+    public SearchAdapter(View searchView, Context context, SearchPresenter searchPresenter, String query, String type) {
         this.mInflater = LayoutInflater.from(context);
         this.searchPresenter=searchPresenter;
         this.searchQuery=query;
         this.context=context;
         this.searchView=searchView;
+        this.type=type;
 
     }
 
@@ -56,7 +58,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     // binds the data to the textview in each cell
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        searchPresenter.bindTrack(searchQuery,holder,position,context);
+        searchPresenter.bind(searchQuery,holder,position,context,type);
     }
 
     // total number of cells
@@ -88,11 +90,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             onItemClick(view, getAdapterPosition());
             if (check.getVisibility() == View.INVISIBLE) {
                 check.setVisibility(View.VISIBLE);
-                searchPresenter.addTrack(getAdapterPosition(), searchQuery);
+                searchPresenter.addItem(type,getAdapterPosition(), searchQuery);
             }
             else {
                 check.setVisibility(View.INVISIBLE);
-                searchPresenter.removeTrack(getAdapterPosition(),searchQuery);
+                searchPresenter.removeItem(type,getAdapterPosition(),searchQuery);
             }
         }
     }

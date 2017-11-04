@@ -30,8 +30,18 @@ public class SearchPresenter implements SearchContract.Presenter {
     }
 
     @Override
-    public void bindTrack(String query, SearchAdapter.ViewHolder holder, int position, Context context) {
-        spotifyHandler.bindTrack(query,holder,position,context);
+    public void bind(String query, SearchAdapter.ViewHolder holder, int position, Context context, String type) {
+        switch (type) {
+            case "track":
+                spotifyHandler.bindTrack(query,holder,position,context);
+                break;
+            case "artist":
+                spotifyHandler.bindArtist(query,holder,position,context);
+                break;
+            case "album":
+                spotifyHandler.bindAlbum(query,holder,position,context);
+                break;
+        }
     }
 
 
@@ -41,13 +51,32 @@ public class SearchPresenter implements SearchContract.Presenter {
     }
 
     @Override
-    public void addTrack(int position, String query) {
-        spotifyHandler.addTrack(position,query,searchView,true);
-
+    public void addItem(String type, int position, String query) {
+        switch (type) {
+            case "track" :
+                spotifyHandler.addTrack(position,query,searchView,true);
+                break;
+            case "artist" :
+                spotifyHandler.addArtist(position,query,searchView,true);
+                break;
+            case "album" :
+                spotifyHandler.addAlbum(position,query,searchView,true);
+                break;
+        }
     }
 
     @Override
-    public  void removeTrack(int position, String query) {
-        spotifyHandler.addTrack(position,query,searchView,false);
+    public  void removeItem(String type, int position, String query) {
+        switch (type) {
+            case "track" :
+                spotifyHandler.addTrack(position,query,searchView,false);
+                break;
+            case "artist" :
+                spotifyHandler.addArtist(position,query,searchView,false);
+                break;
+            case "album" :
+                spotifyHandler.addAlbum(position,query,searchView,false);
+                break;
+        }
     }
 }

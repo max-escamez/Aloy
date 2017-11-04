@@ -21,6 +21,8 @@ import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
+import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.UserPrivate;
@@ -36,12 +38,18 @@ public class AskPresenter implements AskContract.Presenter {
     private DataHandler dataHandler;
     private SpotifyHandler spotifyHandler;
     private SharedPreferenceHelper sharedPreferenceHelper;
+    private HashMap tracksSelected;
+    private HashMap artistsSelected;
+    private HashMap albumsSelected;
 
     public AskPresenter(AskContract.View askView, DataHandler dataHandler, SpotifyHandler spotifyHandler, Context context) {
         sharedPreferenceHelper = new SharedPreferenceHelper(context);
         this.dataHandler = dataHandler;
         this.spotifyHandler = spotifyHandler;
         this.askView = askView;
+        tracksSelected = new HashMap();
+        albumsSelected = new HashMap();
+        artistsSelected = new HashMap();
     }
 
 
@@ -51,10 +59,43 @@ public class AskPresenter implements AskContract.Presenter {
         dataHandler.saveAnswer(newAnswer, questionID);
     }
     @Override
-    public void createQuestion(String body, HashMap<String,Track> tracksSelected) {
+    public void createQuestion(String body) {
         Question newQuestion = new Question(sharedPreferenceHelper.getCurrentUserId(),sharedPreferenceHelper.getProfilePicture(),body);
-        dataHandler.saveQuestion(newQuestion,tracksSelected);
+        dataHandler.saveQuestion(newQuestion,tracksSelected,artistsSelected,albumsSelected);
     }
+
+    @Override
+    public void addTrack(Track track) {
+        tracksSelected.put(track.id,track);
+    }
+
+    @Override
+    public void removeTrack(Track track) {
+        tracksSelected.remove(track.id);
+    }
+
+    @Override
+    public HashMap getTracks(){
+        return this.tracksSelected;
+    }
+
+    @Override
+    public void addArtist(Artist artist) { artistsSelected.put(artist.id,artist);}
+
+    @Override
+    public void removeArtist(Artist artist) { artistsSelected.remove(artist.id); }
+
+    @Override
+    public HashMap getArtists() { return this.artistsSelected ; }
+
+    @Override
+    public void addAlbum(AlbumSimple album) { albumsSelected.put(album.id,album); }
+
+    @Override
+    public void removeAlbum(AlbumSimple album) { albumsSelected.remove(album.id); }
+
+    @Override
+    public HashMap getAlbums() { return this.albumsSelected; }
 
 
 }

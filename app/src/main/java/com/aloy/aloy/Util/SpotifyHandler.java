@@ -24,9 +24,13 @@ import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.Albums;
+import kaaes.spotify.webapi.android.models.AlbumsPager;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistSimple;
+import kaaes.spotify.webapi.android.models.ArtistsPager;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Track;
@@ -100,28 +104,58 @@ public class SpotifyHandler {
             public void failure(SpotifyError spotifyError) {
                 Log.e("Tracks", "Could not get tracks");
             }
-
             @Override
             public void success(TracksPager p, Response response) {
-                Pager<Track> trackPager = p.tracks;
-                List<Track> trackList = trackPager.items;
-                Track song = trackList.get(position);
-                List<ArtistSimple> artists = song.artists;
-                ArtistSimple artist = artists.get(0);
-                AlbumSimple album = song.album;
-                List<Image> imageList = album.images;
-                String image_url = imageList.get(0).url;
-                //Picasso.with(getContext()).load(image_url).into(cover);
-                //link = song.uri;
-                SearchResult result = new SearchResult(image_url, song.name, artist.name);
+                Track track = p.tracks.items.get(position);
+                SearchResult result = new SearchResult(track.album.images.get(0).url, track.name, track.artists.get(0).name);
                 holder.primaryText.setText(result.getPrimaryText());
                 holder.secondaryText.setText(result.getSecondaryText());
-                Picasso.with(context).load(image_url).into(holder.cover);
+                Picasso.with(context).load(track.album.images.get(0).url).into(holder.cover);
 
             }
 
         });
     }
+
+    public void bindArtist(String query, final SearchAdapter.ViewHolder holder, final int position, final Context context) {
+        service.searchArtists(query, new SpotifyCallback<ArtistsPager>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Artists", "Could not get artists");
+            }
+            @Override
+            public void success(ArtistsPager artistsPager, Response response) {
+                Artist artist = artistsPager.artists.items.get(position);
+                holder.primaryText.setText(artist.name);
+                holder.secondaryText.setText(artist.followers.total + " followers");
+                if (artist.images.size()!=0)
+                    Picasso.with(context).load(artist.images.get(0).url).into(holder.cover);
+
+            }
+        });
+    }
+
+
+
+
+    public void bindAlbum(String query, final SearchAdapter.ViewHolder holder, final int position, final Context context) {
+        service.searchAlbums(query, new SpotifyCallback<AlbumsPager>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Albums", "Could not get albums");
+            }
+
+            @Override
+            public void success(AlbumsPager albumsPager, Response response) {
+                AlbumSimple album = albumsPager.albums.items.get(position);
+                holder.primaryText.setText(album.name);
+                holder.secondaryText.setText(album.album_type);
+                Picasso.with(context).load(album.images.get(0).url).into(holder.cover);
+            }
+        });
+    }
+
+
 
 
     public void addTrack(final int position, String query, final SearchContract.View searchView, final boolean add) {
@@ -132,23 +166,57 @@ public class SpotifyHandler {
             }
             @Override
             public void success(TracksPager p, Response response) {
-                //Question newQuestion = new Question(uid,body,profilePic);
-                //System.out.println("++++++++++++++" + tracksSelected.size());
                 Pager<Track> trackPager = p.tracks;
                 List<Track> trackList = trackPager.items;
                 Track song = trackList.get(position);
                 if (add == true ) {
-                    searchView.addTrack(song);
+                    searchView.getAsk().getAskPresenter().addTrack(song);
                 }
                 else
-                    searchView.removeTrack(song);
+                    searchView.getAsk().getAskPresenter().removeTrack(song);
+                searchView.updateCount("track");
+            }
+        });
+    }
 
+    public void addArtist(final int position, String query, final SearchContract.View searchView, final boolean add) {
+        service.searchArtists(query, new SpotifyCallback<ArtistsPager>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Artists", "Could not get artists");
+            }
+            @Override
+            public void success(ArtistsPager artists, Response response) {
+                Artist artist = artists.artists.items.get(position);
+                if (add == true ) {
+                    searchView.getAsk().getAskPresenter().addArtist(artist);
+                }
+                else
+                    searchView.getAsk().getAskPresenter().removeArtist(artist);
+                searchView.updateCount("artist");
 
             }
-
         });
+    }
 
+    public void addAlbum(final int position, String query, final SearchContract.View searchView, final boolean add) {
+        service.searchAlbums(query, new SpotifyCallback<AlbumsPager>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Albums", "Could not get albums");
+            }
+            @Override
+            public void success(AlbumsPager albumsPager, Response response) {
+                AlbumSimple album = albumsPager.albums.items.get(position);
+                if (add == true ) {
+                    searchView.getAsk().getAskPresenter().addAlbum(album);
+                }
+                else
+                    searchView.getAsk().getAskPresenter().removeAlbum(album);
+                searchView.updateCount("album");
 
+            }
+        });
     }
 
 }

@@ -36,6 +36,8 @@ import com.aloy.aloy.R;
 
 import java.util.ArrayList;
 
+import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
@@ -49,7 +51,7 @@ public class Search extends DialogFragment implements SearchContract.View {
     private String searchQuery;
     private Button validateSearch;
     private SearchAdapter searchAdapter;
-    private TextView tracksSelected;
+    private TextView itemsSelected;
     private Ask callingFragment;
     private boolean searchTrack = false;
 
@@ -83,39 +85,26 @@ public class Search extends DialogFragment implements SearchContract.View {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         validateSearch = (Button) searchView.findViewById(R.id.validateSearch);
         searchField = (EditText) searchView.findViewById(R.id.searchSpotify);
-        tracksSelected = (TextView) searchView.findViewById(R.id.elementsSelected);
+        itemsSelected = (TextView) searchView.findViewById(R.id.elementsSelected);
 
         callingFragment = (Ask) getTargetFragment();
 
 
         Bundle args = getArguments();
         type = args.getString("type");
-        switch (type) {
-            case "track" :
-                searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                            searchQuery = searchField.getText().toString();
-                            setupRecyclerView(searchView,searchQuery);
-                            //setupRecyclerView(searchView);
-
-                            //searchPresenter.search(searchQuery,type);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                hideKeyboardFrom(getContext(),searchView);
-                            }
-                            return true;
-                        }
-                        return false;
+        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    searchQuery = searchField.getText().toString();
+                    setupRecyclerView(searchView,searchQuery,type);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        hideKeyboardFrom(getContext(),searchView);
                     }
-                });
-                break;
-            case "artist":
-
-                break;
-            case "album":
-
-                break;
-        }
+                    return true;
+                }
+                return false;
+            }
+        });
 
 
         validateSearch.setOnClickListener(new View.OnClickListener() {
@@ -137,9 +126,14 @@ public class Search extends DialogFragment implements SearchContract.View {
 
     }
 
+    @Override
+    public Ask getAsk() {
+        return callingFragment;
+    }
+
 
     @Override
-    public void setupRecyclerView(View searchView, String searchQuery) {
+    public void setupRecyclerView(View searchView, String searchQuery, String type) {
         searchTrack = true;
         RecyclerView recyclerView = (RecyclerView) searchView.findViewById(R.id.searchGrid);
         if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
@@ -148,29 +142,24 @@ public class Search extends DialogFragment implements SearchContract.View {
         else{
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 5));
         }
-        searchAdapter = new SearchAdapter(searchView,getContext(), searchPresenter, searchQuery);
+        searchAdapter = new SearchAdapter(searchView,getContext(), searchPresenter, searchQuery, type);
         recyclerView.setAdapter(searchAdapter);
-
-
     }
 
     @Override
-    public void addTrack(Track track) {
-        System.out.println("add : " +track.id);
-        callingFragment.addTrack(track);
-        tracksSelected.setText(callingFragment.getTracks().size() + "Tracks Selected");
+    public void updateCount(String type) {
+        switch (type) {
+            case "track" :
+                itemsSelected.setText(callingFragment.getAskPresenter().getTracks().size() + " Tracks Selected");
+                break;
+            case "artist" :
+                itemsSelected.setText(callingFragment.getAskPresenter().getArtists().size() + " Artists Selected");
+                break;
+            case "album" :
+                itemsSelected.setText(callingFragment.getAskPresenter().getAlbums().size() + " Albums Selected");
+                break;
+        }
     }
-
-    @Override
-    public void removeTrack(Track track){
-        System.out.println("remove : " +track.id);
-        callingFragment.removeTrack(track);
-        tracksSelected.setText(callingFragment.getTracks().size() + "Tracks Selected");
-
-    }
-
-
-
 
 
 

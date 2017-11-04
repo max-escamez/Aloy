@@ -3,9 +3,10 @@ package com.aloy.aloy.Contracts;
 import android.content.Context;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
+import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
@@ -15,21 +16,31 @@ import kaaes.spotify.webapi.android.models.Track;
 public interface AskContract {
 
     interface View  {
-        void removeTrack(Track track);
-
-        HashMap getTracks();
-
         void hideAskQuestion();
         void showSearch(String type);
         void hideKeyboardFrom(Context context, android.view.View view);
         void update();
-        void addTrack(Track track);
+
+        Presenter getAskPresenter();
+
 
     }
 
     interface Presenter {
-        void createQuestion(String body,HashMap<String,Track> tracksSelected);
+        void createQuestion(String body);
         void createAnswer(String body, String questionID);
+
+        void addTrack(Track track);
+        void removeTrack(Track track);
+        HashMap getTracks();
+
+        void addArtist(Artist artist);
+        void removeArtist(Artist artist);
+        HashMap getArtists();
+
+        void addAlbum(AlbumSimple album);
+        void removeAlbum(AlbumSimple album);
+        HashMap getAlbums();
 
     }
 }
