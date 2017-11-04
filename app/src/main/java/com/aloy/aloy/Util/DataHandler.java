@@ -66,7 +66,6 @@ public class DataHandler {
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").push().setValue(databaseReference.getKey());
             }
         });
-
     }
 
     public void saveUser(MainUser user){
