@@ -1,13 +1,18 @@
 package com.aloy.aloy.Adapters;
 
 import android.content.Context;
+import android.icu.util.ValueIterator;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aloy.aloy.Fragments.Ask;
+import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
 import com.google.firebase.database.Query;
@@ -22,31 +27,40 @@ import java.util.ArrayList;
 
 public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter.ViewHolder, Question> {
     private Context context;
+    private Feed feedView;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView questionBody;
         TextView questionUsername;
         CircularImageView profilePic;
+        ImageView cover1;
+        ImageView cover2;
+        Button answerButton;
 
         public ViewHolder(View view) {
             super(view);
             questionBody = (TextView) view.findViewById(R.id.questionBody);
             questionUsername = (TextView) view.findViewById(R.id.questionUsername);
             profilePic = (CircularImageView) view.findViewById(R.id.questionProfilePic);
+            cover1 = (ImageView) view.findViewById(R.id.questionCover1);
+            cover2 = (ImageView) view.findViewById(R.id.questionCover2);
+            answerButton = (Button) view.findViewById(R.id.answerButton);
+
+
         }
     }
 
     public MyRecyclerAdapter(Query query, @Nullable ArrayList<Question> questions,
-                             @Nullable ArrayList<String> keys, Context context) {
+                             @Nullable ArrayList<String> keys, Context context, Feed view) {
         super(query, questions, keys);
         this.context = context;
+        this.feedView=view;
     }
 
     @Override
     public MyRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.question, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.question, parent, false);
 
         return new ViewHolder(view);
     }
@@ -54,10 +68,21 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
     @Override
     public void onBindViewHolder(MyRecyclerAdapter.ViewHolder holder, int position) {
         //Question question = getItem(getItemCount()-position-1);
-        Question question = getItem(position);
+        final Question question = getItem(position);
         holder.questionBody.setText(question.getBody());
         holder.questionUsername.setText(question.getUsername());
         Picasso.with(context).load(question.getPic()).into(holder.profilePic);
+        Picasso.with(context).load(question.getCover1()).into(holder.cover1);
+        Picasso.with(context).load(question.getCover2()).into(holder.cover2);
+
+        holder.answerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                feedView.showAnswerQuestion(question.getId());
+            }
+        });
+
+
     }
 
 

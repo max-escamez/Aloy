@@ -22,11 +22,11 @@ import com.aloy.aloy.Contracts.AskContract;
 import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Presenters.AskPresenter;
 import com.aloy.aloy.R;
-import com.aloy.aloy.Util.DataHandler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
+import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
@@ -45,8 +45,9 @@ public class Ask extends DialogFragment implements AskContract.View{
     private TextView tracksSelectedTextView;
     private TextView artistsSelectedTextView;
     private TextView albumsSelectedTextView;
-    private String tracksQuery;
-    private HashMap tracksSelected;
+    private String questionId;
+    private boolean answer;
+
 
 
 
@@ -54,31 +55,9 @@ public class Ask extends DialogFragment implements AskContract.View{
         // Required empty public constructor
     }
 
-
-
     public void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    @Override
-    public void update() {
-        tracksSelectedTextView.setText(tracksSelected.size() + " Tracks Selected");
-    }
-
-    @Override
-    public void addTrack(Track track) {
-        tracksSelected.put(track.id,track);
-    }
-
-    @Override
-    public void removeTrack(Track track) {
-        tracksSelected.remove(track.id);
-    }
-
-    @Override
-    public HashMap getTracks(){
-        return this.tracksSelected;
     }
 
 
@@ -97,8 +76,9 @@ public class Ask extends DialogFragment implements AskContract.View{
         albumsSelectedTextView = (TextView) askView.findViewById(R.id.albumsSelected);
         searchArtists = (Button) askView.findViewById(R.id.findArtists);
         artistsSelectedTextView = (TextView) askView.findViewById(R.id.artistsSelected);
-        tracksSelected = new HashMap(5);
 
+        Bundle args = getArguments();
+        questionId = args.getString("questionId");
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,16 +91,36 @@ public class Ask extends DialogFragment implements AskContract.View{
             @Override
             public void onClick(View v) {
                 questionBody = askQuestionField.getText().toString();
-                askPresenter.createQuestion(questionBody,tracksSelected);
+
+                if (!questionId.equals("null"))
+                    askPresenter.createAnswer(questionBody,questionId);
+                else
+                    askPresenter.createQuestion(questionBody);
                 hideAskQuestion();
             }
         });
 
         searchTracks.setOnClickListener(new View.OnClickListener() {
-            String track = "track";
+            String type = "track";
             @Override
             public void onClick(View v) {
-                showSearch(track);
+                showSearch(type);
+            }
+        });
+
+        searchArtists.setOnClickListener(new View.OnClickListener() {
+            String type = "artist";
+            @Override
+            public void onClick(View v) {
+                showSearch(type);
+            }
+        });
+
+        searchAlbums.setOnClickListener(new View.OnClickListener() {
+            String type = "album";
+            @Override
+            public void onClick(View v) {
+                showSearch(type);
             }
         });
 
@@ -145,6 +145,21 @@ public class Ask extends DialogFragment implements AskContract.View{
         searchTracksDialog.setArguments(args);
         searchTracksDialog.show(fragmentManager,"search");
     }
+
+
+    @Override
+    public void update() {
+        tracksSelectedTextView.setText(askPresenter.getTracks().size() + " Tracks Selected");
+        artistsSelectedTextView.setText(askPresenter.getArtists().size() + " Artists Selected");
+        albumsSelectedTextView.setText(askPresenter.getAlbums().size() + " Albums Selected");
+    }
+
+    @Override
+    public AskContract.Presenter getAskPresenter() {
+        return askPresenter;
+    }
+
+
 
 
 }

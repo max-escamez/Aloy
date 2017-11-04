@@ -6,10 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
+import com.aloy.aloy.Fragments.Ask;
 import com.aloy.aloy.Models.SearchResult;
 
 import java.util.ArrayList;
 
+import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
@@ -22,16 +25,17 @@ public interface SearchContract {
 
         void hideKeyboardFrom(Context context, android.view.View view);
         void hideSearch();
-        void setupRecyclerView(android.view.View searchView, String query);
-        //void setupRecyclerView(android.view.View searchView);
-        void addTrack(Track track);
-        void removeTrack(Track track);
+        Ask getAsk();
+        void setupRecyclerView(android.view.View searchView, String searchQuery, String type);
+        void updateCount(String type);
+
     }
 
     interface Presenter {
-        void bindTrack(String query, SearchAdapter.ViewHolder holder,int position, Context context);
+        void bind(String query, SearchAdapter.ViewHolder holder,int position, Context context, String type);
         int getCount();
-        void addTrack(int position, String query);
-        void removeTrack(int position, String query);
+        void addItem(String type, int position, String query);
+
+        void removeItem(String type, int position, String query);
     }
 }

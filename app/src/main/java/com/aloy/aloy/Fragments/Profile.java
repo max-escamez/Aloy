@@ -130,7 +130,7 @@ public class Profile extends Fragment {
                         });
                         t.start();*/
 
-                        
+
                         spotify.searchTracks(search_query, new SpotifyCallback<TracksPager>() {
                             @Override
                             public void failure(SpotifyError spotifyError) {
