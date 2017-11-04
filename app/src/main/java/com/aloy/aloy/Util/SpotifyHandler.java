@@ -29,9 +29,11 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.SavedTrack;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
 import kaaes.spotify.webapi.android.models.UserPrivate;
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -94,33 +96,40 @@ public class SpotifyHandler {
     }
 
 
+
     public void bindTrack(String query, final SearchAdapter.ViewHolder holder, final int position, final Context context) {
-        service.searchTracks(query, new SpotifyCallback<TracksPager>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Tracks", "Could not get tracks");
-            }
 
-            @Override
-            public void success(TracksPager p, Response response) {
-                Pager<Track> trackPager = p.tracks;
-                List<Track> trackList = trackPager.items;
-                Track song = trackList.get(position);
-                List<ArtistSimple> artists = song.artists;
-                ArtistSimple artist = artists.get(0);
-                AlbumSimple album = song.album;
-                List<Image> imageList = album.images;
-                String image_url = imageList.get(0).url;
-                //Picasso.with(getContext()).load(image_url).into(cover);
-                //link = song.uri;
-                SearchResult result = new SearchResult(image_url, song.name, artist.name);
-                holder.primaryText.setText(result.getPrimaryText());
-                holder.secondaryText.setText(result.getSecondaryText());
-                Picasso.with(context).load(image_url).into(holder.cover);
+        try {
+            service.searchTracks(query, new SpotifyCallback<TracksPager>() {
 
-            }
+                @Override
+                public void failure(SpotifyError spotifyError) {
+                    Log.e("Tracks", "Could not get tracks");
+                }
 
-        });
+                @Override
+                public void success(TracksPager p, Response response) {
+                    Pager<Track> trackPager = p.tracks;
+                    List<Track> trackList = trackPager.items;
+                    Track song = trackList.get(position);
+                    List<ArtistSimple> artists = song.artists;
+                    ArtistSimple artist = artists.get(0);
+                    AlbumSimple album = song.album;
+                    List<Image> imageList = album.images;
+                    String image_url = imageList.get(0).url;
+                    //Picasso.with(getContext()).load(image_url).into(cover);
+                    //link = song.uri;
+                    SearchResult result = new SearchResult(image_url, song.name, artist.name);
+                    holder.primaryText.setText(result.getPrimaryText());
+                    holder.secondaryText.setText(result.getSecondaryText());
+                    Picasso.with(context).load(image_url).into(holder.cover);
+
+                }
+
+            });
+        }catch(IndexOutOfBoundsException e){
+            e.printStackTrace();
+        }
     }
 
 

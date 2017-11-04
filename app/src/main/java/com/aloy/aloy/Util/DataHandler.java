@@ -20,18 +20,16 @@ import kaaes.spotify.webapi.android.models.Track;
 
 public class DataHandler {
 
-    private FirebaseDatabase database;
     private DatabaseReference refQuestionFeed;
     private DatabaseReference refUser;
-    SharedPreferenceHelper sharedPreferenceHelper;
+    private SharedPreferenceHelper sharedPreferenceHelper;
 
 
     public DataHandler(Context context){
         sharedPreferenceHelper = new SharedPreferenceHelper(context);
-        database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         refQuestionFeed = database.getReference("questions");
         refUser = database.getReference("users");
-
     }
 
     public void saveQuestion(Question question, final HashMap<String,Track> tracks) {
@@ -47,8 +45,6 @@ public class DataHandler {
                     refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).child("href").setValue(entry.getValue().href);
                     refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).child("artist").setValue(entry.getValue().artists.get(0).name);
                     refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).child("cover").setValue(entry.getValue().album.images.get(0).url);
-
-
 
                 }
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").push().setValue(databaseReference.getKey());

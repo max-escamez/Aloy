@@ -25,12 +25,15 @@ import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.AlbumsPager;
 import kaaes.spotify.webapi.android.models.Artist;
@@ -64,6 +67,7 @@ public class Profile extends Fragment {
 
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -91,6 +95,8 @@ public class Profile extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     try {
+
+
                         search_query = search_bar.getText().toString();
                         Log.i("Before encoding",search_query);
                         search_query=URLEncoder.encode(search_query,"utf-8");
@@ -102,6 +108,29 @@ public class Profile extends Fragment {
                         api.setAccessToken(CredentialsHandler.getAccessToken(getContext()));
                         SpotifyService spotify = api.getService();
 
+                        /*Thread t = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SpotifyApi api = new SpotifyApi();
+                                api.setAccessToken(CredentialsHandler.getAccessToken(getContext()));
+                                SpotifyService spotify = api.getService();
+                                UserPrivate u = spotify.getMe();
+                                Log.i("Name",u.id);
+                                try {
+                                    TracksPager p = spotify.searchTracks(search_query);
+                                    Pager<Track> trackPager = p.tracks;
+                                    List<Track> trackList = trackPager.items;
+                                    for (Track s : trackList) {
+                                        Log.i("Song", s.name);
+                                    }
+                                }catch(IndexOutOfBoundsException e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        t.start();*/
+
+                        
                         spotify.searchTracks(search_query, new SpotifyCallback<TracksPager>() {
                             @Override
                             public void failure(SpotifyError spotifyError) {
@@ -128,6 +157,7 @@ public class Profile extends Fragment {
                             }
 
                         });
+
                     } catch (UnsupportedEncodingException | IndexOutOfBoundsException e) {
                         e.printStackTrace();
                     }
