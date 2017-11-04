@@ -2,7 +2,9 @@ package com.aloy.aloy.Fragments;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -34,6 +36,8 @@ import com.aloy.aloy.R;
 
 import java.util.ArrayList;
 
+import kaaes.spotify.webapi.android.models.Track;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -47,6 +51,7 @@ public class Search extends DialogFragment implements SearchContract.View {
     private SearchAdapter searchAdapter;
     private TextView tracksSelected;
     private Ask callingFragment;
+    private boolean searchTrack = false;
 
 
     public Search() {
@@ -59,13 +64,29 @@ public class Search extends DialogFragment implements SearchContract.View {
     }
 
     @Override
+    public void onStart()
+    {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null)
+        {
+            int width = ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = ViewGroup.LayoutParams.MATCH_PARENT;
+            dialog.getWindow().setLayout(width, height);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View searchView = inflater.inflate(R.layout.fragment_search, container, false);
         searchPresenter = new SearchPresenter(this, MainActivity.getDataHandler(), MainActivity.getSpotifyHandler());
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         validateSearch = (Button) searchView.findViewById(R.id.validateSearch);
         searchField = (EditText) searchView.findViewById(R.id.searchSpotify);
+        tracksSelected = (TextView) searchView.findViewById(R.id.elementsSelected);
+
         callingFragment = (Ask) getTargetFragment();
+
 
         Bundle args = getArguments();
         type = args.getString("type");
@@ -87,19 +108,27 @@ public class Search extends DialogFragment implements SearchContract.View {
                         return false;
                     }
                 });
+                break;
+            case "artist":
+
+                break;
+            case "album":
+
+                break;
         }
+
 
         validateSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callingFragment.setSelectedTracks(searchAdapter.getSelectedTracksCount(),searchQuery);
+                if (searchTrack==true)
+                    callingFragment.update();
                 hideSearch();
             }
         });
 
 
         return searchView;
-
     }
 
     @Override
@@ -111,26 +140,37 @@ public class Search extends DialogFragment implements SearchContract.View {
 
     @Override
     public void setupRecyclerView(View searchView, String searchQuery) {
+        searchTrack = true;
         RecyclerView recyclerView = (RecyclerView) searchView.findViewById(R.id.searchGrid);
-        int numberOfColumns = 3;
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
+        if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        }
+        else{
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 5));
+        }
         searchAdapter = new SearchAdapter(searchView,getContext(), searchPresenter, searchQuery);
         recyclerView.setAdapter(searchAdapter);
 
 
     }
 
-    /*@Override
-    public void setupRecyclerView(View searchView) {
-        String[] data = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48"};
-        int numberOfColumns = 3;
-        RecyclerView recyclerView = (RecyclerView) searchView.findViewById(R.id.searchGrid);
-        searchAdapter = new SearchAdapter(getContext(), data);
-        layoutManager = new GridLayoutManager(getContext(), numberOfColumns);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(searchAdapter);
+    @Override
+    public void addTrack(Track track) {
+        System.out.println("add : " +track.id);
+        callingFragment.addTrack(track);
+        tracksSelected.setText(callingFragment.getTracks().size() + "Tracks Selected");
+    }
 
-    }*/
+    @Override
+    public void removeTrack(Track track){
+        System.out.println("remove : " +track.id);
+        callingFragment.removeTrack(track);
+        tracksSelected.setText(callingFragment.getTracks().size() + "Tracks Selected");
+
+    }
+
+
+
 
 
 

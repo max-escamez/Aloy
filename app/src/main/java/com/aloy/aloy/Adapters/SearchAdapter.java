@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aloy.aloy.Contracts.SearchContract;
+import com.aloy.aloy.Fragments.Search;
 import com.aloy.aloy.Models.SearchResult;
 import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
@@ -26,14 +27,11 @@ import java.util.Iterator;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
-    private String[] mData = new String[0];
-    private ArrayList<SearchResult> searchResults;
     private LayoutInflater mInflater;
     private SearchPresenter searchPresenter;
     private String searchQuery;
     private Context context;
     private View searchView;
-    private ArrayList<Integer> selectedTracksCount = new ArrayList<>(0);
 
 
 
@@ -44,7 +42,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         this.searchQuery=query;
         this.context=context;
         this.searchView=searchView;
-
 
     }
 
@@ -69,10 +66,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         //return searchResults.size();
     }
 
-    public ArrayList<Integer> getSelectedTracksCount() {
-        return selectedTracksCount;
-    }
-
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -80,7 +73,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         public TextView secondaryText;
         public ImageView cover;
         public CircularImageView check;
-        private TextView selectedTracks;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -88,7 +80,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             secondaryText = (TextView) itemView.findViewById(R.id.secondarySearchText);
             cover = (ImageView) itemView.findViewById(R.id.searchCover);
             check = (CircularImageView) itemView.findViewById(R.id.selectedTrack);
-            selectedTracks = (TextView) searchView.findViewById(R.id.elementsSelected);
             itemView.setOnClickListener(this);
         }
 
@@ -97,24 +88,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             onItemClick(view, getAdapterPosition());
             if (check.getVisibility() == View.INVISIBLE) {
                 check.setVisibility(View.VISIBLE);
-                selectedTracksCount.add(getAdapterPosition());
-                selectedTracks.setText(selectedTracksCount.size() + " tracks selected");
-
-                //searchPresenter.updateSelectedTracks(getAdapterPosition(),searchView,searchQuery);
+                searchPresenter.addTrack(getAdapterPosition(), searchQuery);
             }
             else {
                 check.setVisibility(View.INVISIBLE);
-                Iterator<Integer> track = selectedTracksCount.iterator();
-                while (track.hasNext()) {
-                    Integer current = track.next();
-                    if (current.equals(getAdapterPosition())) {
-                        track.remove();
-                    }
-                }
-                selectedTracks.setText(selectedTracksCount.size() + " tracks selected");
-
+                searchPresenter.removeTrack(getAdapterPosition(),searchQuery);
             }
-
         }
     }
 

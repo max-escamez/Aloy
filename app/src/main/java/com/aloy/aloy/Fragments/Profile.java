@@ -87,21 +87,6 @@ public class Profile extends Fragment {
         username.setText(mSharedPreferenceHelper.getCurrentUserId());
         Picasso.with(getContext()).load(mSharedPreferenceHelper.getProfilePicture()).into(profilePicture);
 
-        /*spotify.getMe(new SpotifyCallback<UserPrivate>() {
-            @Override
-            public void success(UserPrivate u, Response response) {
-                username.setText(u.id);
-                List<Image> images = u.images;
-                for (Image image : images) {
-                    Picasso.with(getContext()).load(image.url).into(profilePicture);
-                }
-            }
-            @Override
-            public void failure(SpotifyError error) {
-                Log.i("Error", error.toString());
-            }
-        });
-        */
         search_bar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {

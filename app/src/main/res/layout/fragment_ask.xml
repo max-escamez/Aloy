@@ -11,13 +11,16 @@
         android:id="@+id/askQuestionField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/askHint"
         android:imeOptions="actionDone"
         android:inputType="text"
         android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,44 +37,102 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/submitQuestion"
+    <TextView
+        android:id="@+id/tracksSelected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@color/accent_material_dark_Aloy"
-        android:text="@string/submit"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="40dp"
+        android:text="0 Tracks Selected"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/findTracks"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/askQuestionField" />
 
     <Button
         android:id="@+id/findTracks"
         android:layout_width="96dp"
         android:layout_height="37dp"
-        android:layout_marginBottom="200dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="57dp"
-        android:layout_marginTop="76dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="40dp"
         android:background="@color/accent_material_dark_Aloy"
         android:text="Find Tracks"
-        app:layout_constraintBottom_toTopOf="@+id/submitQuestion"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/tracksSelected"
-        app:layout_constraintTop_toBottomOf="@+id/askQuestionField"
-        app:layout_constraintVertical_bias="0.038" />
+        app:layout_constraintTop_toBottomOf="@+id/askQuestionField" />
 
     <TextView
-        android:id="@+id/tracksSelected"
+        android:id="@+id/artistsSelected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="88dp"
-        android:text="X Tracks Selected"
+        android:layout_marginTop="50dp"
+        android:text="0 Artists Selected"
         android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/findArtists"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/askQuestionField" />
+        app:layout_constraintTop_toBottomOf="@+id/tracksSelected" />
+
+    <Button
+        android:id="@+id/findArtists"
+        android:layout_width="96dp"
+        android:layout_height="37dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/accent_material_dark_Aloy"
+        android:text="Find Artists"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findTracks" />
+
+    <Button
+        android:id="@+id/submitQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/accent_material_dark_Aloy"
+        android:text="@string/submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findAlbums" />
+
+    <TextView
+        android:id="@+id/albumsSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="50dp"
+        android:text="0 Albums Selected"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/findAlbums"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/artistsSelected" />
+
+    <Button
+        android:id="@+id/findAlbums"
+        android:layout_width="96dp"
+        android:layout_height="37dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/accent_material_dark_Aloy"
+        android:text="Find Albums"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findArtists" />
+
+    <TextView
+        android:id="@+id/specialTrack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="specialTrack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/albumsSelected" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -151,6 +151,7 @@ public class LoginActivity extends Activity {
                         new codeToRefresh().execute().get();
                         mSharedPreferenceHelper.saveSpotifyToken(refresh_token);
                         new refreshToAccess().execute().get();
+                        System.out.println("Token : " +access_token);
                         CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
                         spotifyHandler = new SpotifyHandler(CredentialsHandler.getAccessToken(this),this);
                         mAuth.signInWithCustomToken(firebase_token)

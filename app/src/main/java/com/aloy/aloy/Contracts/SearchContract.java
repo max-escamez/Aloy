@@ -10,6 +10,8 @@ import com.aloy.aloy.Models.SearchResult;
 
 import java.util.ArrayList;
 
+import kaaes.spotify.webapi.android.models.Track;
+
 /**
  * Created by tldonne on 01/11/2017.
  */
@@ -22,17 +24,14 @@ public interface SearchContract {
         void hideSearch();
         void setupRecyclerView(android.view.View searchView, String query);
         //void setupRecyclerView(android.view.View searchView);
-
-
-
-
+        void addTrack(Track track);
+        void removeTrack(Track track);
     }
 
     interface Presenter {
         void bindTrack(String query, SearchAdapter.ViewHolder holder,int position, Context context);
-        ArrayList<SearchResult> updateSelectedTracks (int position, android.view.View searchView, String query);
         int getCount();
-
-
+        void addTrack(int position, String query);
+        void removeTrack(int position, String query);
     }
 }

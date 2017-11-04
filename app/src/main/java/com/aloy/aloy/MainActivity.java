@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         long expiresAt=intent.getLongExtra(EXTRA_EXPIRES_AT,3600);
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
-        SpotifyService spotify = api.getService();
         service = api.getService();
         dataHandler = new DataHandler(this);
         spotifyHandler = new SpotifyHandler(service, this);
