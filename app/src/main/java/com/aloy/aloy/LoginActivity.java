@@ -93,8 +93,8 @@ public class LoginActivity extends Activity {
         refresh_token = mSharedPreferenceHelper.getCurrentSpotifyToken();
         String token = CredentialsHandler.getAccessToken(this);
 
-        if (token==null||a==1) {
-            if(refresh_token==null||a==1) {
+        if (token==null) {
+            if(refresh_token==null) {
                 Log.i("Token State","Never logged in");
                 setContentView(R.layout.activity_login);
             }else{

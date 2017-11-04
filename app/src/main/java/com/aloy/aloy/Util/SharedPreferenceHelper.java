@@ -10,11 +10,10 @@ import android.util.Log;
 
 public class SharedPreferenceHelper {
 
-    public static final String PREFERENCES = "AloyPreferences";
-    public static final String CURRENT_SPOTIFY_TOKEN_KEY = "CurrentSpotifyToken";
-    public static final String CURRENT_USER_SPOTIFY_ID_KEY = "CurrentSpotifyID";
-    public static final String CURRENT_USER_SPOTIFY_PROFILE_PIC = "currentSpotifyProfilePic";
-    public static final String CURRENT_USER_FIREBASE_ID = "currentFirebaseID";
+    private static final String PREFERENCES = "AloyPreferences";
+    private static final String CURRENT_SPOTIFY_TOKEN_KEY = "CurrentSpotifyToken";
+    private static final String CURRENT_USER_SPOTIFY_ID_KEY = "CurrentSpotifyID";
+    private static final String CURRENT_USER_SPOTIFY_PROFILE_PIC = "currentSpotifyProfilePic";
 
     private Context mContext;
     private SharedPreferences mSharedPreferences;

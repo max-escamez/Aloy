@@ -23,6 +23,8 @@ import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -103,39 +105,47 @@ public class Profile extends Fragment {
         search_bar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    search_query = search_bar.getText().toString();
-                    search_bar.setText("");
-                    SpotifyApi api = new SpotifyApi();
-                    api.setAccessToken(CredentialsHandler.getAccessToken(getContext()));
-                    SpotifyService spotify = api.getService();
+                    try {
+                        search_query = search_bar.getText().toString();
+                        Log.i("Before encoding",search_query);
+                        search_query=URLEncoder.encode(search_query,"utf-8");
+                        Log.i("After encoding",search_query);
 
-                    spotify.searchTracks(search_query, new SpotifyCallback<TracksPager>() {
-                        @Override
-                        public void failure(SpotifyError spotifyError) {
-                            Log.e("Tracks", "Could not get tracks");
-                        }
-                        @Override
-                        public void success(TracksPager p, Response response) {
-                            Pager<Track> trackPager = p.tracks;
-                            List<Track> trackList = trackPager.items;
-                            Track song = trackList.get(0);
-                            AlbumSimple album = song.album;
-                            List<Image> imageList = album.images;
-                            image_url = imageList.get(0).url;
-                            Picasso.with(getContext()).load(image_url).into(cover);
-                            link = song.uri;
-                            cover.setOnClickListener(new View.OnClickListener() {
 
-                                public void onClick(View arg0) {
-                                    Intent viewIntent =
-                                            new Intent("android.intent.action.VIEW",
-                                                    Uri.parse(link));
-                                    startActivity(viewIntent);
-                                }
-                            });
-                        }
+                        search_bar.setText("");
+                        SpotifyApi api = new SpotifyApi();
+                        api.setAccessToken(CredentialsHandler.getAccessToken(getContext()));
+                        SpotifyService spotify = api.getService();
 
-                    });
+                        spotify.searchTracks(search_query, new SpotifyCallback<TracksPager>() {
+                            @Override
+                            public void failure(SpotifyError spotifyError) {
+                             Log.e("Tracks", "Could not get tracks");
+                            }
+                            @Override
+                            public void success(TracksPager p, Response response) {
+                                Pager<Track> trackPager = p.tracks;
+                                List<Track> trackList = trackPager.items;
+                                Track song = trackList.get(0);
+                                AlbumSimple album = song.album;
+                                List<Image> imageList = album.images;
+                                image_url = imageList.get(0).url;
+                                Picasso.with(getContext()).load(image_url).into(cover);
+                                link = song.uri;
+                                cover.setOnClickListener(new View.OnClickListener() {
+
+                                    public void onClick(View arg0) {
+                                        Intent viewIntent = new Intent("android.intent.action.VIEW",
+                                                        Uri.parse(link));
+                                        startActivity(viewIntent);
+                                    }
+                                });
+                            }
+
+                        });
+                    } catch (UnsupportedEncodingException | IndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                    }
                     return true;
                 }
                 return false;
