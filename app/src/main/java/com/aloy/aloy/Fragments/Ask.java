@@ -45,7 +45,8 @@ public class Ask extends DialogFragment implements AskContract.View{
     private TextView tracksSelectedTextView;
     private TextView artistsSelectedTextView;
     private TextView albumsSelectedTextView;
-    private String tracksQuery;
+    private String questionId;
+    private boolean answer;
 
 
 
@@ -76,6 +77,8 @@ public class Ask extends DialogFragment implements AskContract.View{
         searchArtists = (Button) askView.findViewById(R.id.findArtists);
         artistsSelectedTextView = (TextView) askView.findViewById(R.id.artistsSelected);
 
+        Bundle args = getArguments();
+        questionId = args.getString("questionId");
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +91,11 @@ public class Ask extends DialogFragment implements AskContract.View{
             @Override
             public void onClick(View v) {
                 questionBody = askQuestionField.getText().toString();
-                askPresenter.createQuestion(questionBody);
+
+                if (!questionId.equals("null"))
+                    askPresenter.createAnswer(questionBody,questionId);
+                else
+                    askPresenter.createQuestion(questionBody);
                 hideAskQuestion();
             }
         });

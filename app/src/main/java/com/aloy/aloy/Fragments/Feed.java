@@ -2,13 +2,10 @@ package com.aloy.aloy.Fragments;
 
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +17,6 @@ import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.FeedPresenter;
 import com.aloy.aloy.R;
-import com.aloy.aloy.Util.DataHandler;
 import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -72,7 +68,7 @@ public class Feed extends Fragment implements FeedContract.View {
     @Override
     public void setupRecyclerView(View feedView) {
         RecyclerView recyclerView = (RecyclerView) feedView.findViewById(R.id.feedRecyclerView);
-        myRecyclerAdapter = new MyRecyclerAdapter(myRef, adapterQuestions, adapterKeys,getContext());
+        myRecyclerAdapter = new MyRecyclerAdapter(myRef, adapterQuestions, adapterKeys,getContext(),this);
         layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
@@ -90,8 +86,20 @@ public class Feed extends Fragment implements FeedContract.View {
     public void showAddQuestion() {
         FragmentManager fragmentManager = getFragmentManager();
         Ask askDialog = new Ask();
+        Bundle args = new Bundle();
+        args.putString("questionId", "null");
+        askDialog.setArguments(args);
         askDialog.show(fragmentManager,"ask");
+    }
 
+    @Override
+    public void showAnswerQuestion(String questionId) {
+        FragmentManager fragmentManager = getFragmentManager();
+        Ask askDialog = new Ask();
+        Bundle args = new Bundle();
+        args.putString("questionId", questionId);
+        askDialog.setArguments(args);
+        askDialog.show(fragmentManager,"ask");
     }
 
 }

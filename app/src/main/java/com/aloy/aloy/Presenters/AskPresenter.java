@@ -16,7 +16,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyCallback;
@@ -38,7 +40,7 @@ public class AskPresenter implements AskContract.Presenter {
     private DataHandler dataHandler;
     private SpotifyHandler spotifyHandler;
     private SharedPreferenceHelper sharedPreferenceHelper;
-    private HashMap tracksSelected;
+    private LinkedHashMap<String,Track> tracksSelected;
     private HashMap artistsSelected;
     private HashMap albumsSelected;
 
@@ -47,7 +49,7 @@ public class AskPresenter implements AskContract.Presenter {
         this.dataHandler = dataHandler;
         this.spotifyHandler = spotifyHandler;
         this.askView = askView;
-        tracksSelected = new HashMap();
+        tracksSelected = new LinkedHashMap<>();
         albumsSelected = new HashMap();
         artistsSelected = new HashMap();
     }
@@ -56,11 +58,15 @@ public class AskPresenter implements AskContract.Presenter {
     @Override
     public void createAnswer(String body, String questionID) {
         Answer newAnswer = new Answer(sharedPreferenceHelper.getCurrentUserId(),body,sharedPreferenceHelper.getProfilePicture());
-        dataHandler.saveAnswer(newAnswer, questionID);
+        dataHandler.saveAnswer(newAnswer, questionID, tracksSelected, artistsSelected, albumsSelected);
     }
     @Override
     public void createQuestion(String body) {
         Question newQuestion = new Question(sharedPreferenceHelper.getCurrentUserId(),sharedPreferenceHelper.getProfilePicture(),body);
+        if (tracksSelected.size()>=2) {
+            newQuestion.setCover1(new ArrayList<>(tracksSelected.values()).get(0).album.images.get(0).url );
+            newQuestion.setCover2(new ArrayList<>(tracksSelected.values()).get(1).album.images.get(0).url );
+        }
         dataHandler.saveQuestion(newQuestion,tracksSelected,artistsSelected,albumsSelected);
     }
 

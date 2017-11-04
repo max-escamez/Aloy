@@ -149,7 +149,20 @@ public class SpotifyHandler {
             public void success(AlbumsPager albumsPager, Response response) {
                 AlbumSimple album = albumsPager.albums.items.get(position);
                 holder.primaryText.setText(album.name);
-                holder.secondaryText.setText(album.album_type);
+
+                service.getAlbum(album.id, new SpotifyCallback<Album>() {
+                    @Override
+                    public void failure(SpotifyError spotifyError) {
+                        Log.e("Albums", "Could not get albums");
+                    }
+
+                    @Override
+                    public void success(Album album2, Response response) {
+                        holder.secondaryText.setText(album2.artists.get(0).name);
+
+                    }
+                });
+
                 Picasso.with(context).load(album.images.get(0).url).into(holder.cover);
             }
         });
