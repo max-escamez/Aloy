@@ -73,11 +73,6 @@ public class MainActivity extends AppCompatActivity {
         return new Intent(context, MainActivity.class);
     }
 
-    /*public void switchToProfile() {
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.profile_layout, new Profile()).commit();}*/
-
-
     private void setupViewPager(String token) {
         Bundle args = new Bundle();
         args.putString("token",token );
@@ -113,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,20 +146,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("Token", "Refresh");
                     try {
                         new LoginActivity.refreshToAccess().execute().get();
-                        /*mAuth.signInWithCustomToken(LoginActivity.firebase_token)
-                                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            Log.d("", "signInWithCustomToken:success");
-                                            FirebaseUser user = mAuth.getCurrentUser();
-                                        } else {
-                                            // If sign in fails, display a message to the user.
-                                            Log.w("", "signInWithCustomToken:failure", task.getException());
-                                        }
-                                    }
-                                });*/
-
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }

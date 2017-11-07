@@ -62,7 +62,13 @@ public class AskPresenter implements AskContract.Presenter {
     }
     @Override
     public void createQuestion(String body) {
-        Question newQuestion = new Question(sharedPreferenceHelper.getCurrentUserId(),sharedPreferenceHelper.getProfilePicture(),body);
+        String id;
+        if(sharedPreferenceHelper.getCurrentUserName().equals("")){
+            id=sharedPreferenceHelper.getCurrentUserId();
+        }else{
+            id=sharedPreferenceHelper.getCurrentUserName();
+        }
+        Question newQuestion = new Question(id,sharedPreferenceHelper.getProfilePicture(),body);
         if (tracksSelected.size()>=2) {
             newQuestion.setCover1(new ArrayList<>(tracksSelected.values()).get(0).album.images.get(0).url );
             newQuestion.setCover2(new ArrayList<>(tracksSelected.values()).get(1).album.images.get(0).url );
@@ -102,6 +108,8 @@ public class AskPresenter implements AskContract.Presenter {
 
     @Override
     public HashMap getAlbums() { return this.albumsSelected; }
+
+    public void upvoteScheme(String questionId){dataHandler.upvote(questionId);}
 
 
 }

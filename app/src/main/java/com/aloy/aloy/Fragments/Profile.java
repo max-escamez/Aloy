@@ -87,8 +87,11 @@ public class Profile extends Fragment {
         cover = (ImageView) myInflatedView.findViewById(R.id.cover);
         search_bar = (EditText) myInflatedView.findViewById(R.id.search_bar);
         search_bar.setVisibility(View.VISIBLE);
-
-        username.setText(mSharedPreferenceHelper.getCurrentUserId());
+        if(mSharedPreferenceHelper.getCurrentUserName().equals("")){
+            username.setText(mSharedPreferenceHelper.getCurrentUserId());
+        }else{
+            username.setText(mSharedPreferenceHelper.getCurrentUserName());
+        }
         Picasso.with(getContext()).load(mSharedPreferenceHelper.getProfilePicture()).into(profilePicture);
 
         search_bar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -138,22 +141,28 @@ public class Profile extends Fragment {
                             }
                             @Override
                             public void success(TracksPager p, Response response) {
+                                try {
                                 Pager<Track> trackPager = p.tracks;
                                 List<Track> trackList = trackPager.items;
                                 Track song = trackList.get(0);
                                 AlbumSimple album = song.album;
                                 List<Image> imageList = album.images;
                                 image_url = imageList.get(0).url;
-                                Picasso.with(getContext()).load(image_url).into(cover);
-                                link = song.uri;
-                                cover.setOnClickListener(new View.OnClickListener() {
 
-                                    public void onClick(View arg0) {
-                                        Intent viewIntent = new Intent("android.intent.action.VIEW",
-                                                        Uri.parse(link));
-                                        startActivity(viewIntent);
-                                    }
-                                });
+                                    Picasso.with(getContext()).load(image_url).into(cover);
+                                    link = song.uri;
+                                    cover.setOnClickListener(new View.OnClickListener() {
+
+                                        public void onClick(View arg0) {
+                                            Intent viewIntent = new Intent("android.intent.action.VIEW",
+                                                    Uri.parse(link));
+                                            startActivity(viewIntent);
+                                        }
+                                    });
+                                }catch(IndexOutOfBoundsException e){
+                                    e.printStackTrace();
+
+                                }
                             }
 
                         });

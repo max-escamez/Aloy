@@ -18,6 +18,8 @@ import com.aloy.aloy.R;
 import com.aloy.aloy.Util.SpotifyHandler;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -38,12 +40,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     // data is passed into the constructor
     public SearchAdapter(View searchView, Context context, SearchPresenter searchPresenter, String query, String type) {
-        this.mInflater = LayoutInflater.from(context);
-        this.searchPresenter=searchPresenter;
-        this.searchQuery=query;
-        this.context=context;
-        this.searchView=searchView;
-        this.type=type;
+        try {
+            this.mInflater = LayoutInflater.from(context);
+            this.searchPresenter = searchPresenter;
+            this.searchQuery = query;
+            this.searchQuery = URLEncoder.encode(searchQuery, "utf-8");
+            this.context = context;
+            this.searchView = searchView;
+            this.type = type;
+        }catch(UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -98,7 +105,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             }
         }
     }
-
 
 
     // Method that executes your code for the action received

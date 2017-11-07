@@ -72,6 +72,7 @@ public class SpotifyHandler {
             @Override
             public void success(UserPrivate u, Response response) {
                 sharedPreferenceHelper.saveCurrentUserId(u.id);
+                sharedPreferenceHelper.saveName(u.display_name);
                 sharedPreferenceHelper.saveProfilePicture(u.images.get(0).url);
             }
 
@@ -84,25 +85,13 @@ public class SpotifyHandler {
     }
 
     public void createMainUser() {
-        service.getMe(new SpotifyCallback<UserPrivate>() {
-            @Override
-            public void success(UserPrivate u, Response response) {
-                mainUser = new MainUser(u.id, u.images.get(0).url);
-                dataHandler.saveUser(mainUser);
-            }
-
-            @Override
-            public void failure(SpotifyError error) {
-                Log.i("Error", error.toString());
-            }
-
-        });
+        mainUser = new MainUser(sharedPreferenceHelper.getCurrentUserId(), sharedPreferenceHelper.getProfilePicture());
+        dataHandler.saveUser(mainUser);
     }
 
 
 
     public void bindTrack(String query, final SearchAdapter.ViewHolder holder, final int position, final Context context) {
-
         service.searchTracks(query, new SpotifyCallback<TracksPager>() {
             @Override
             public void failure(SpotifyError spotifyError) {

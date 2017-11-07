@@ -13,6 +13,7 @@ public class SharedPreferenceHelper {
     private static final String PREFERENCES = "AloyPreferences";
     private static final String CURRENT_SPOTIFY_TOKEN_KEY = "CurrentSpotifyToken";
     private static final String CURRENT_USER_SPOTIFY_ID_KEY = "CurrentSpotifyID";
+    private static final String CURRENT_USER_SPOTIFY_NAME_KEY = "CurrentSpotifyName";
     private static final String CURRENT_USER_SPOTIFY_PROFILE_PIC = "currentSpotifyProfilePic";
 
     private Context mContext;
@@ -45,8 +46,18 @@ public class SharedPreferenceHelper {
         return mSharedPreferences.getString(CURRENT_SPOTIFY_TOKEN_KEY, "");
     }
 
+    public void saveName(String id) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(CURRENT_USER_SPOTIFY_NAME_KEY, id);
+        editor.apply();
+    }
+
     public String getProfilePicture() {
         return mSharedPreferences.getString(CURRENT_USER_SPOTIFY_PROFILE_PIC, "");
+    }
+
+    public String getCurrentUserName(){
+        return mSharedPreferences.getString(CURRENT_USER_SPOTIFY_NAME_KEY, "");
     }
 
     public String getCurrentUserId() {
