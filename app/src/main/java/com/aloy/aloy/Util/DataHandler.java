@@ -3,12 +3,17 @@ package com.aloy.aloy.Util;
 import android.content.Context;
 import android.util.Log;
 
+import com.aloy.aloy.LoginActivity;
 import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,24 +22,24 @@ import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by tldonne on 29/10/2017.
  */
 
 public class DataHandler {
 
-    private FirebaseDatabase database;
     private DatabaseReference refQuestionFeed;
     private DatabaseReference refUser;
-    SharedPreferenceHelper sharedPreferenceHelper;
+    private SharedPreferenceHelper sharedPreferenceHelper;
 
 
     public DataHandler(Context context){
         sharedPreferenceHelper = new SharedPreferenceHelper(context);
-        database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         refQuestionFeed = database.getReference("questions");
         refUser = database.getReference("users");
-
     }
 
     public DatabaseReference getRefAnswers(String questionId) {
@@ -65,8 +70,6 @@ public class DataHandler {
                     refQuestionFeed.child(databaseReference.getKey()).child("albums").child(album.getKey()).child("uri").setValue(album.getValue().uri);
                     refQuestionFeed.child(databaseReference.getKey()).child("albums").child(album.getKey()).child("cover").setValue(album.getValue().images.get(0).url);
                 }
-
-
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").push().setValue(databaseReference.getKey());
             }
         });
@@ -105,6 +108,58 @@ public class DataHandler {
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("answers").child(questionID).setValue(databaseReference.getKey());
             }
         });
+    }
+
+    public void upvote(final String questionId) {
+        //refQuestionFeed.runTransaction(new Transaction.Handler() {
+           // @Override
+            //public Transaction.Result doTransaction(MutableData mutableData) {
+                //Post p = mutableData.getValue(Post.class);
+                final DatabaseReference mUpvoterReference = refQuestionFeed.child(questionId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
+                final DatabaseReference mUpvotesReference = refQuestionFeed.child(questionId).child("upvotes").child("number");
+                mUpvotesReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot votes) {
+                        mUpvoterReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot voter) {
+                                if (voter.exists()) {
+                                    //Log.i("votes",""+(int)votes.getValue());
+                                    refQuestionFeed.child(questionId).child("upvotes").child("number").setValue(votes.getValue(Integer.class)-1);
+                                    refQuestionFeed.child(questionId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId()).removeValue();
+
+                                }else{
+                                    refQuestionFeed.child(questionId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId()).setValue("voted");
+                                    if (votes.exists()) {
+                                        refQuestionFeed.child(questionId).child("upvotes").child("number").setValue(votes.getValue(Integer.class)+1);
+                                    }else{
+                                        refQuestionFeed.child(questionId).child("upvotes").child("number").setValue(1);
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+                            }
+                        });
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+                    }
+                });
+
+                //mutableData.setValue(p);
+                //return Transaction.success(mutableData);
+            //}
+
+            //@Override
+            //public void onComplete(DatabaseError databaseError, boolean b,
+            //                       DataSnapshot dataSnapshot) {
+                // Transaction completed
+            //    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+            //}
+        //});
     }
 
 }

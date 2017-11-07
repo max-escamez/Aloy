@@ -83,4 +83,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/aloy_transparent2x" />
 
+    <Button
+        android:id="@+id/upvoteButton"
+        android:layout_width="75dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="12dp"
+        android:text="upvote"
+        android:textAppearance="@android:style/TextAppearance.Material.Button"
+        android:textSize="8sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/questionCover1"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

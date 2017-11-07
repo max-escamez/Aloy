@@ -16,6 +16,7 @@ import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Fragments.QuestionDetails;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.DataHandler;
 import com.google.firebase.database.Query;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -29,39 +30,46 @@ import java.util.ArrayList;
 public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter.ViewHolder, Question> {
     private Context context;
     private Feed feedView;
-    private QuestionDetails questionDetailsView;
-    private String answers="question";
+    private DataHandler dataHandler;
 
 
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView questionBody;
+        TextView questionUsername;
+        CircularImageView profilePic;
+        ImageView cover1;
+        ImageView cover2;
+        Button answerButton;
+        Button upvoteButton;
+
+        public ViewHolder(View view) {
+            super(view);
+            questionBody = (TextView) view.findViewById(R.id.questionBody);
+            questionUsername = (TextView) view.findViewById(R.id.questionUsername);
+            profilePic = (CircularImageView) view.findViewById(R.id.questionProfilePic);
+            cover1 = (ImageView) view.findViewById(R.id.questionCover1);
+            cover2 = (ImageView) view.findViewById(R.id.questionCover2);
+            answerButton = (Button) view.findViewById(R.id.answerButton);
+            upvoteButton = (Button) view.findViewById(R.id.upvoteButton);
+        }
+    }
 
     public MyRecyclerAdapter(Query query, @Nullable ArrayList<Question> questions,
                              @Nullable ArrayList<String> keys, Context context, Feed view) {
         super(query, questions, keys);
         this.context = context;
         this.feedView=view;
+        this.dataHandler = new DataHandler(context);
     }
 
-    public MyRecyclerAdapter(Query query, @Nullable ArrayList<Question> questions,
-                             @Nullable ArrayList<String> keys, Context context, QuestionDetails view, String answers) {
-        super(query, questions, keys);
-        this.context = context;
-        this.questionDetailsView=view;
-        this.answers=answers;
-    }
+
 
 
     @Override
     public MyRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (answers.equals("answers")) {
-            View answerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.answer, parent, false);
-            return new ViewHolder(answerView);
-
-        }
-        else {
-            View questionView = LayoutInflater.from(parent.getContext()).inflate(R.layout.question, parent, false);
-            return new ViewHolder(questionView);
-
-        }
+        View questionView = LayoutInflater.from(parent.getContext()).inflate(R.layout.question, parent, false);
+        return new ViewHolder(questionView);
 
     }
 
@@ -85,35 +93,20 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
 
             }
         });
+
         holder.answerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 feedView.showAnswerQuestion(question.getId());
             }
         });
-    }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-
-        TextView questionBody;
-        TextView questionUsername;
-        CircularImageView profilePic;
-        ImageView cover1;
-        ImageView cover2;
-        Button answerButton;
-
-        ViewHolder(View view) {
-            super(view);
-            questionBody = (TextView) view.findViewById(R.id.questionBody);
-            questionUsername = (TextView) view.findViewById(R.id.questionUsername);
-            profilePic = (CircularImageView) view.findViewById(R.id.questionProfilePic);
-            cover1 = (ImageView) view.findViewById(R.id.questionCover1);
-            cover2 = (ImageView) view.findViewById(R.id.questionCover2);
-            answerButton = (Button) view.findViewById(R.id.answerButton);
-            //view.setOnClickListener(this);
-
-        }
-
+        holder.upvoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataHandler.upvote(question.getId());
+            }
+        });
     }
 
 
