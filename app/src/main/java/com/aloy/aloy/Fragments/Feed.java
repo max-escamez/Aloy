@@ -4,6 +4,7 @@ package com.aloy.aloy.Fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
  */
 public class Feed extends Fragment implements FeedContract.View {
 
+    public static final String TAG = Feed.class.getSimpleName();
     private FeedContract.Presenter feedPresenter;
     private FloatingActionButton addQuestionFab;
     private Query query;
@@ -100,6 +102,22 @@ public class Feed extends Fragment implements FeedContract.View {
         args.putString("questionId", questionId);
         askDialog.setArguments(args);
         askDialog.show(fragmentManager,"ask");
+    }
+
+    @Override
+    public void onQuestionCLick(Question question, View itemView) {
+        QuestionDetails questionDetails = QuestionDetails.newInstance(question, ViewCompat.getTransitionName(itemView));
+        FragmentManager fragmentManager = getFragmentManager();
+        questionDetails.show(fragmentManager,"details");
+
+
+
+        /*getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .addSharedElement(itemView, ViewCompat.getTransitionName(itemView))
+                .addToBackStack(TAG)
+                .replace( ((ViewGroup)( getView().getParent())).getId(), questionDetails)
+                .commit();*/
     }
 
 }

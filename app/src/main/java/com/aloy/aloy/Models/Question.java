@@ -1,5 +1,8 @@
 package com.aloy.aloy.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.Exclude;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
@@ -11,7 +14,7 @@ import java.util.List;
  * Created by tldonne on 29/10/2017.
  */
 
-public class Question {
+public class Question implements Parcelable {
     private String id;
     private String username;
     private String body;
@@ -24,7 +27,7 @@ public class Question {
     public Question() {
     }
 
-    public Question(String username, String pic, String body) {
+    public Question(String username, String pic, String body)  {
         this.username = username;
         this.body = body;
         this.pic = pic;
@@ -67,4 +70,17 @@ public class Question {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(username);
+        dest.writeString(pic);
+        dest.writeString(body);
+
+    }
 }

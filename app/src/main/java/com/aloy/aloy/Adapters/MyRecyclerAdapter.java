@@ -1,9 +1,10 @@
 package com.aloy.aloy.Adapters;
 
 import android.content.Context;
-import android.icu.util.ValueIterator;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.aloy.aloy.Fragments.Ask;
 import com.aloy.aloy.Fragments.Feed;
+import com.aloy.aloy.Fragments.QuestionDetails;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
 import com.google.firebase.database.Query;
@@ -28,28 +29,10 @@ import java.util.ArrayList;
 public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter.ViewHolder, Question> {
     private Context context;
     private Feed feedView;
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView questionBody;
-        TextView questionUsername;
-        CircularImageView profilePic;
-        ImageView cover1;
-        ImageView cover2;
-        Button answerButton;
-
-        public ViewHolder(View view) {
-            super(view);
-            questionBody = (TextView) view.findViewById(R.id.questionBody);
-            questionUsername = (TextView) view.findViewById(R.id.questionUsername);
-            profilePic = (CircularImageView) view.findViewById(R.id.questionProfilePic);
-            cover1 = (ImageView) view.findViewById(R.id.questionCover1);
-            cover2 = (ImageView) view.findViewById(R.id.questionCover2);
-            answerButton = (Button) view.findViewById(R.id.answerButton);
+    private QuestionDetails questionDetailsView;
+    private String answers="question";
 
 
-        }
-    }
 
     public MyRecyclerAdapter(Query query, @Nullable ArrayList<Question> questions,
                              @Nullable ArrayList<String> keys, Context context, Feed view) {
@@ -58,15 +41,32 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
         this.feedView=view;
     }
 
+    public MyRecyclerAdapter(Query query, @Nullable ArrayList<Question> questions,
+                             @Nullable ArrayList<String> keys, Context context, QuestionDetails view, String answers) {
+        super(query, questions, keys);
+        this.context = context;
+        this.questionDetailsView=view;
+        this.answers=answers;
+    }
+
+
     @Override
     public MyRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.question, parent, false);
+        if (answers.equals("answers")) {
+            View answerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.answer, parent, false);
+            return new ViewHolder(answerView);
 
-        return new ViewHolder(view);
+        }
+        else {
+            View questionView = LayoutInflater.from(parent.getContext()).inflate(R.layout.question, parent, false);
+            return new ViewHolder(questionView);
+
+        }
+
     }
 
     @Override
-    public void onBindViewHolder(MyRecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final MyRecyclerAdapter.ViewHolder holder, int position) {
         //Question question = getItem(getItemCount()-position-1);
         final Question question = getItem(position);
         holder.questionBody.setText(question.getBody());
@@ -75,13 +75,44 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
         Picasso.with(context).load(question.getCover1()).into(holder.cover1);
         Picasso.with(context).load(question.getCover2()).into(holder.cover2);
 
+        ViewCompat.setTransitionName(holder.itemView, question.getId());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("TAG", "You clicked question " +  question.getId());
+                feedView.onQuestionCLick(question,holder.itemView);
+
+            }
+        });
         holder.answerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 feedView.showAnswerQuestion(question.getId());
             }
         });
+    }
 
+    public class ViewHolder extends RecyclerView.ViewHolder{
+
+        TextView questionBody;
+        TextView questionUsername;
+        CircularImageView profilePic;
+        ImageView cover1;
+        ImageView cover2;
+        Button answerButton;
+
+        ViewHolder(View view) {
+            super(view);
+            questionBody = (TextView) view.findViewById(R.id.questionBody);
+            questionUsername = (TextView) view.findViewById(R.id.questionUsername);
+            profilePic = (CircularImageView) view.findViewById(R.id.questionProfilePic);
+            cover1 = (ImageView) view.findViewById(R.id.questionCover1);
+            cover2 = (ImageView) view.findViewById(R.id.questionCover2);
+            answerButton = (Button) view.findViewById(R.id.answerButton);
+            //view.setOnClickListener(this);
+
+        }
 
     }
 

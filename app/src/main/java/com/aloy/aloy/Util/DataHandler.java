@@ -37,6 +37,11 @@ public class DataHandler {
 
     }
 
+    public DatabaseReference getRefAnswers(String questionId) {
+        //return database.getReference(questionId);
+        return refQuestionFeed.child(questionId).child("answers");
+    }
+
     public void saveQuestion(final Question question, final HashMap<String,Track> tracks, final HashMap<String,Artist> artists, final HashMap<String,AlbumSimple> albums) {
         refQuestionFeed.push().setValue(question,new DatabaseReference.CompletionListener() {
             @Override
