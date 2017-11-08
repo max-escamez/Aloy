@@ -33,24 +33,25 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private SearchPresenter searchPresenter;
     private String searchQuery;
     private Context context;
-    private View searchView;
     private String type;
+    private int itemNb;
 
 
 
     // data is passed into the constructor
-    public SearchAdapter(View searchView, Context context, SearchPresenter searchPresenter, String query, String type) {
-        try {
+    public SearchAdapter(Context context, SearchPresenter searchPresenter, String query, String type,int itemNb) {
+        //try {
             this.mInflater = LayoutInflater.from(context);
             this.searchPresenter = searchPresenter;
             this.searchQuery = query;
-            this.searchQuery = URLEncoder.encode(searchQuery, "utf-8");
             this.context = context;
-            this.searchView = searchView;
             this.type = type;
+            this.itemNb=itemNb;
+            this.searchQuery=query;
+            /*this.searchQuery = URLEncoder.encode(searchQuery, "utf-8");
         }catch(UnsupportedEncodingException e){
-            e.printStackTrace();
-        }
+           e.printStackTrace();
+        }*/
 
     }
 
@@ -65,14 +66,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     // binds the data to the textview in each cell
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        searchPresenter.bind(searchQuery,holder,position,context,type);
+        searchPresenter.bind(searchQuery,holder,position,context,type,this);
     }
 
     // total number of cells
     @Override
     public int getItemCount() {
-        return searchPresenter.getCount();
-        //return searchResults.size();
+        return this.itemNb;
+    }
+
+    public void setItemCount(int count) {
+        this.itemNb=count;
     }
 
 

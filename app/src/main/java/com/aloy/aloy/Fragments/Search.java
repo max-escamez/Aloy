@@ -34,6 +34,8 @@ import com.aloy.aloy.Models.SearchResult;
 import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import kaaes.spotify.webapi.android.models.AlbumSimple;
@@ -54,6 +56,7 @@ public class Search extends DialogFragment implements SearchContract.View {
     private TextView itemsSelected;
     private Ask callingFragment;
     private boolean searchTrack = false;
+
 
 
     public Search() {
@@ -142,8 +145,10 @@ public class Search extends DialogFragment implements SearchContract.View {
         else{
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 5));
         }
-        searchAdapter = new SearchAdapter(searchView,getContext(), searchPresenter, searchQuery, type);
-        recyclerView.setAdapter(searchAdapter);
+        searchPresenter.setupSearchRecycler(recyclerView,searchView,getContext(), searchQuery,type);
+        /*searchPresenter.updateCount(searchQuery);
+        searchAdapter = new SearchAdapter(searchView,getContext(), searchPresenter, searchQuery, type, searchPresenter.getitemCount());
+        recyclerView.setAdapter(searchAdapter);*/
     }
 
     @Override
