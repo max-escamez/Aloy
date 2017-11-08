@@ -85,13 +85,13 @@ public class SearchPresenter implements SearchContract.Presenter {
     public void setupSearchRecycler(RecyclerView recyclerView, View searchView, Context context, String searchQuery, String type) {
         switch (type) {
             case "track" :
-                spotifyHandler.setupSearchRecyclerTracks(recyclerView,context,this,encodeQuery(searchQuery),type);
+                spotifyHandler.setupSearchRecyclerTracks(recyclerView,context,this,searchQuery,type);
                 break;
             case "artist" :
-                spotifyHandler.setupSearchRecyclerArtists(recyclerView,context,this,encodeQuery(searchQuery),type);
+                spotifyHandler.setupSearchRecyclerArtists(recyclerView,context,this,searchQuery,type);
                 break;
             case "album" :
-                spotifyHandler.setupSearchRecyclerAlbums(recyclerView,context,this,encodeQuery(searchQuery),type);
+                spotifyHandler.setupSearchRecyclerAlbums(recyclerView,context,this,searchQuery,type);
                 break;
         }
     }
