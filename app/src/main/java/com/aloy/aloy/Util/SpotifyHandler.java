@@ -14,6 +14,7 @@ import com.aloy.aloy.Contracts.SearchContract;
 import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Models.SearchResult;
+import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
 import com.squareup.picasso.Picasso;
 
@@ -90,6 +91,75 @@ public class SpotifyHandler {
     }
 
 
+    /*public void setTrackCount(String query, final SearchPresenter searchPresenter) {
+        service.searchTracks(query, new SpotifyCallback<TracksPager>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Tracks", "Could not get tracks");
+            }
+            @Override
+            public void success(TracksPager p, Response response) {
+                searchPresenter.setCount(p.tracks.items.size());
+
+            }
+
+        });
+    }*/
+
+    public void setupSearchRecyclerTracks(final RecyclerView recyclerView, final Context context, final SearchPresenter searchPresenter, final String searchQuery, final String type) {
+        service.searchTracks(searchQuery, new SpotifyCallback<TracksPager>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Tracks", "Could not get tracks");
+            }
+            @Override
+            public void success(TracksPager p, Response response) {
+                /*System.out.println("______ Setup Recycler size ______" + p.tracks.items.size());
+                int count = 0;
+                for (int i =0;i<p.tracks.items.size();i++) {
+                    System.out.println("____track id______" + p.tracks.items.get(i).name);
+                }*/
+                SearchAdapter searchAdapter = new SearchAdapter(context, searchPresenter, searchQuery, type, p.tracks.items.size());
+                recyclerView.setAdapter(searchAdapter);
+            }
+
+        });
+    }
+
+    public void setupSearchRecyclerArtists(final RecyclerView recyclerView, final Context context, final SearchPresenter searchPresenter, final String searchQuery, final String type) {
+        service.searchArtists(searchQuery, new SpotifyCallback<ArtistsPager>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Tracks", "Could not get tracks");
+            }
+            @Override
+            public void success(ArtistsPager p, Response response) {
+                SearchAdapter searchAdapter = new SearchAdapter(context, searchPresenter, searchQuery, type, p.artists.items.size());
+                recyclerView.setAdapter(searchAdapter);
+            }
+
+        });
+    }
+
+    public void setupSearchRecyclerAlbums(final RecyclerView recyclerView, final Context context, final SearchPresenter searchPresenter, final String searchQuery, final String type) {
+        service.searchAlbums(searchQuery, new SpotifyCallback<AlbumsPager>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e("Tracks", "Could not get tracks");
+            }
+            @Override
+            public void success(AlbumsPager p, Response response) {
+                SearchAdapter searchAdapter = new SearchAdapter(context, searchPresenter, searchQuery, type, p.albums.items.size());
+                recyclerView.setAdapter(searchAdapter);
+            }
+
+        });
+    }
+
+
+
+
+
 
     public void bindTrack(String query, final SearchAdapter.ViewHolder holder, final int position, final Context context) {
         service.searchTracks(query, new SpotifyCallback<TracksPager>() {
@@ -99,11 +169,15 @@ public class SpotifyHandler {
             }
             @Override
             public void success(TracksPager p, Response response) {
-                Track track = p.tracks.items.get(position);
-                SearchResult result = new SearchResult(track.album.images.get(0).url, track.name, track.artists.get(0).name);
-                holder.primaryText.setText(result.getPrimaryText());
-                holder.secondaryText.setText(result.getSecondaryText());
-                Picasso.with(context).load(track.album.images.get(0).url).into(holder.cover);
+                //System.out.println("bind track size : "+p.tracks.items.size());
+                if (position<p.tracks.items.size()) {
+                    Track track = p.tracks.items.get(position);
+                    //SearchResult result = new SearchResult(track.album.images.get(0).url, track.name, track.artists.get(0).name);
+                    holder.primaryText.setText(track.name);
+                    holder.secondaryText.setText(track.artists.get(0).name);
+                    Picasso.with(context).load(track.album.images.get(0).url).into(holder.cover);
+                }
+
 
             }
 
@@ -224,6 +298,7 @@ public class SpotifyHandler {
             }
         });
     }
+
 
 }
 
