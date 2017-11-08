@@ -40,18 +40,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     // data is passed into the constructor
     public SearchAdapter(View searchView, Context context, SearchPresenter searchPresenter, String query, String type) {
-        try {
-            this.mInflater = LayoutInflater.from(context);
-            this.searchPresenter = searchPresenter;
-            this.searchQuery = query;
-            this.searchQuery = URLEncoder.encode(searchQuery, "utf-8");
-            this.context = context;
-            this.searchView = searchView;
-            this.type = type;
-        }catch(UnsupportedEncodingException e){
-            e.printStackTrace();
-        }
-
+        this.mInflater = LayoutInflater.from(context);
+        this.searchPresenter = searchPresenter;
+        this.searchQuery = query;
+        this.context = context;
+        this.searchView = searchView;
+        this.type = type;
     }
 
 

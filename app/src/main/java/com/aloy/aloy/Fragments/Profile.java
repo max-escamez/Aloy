@@ -99,7 +99,6 @@ public class Profile extends Fragment {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     try {
 
-
                         search_query = search_bar.getText().toString();
                         Log.i("Before encoding",search_query);
                         search_query=URLEncoder.encode(search_query,"utf-8");
