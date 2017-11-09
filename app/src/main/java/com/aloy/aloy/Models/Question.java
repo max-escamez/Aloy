@@ -3,6 +3,7 @@ package com.aloy.aloy.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.aloy.aloy.Util.DataHandler;
 import com.google.firebase.database.Exclude;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
@@ -19,6 +20,7 @@ public class Question implements Parcelable {
     private String username;
     private String body;
     private String pic;
+    private String name;
     @Exclude
     private String cover1;
     @Exclude
@@ -27,10 +29,11 @@ public class Question implements Parcelable {
     public Question() {
     }
 
-    public Question(String username, String pic, String body)  {
+    public Question(String username, String pic, String body,String name)  {
         this.username = username;
         this.body = body;
         this.pic = pic;
+        this.name=name;
     }
 
     protected Question(Parcel in) {
@@ -61,7 +64,12 @@ public class Question implements Parcelable {
 
     public String getUsername() {return username; }
 
-    public String getPic(){return pic;}
+    public String getName() {return name; }
+
+
+    public String getPic(){
+        return pic;
+    }
 
     public void setBody(String body) {
         this.body=body;

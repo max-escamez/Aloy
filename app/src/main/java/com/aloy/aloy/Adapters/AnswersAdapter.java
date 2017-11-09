@@ -15,6 +15,8 @@ import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.DataHandler;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -52,12 +54,16 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
     @Override
     public void onBindViewHolder(final AnswersAdapter.ViewHolder holder, int position) {
         //Question question = getItem(getItemCount()-position-1);
+
         final Answer answer = getItem(position);
         holder.body.setText(answer.getBody());
-        holder.username.setText(answer.getUsername());
+        if ((answer.getName()) == null) {
+            holder.username.setText(answer.getUsername());
+        }else{
+            holder.username.setText(answer.getName());
+        }
         Picasso.with(context).load(answer.getPic()).into(holder.profilePic);
         questionDetailsPresenter.getUserUpvote(questionId,answer.getId(),holder);
-
         //Picasso.with(context).load(question.getCover1()).into(holder.cover1);
         //Picasso.with(context).load(question.getCover2()).into(holder.cover2);
 

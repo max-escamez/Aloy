@@ -11,15 +11,17 @@ public class Answer {
     private String username;
     private String body;
     private String pic;
+    private String name;
     private CircularImageView profilePicture;
 
     public Answer() {
     }
 
-    public Answer(String username, String body, String pic) {
+    public Answer(String username, String body, String pic,String name) {
         this.username = username;
         this.body = body;
         this.pic = pic;
+        this.name=name;
     }
 
     public void setId(String id) {
@@ -35,6 +37,8 @@ public class Answer {
         }
 
     public String getUsername() {return username; }
+
+    public String getName() {return name; }
 
     public String getPic(){return pic;}
 

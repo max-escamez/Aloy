@@ -15,7 +15,6 @@ import com.aloy.aloy.R;
 
 public class Following extends Fragment {
     private static final String TAG = "Following";
-    private Button test;
 
     public Following() {
         // Required empty public constructor
@@ -26,14 +25,8 @@ public class Following extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_following, container, false);
-        test =(Button) view.findViewById(R.id.followButton);
 
-        test.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
 
-            }
-        });
         return view;
     }
 

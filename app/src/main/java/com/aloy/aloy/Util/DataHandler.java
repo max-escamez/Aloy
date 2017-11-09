@@ -36,6 +36,7 @@ public class DataHandler {
     private DatabaseReference refQuestionFeed;
     private DatabaseReference refUser;
     private SharedPreferenceHelper sharedPreferenceHelper;
+    private String profilePicture;
 
 
     public DataHandler(Context context){
@@ -165,6 +166,43 @@ public class DataHandler {
         //});
     }
 
+    public void follow(final String questionId){
+        final DatabaseReference mFollowersReference = refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId());
+        final DatabaseReference mFollowingReference = refQuestionFeed.child(questionId).child("following").child("number");
+        mFollowingReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot following) {
+                mFollowersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot follower) {
+                        if (follower.exists()) {
+                            //unfollow
+                            refQuestionFeed.child(questionId).child("following").child("number").setValue(following.getValue(Integer.class)-1);
+                            refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId()).removeValue();
+
+                        }else{
+                            refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId()).setValue("is following");
+                            if (following.exists()) {
+                                refQuestionFeed.child(questionId).child("following").child("number").setValue(following.getValue(Integer.class)+1);
+                            }else{
+                                refQuestionFeed.child(questionId).child("following").child("number").setValue(1);
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
+
+    }
+
     public void getUpvote(final DatabaseReference questionRef, final String answerId, final AnswersAdapter.ViewHolder holder) {
         final DatabaseReference mUpvoterReference = questionRef.child(answerId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
         final DatabaseReference mUpvotesReference = questionRef.child(answerId).child("upvotes").child("number");
@@ -193,6 +231,35 @@ public class DataHandler {
                 Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
             }
         });
+    }
+
+    public void updateURL(final String username){
+        final DatabaseReference picReference = refUser.child(username).child("pic");
+        picReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot userURL) {
+                setProfilePicture(userURL.getValue().toString());
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+
+        });
 
     }
+
+    public void setProfilePicture(String url){
+        profilePicture=url;
+    }
+
+    public String getProfilePicture(){
+        return profilePicture;
+    }
+
+    public void updateData(String username){
+        refUser.child(username).child("pic").setValue(sharedPreferenceHelper.getProfilePicture());
+    }
+
+
 }
