@@ -180,7 +180,6 @@ public class DataHandler {
 
                         }else{
                             holder.upvote.setImageResource(R.drawable.ic_favorite_border);
-
                         }
                     }
                     @Override

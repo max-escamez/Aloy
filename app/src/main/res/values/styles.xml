@@ -6,6 +6,9 @@
         <item name="colorPrimary">@color/background_dark</item>
         <item name="colorPrimaryDark">@color/navbar_dark</item>
         <item name="colorAccent">@color/accent_material_dark_Aloy</item>
+        <item name="android:windowContentTransitions">true</item>
+
+
     </style>
 
 </resources>

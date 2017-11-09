@@ -22,6 +22,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import static com.aloy.aloy.Fragments.Feed.EXTRA_QUESTION_TRANSITION_NAME;
+
 /**
  * Created by tldonne on 29/10/2017.
  */

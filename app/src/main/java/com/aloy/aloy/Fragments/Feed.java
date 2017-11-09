@@ -112,6 +112,7 @@ public class Feed extends Fragment implements FeedContract.View {
     @Override
     public void onQuestionCLick(Question question, View itemView) {
         Intent intent = new Intent(this.getActivity(), Details.class);
+        itemView.setTransitionName(EXTRA_QUESTION_TRANSITION_NAME);
         intent.putExtra(EXTRA_QUESTION, question);
         intent.putExtra(EXTRA_QUESTION_TRANSITION_NAME, ViewCompat.getTransitionName(itemView));
 
@@ -122,5 +123,7 @@ public class Feed extends Fragment implements FeedContract.View {
         startActivity(intent, options.toBundle());
 
     }
+
+
 
 }
