@@ -58,7 +58,7 @@ public class IndexedFeedAdapter {
             protected void onBindViewHolder(final QuestionHolder holder, int position, final Question model) {
                 //final Question question = getItem(position);
                 holder.questionBody.setText(model.getBody());
-                if((model.getName())==null){
+                if((model.getName()).equals("")){
                     holder.questionUsername.setText(model.getUsername());
                 }else{
                     holder.questionUsername.setText(model.getName());

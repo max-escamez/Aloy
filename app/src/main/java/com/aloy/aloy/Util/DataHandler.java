@@ -98,6 +98,7 @@ public class DataHandler {
                     databaseReference.child("genres").child(genre.getKey()).child("cover").setValue(genre.getValue());
                 }
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").child(databaseReference.getKey()).setValue("true");
+                follow(databaseReference.getKey());
             }
         });
     }
