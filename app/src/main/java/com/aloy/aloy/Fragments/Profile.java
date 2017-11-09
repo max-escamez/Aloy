@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -17,10 +19,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aloy.aloy.Adapters.InboxAdapter;
 import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
+import com.github.clans.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
@@ -54,14 +58,8 @@ public class Profile extends Fragment {
     //SpotifyService service = MainActivity.getService();
     //String username = service.getMe().id;
 
-    private TextView username;
-    private com.mikhaellopez.circularimageview.CircularImageView profilePicture;
-    private ImageView cover;
-    private  String link="";
-    private String image_url="";
-    private String search_query;
-    private EditText search_bar;
     private SharedPreferenceHelper mSharedPreferenceHelper;
+    private InboxAdapter profileAdapter;
 
     public Profile(){
 
@@ -71,22 +69,12 @@ public class Profile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View myInflatedView = inflater.inflate(R.layout.fragment_profile, container, false);
-        mSharedPreferenceHelper=new SharedPreferenceHelper(getContext());
-        //Bundle args = getArguments();
-        //String token = args.getString("token");
-        String token = CredentialsHandler.getAccessToken(getContext());
+        View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        SpotifyApi api = new SpotifyApi();
-        api.setAccessToken(token);
-        SpotifyService spotify = api.getService();
+        mSharedPreferenceHelper = new SharedPreferenceHelper(getContext());
+        TextView username = (TextView) profileView.findViewById(R.id.username);
+        com.mikhaellopez.circularimageview.CircularImageView profilePicture = (com.mikhaellopez.circularimageview.CircularImageView) profileView.findViewById(R.id.profilePicture);
 
-
-        username = (TextView) myInflatedView.findViewById(R.id.username);
-        profilePicture = (com.mikhaellopez.circularimageview.CircularImageView) myInflatedView.findViewById(R.id.profilePicture);
-        cover = (ImageView) myInflatedView.findViewById(R.id.cover);
-        search_bar = (EditText) myInflatedView.findViewById(R.id.search_bar);
-        search_bar.setVisibility(View.VISIBLE);
         if(mSharedPreferenceHelper.getCurrentUserName().equals("")){
             username.setText(mSharedPreferenceHelper.getCurrentUserId());
         }else{
@@ -94,7 +82,37 @@ public class Profile extends Fragment {
         }
         Picasso.with(getContext()).load(mSharedPreferenceHelper.getProfilePicture()).into(profilePicture);
 
-        search_bar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        ViewPager profileViewPager = (ViewPager) profileView.findViewById(R.id.profile_view_pager);
+        setupViewPager(profileViewPager);
+        // Set Tabs inside Toolbar
+        TabLayout tabs = (TabLayout) profileView.findViewById(R.id.profile_tabs);
+        tabs.setupWithViewPager(profileViewPager);
+
+        return profileView;
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+
+        Bundle questionArgs = new Bundle();
+        questionArgs.putString("userId", mSharedPreferenceHelper.getCurrentUserId());
+        questionArgs.putString("type","questions");
+        Fragment questions = new IndexedFeed();
+        questions.setArguments(questionArgs);
+
+
+        Bundle answersArgs = new Bundle();
+        answersArgs.putString("userId", mSharedPreferenceHelper.getCurrentUserId());
+        answersArgs.putString("type","answers");
+        Fragment answers = new IndexedFeed();
+        answers.setArguments(answersArgs);
+
+        profileAdapter = new InboxAdapter(getChildFragmentManager());
+        profileAdapter.addFragments(questions,"Questions");
+        profileAdapter.addFragments(answers,"Answers");
+        viewPager.setAdapter(profileAdapter);
+    }
+
+    /*search_bar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     try {
@@ -110,7 +128,7 @@ public class Profile extends Fragment {
                         api.setAccessToken(CredentialsHandler.getAccessToken(getContext()));
                         SpotifyService spotify = api.getService();
 
-                        /*Thread t = new Thread(new Runnable() {
+                        Thread t = new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 SpotifyApi api = new SpotifyApi();
@@ -130,7 +148,7 @@ public class Profile extends Fragment {
                                 }
                             }
                         });
-                        t.start();*/
+                        t.start();
 
 
                         spotify.searchTracks(search_query, new SpotifyCallback<TracksPager>() {
@@ -173,13 +191,7 @@ public class Profile extends Fragment {
                 }
                 return false;
             }
-        });
-
-
-
-
-        return myInflatedView;
-    }
+        });*/
 
 
 

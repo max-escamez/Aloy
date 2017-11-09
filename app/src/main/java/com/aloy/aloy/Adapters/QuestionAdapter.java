@@ -16,20 +16,17 @@ import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
-import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.google.firebase.database.Query;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import static com.aloy.aloy.Fragments.Feed.EXTRA_QUESTION_TRANSITION_NAME;
-
 /**
  * Created by tldonne on 29/10/2017.
  */
 
-public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter.ViewHolder, Question> {
+public class QuestionAdapter extends FirebaseRecyclerAdapter<QuestionAdapter.ViewHolder, Question> {
     private Context context;
     private Feed feedView;
     private DataHandler dataHandler;
@@ -58,8 +55,8 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
         }
     }
 
-    public MyRecyclerAdapter(Query query, @Nullable ArrayList<Question> questions,
-                             @Nullable ArrayList<String> keys, Context context, Feed view) {
+    public QuestionAdapter(Query query, @Nullable ArrayList<Question> questions,
+                           @Nullable ArrayList<String> keys, Context context, Feed view) {
         super(query, questions, keys);
         this.context = context;
         this.feedView=view;
@@ -71,14 +68,14 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
 
 
     @Override
-    public MyRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public QuestionAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View questionView = LayoutInflater.from(parent.getContext()).inflate(R.layout.question, parent, false);
         return new ViewHolder(questionView);
 
     }
 
     @Override
-    public void onBindViewHolder(final MyRecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final QuestionAdapter.ViewHolder holder, int position) {
         //Question question = getItem(getItemCount()-position-1);
         final Question question = getItem(position);
         holder.questionBody.setText(question.getBody());

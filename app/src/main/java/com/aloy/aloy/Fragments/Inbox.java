@@ -12,6 +12,7 @@ import android.widget.Adapter;
 
 import com.aloy.aloy.Adapters.InboxAdapter;
 import com.aloy.aloy.R;
+import com.github.clans.fab.FloatingActionButton;
 
 
 /**
@@ -38,11 +39,14 @@ public class Inbox extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_inbox, container, false);
+
+
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.container);
         setupViewPager(viewPager);
         // Set Tabs inside Toolbar
         TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+
 
 
         return view;

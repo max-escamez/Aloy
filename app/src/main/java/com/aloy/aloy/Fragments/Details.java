@@ -86,6 +86,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
 
     @Override
     public void onBackPressed() {
+        // finishAfterTransition()
         finish();
     }
 

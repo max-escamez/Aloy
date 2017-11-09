@@ -46,6 +46,10 @@ public class DataHandler {
         refUser = database.getReference("users");
     }
 
+    public DatabaseReference getRefQuestionFeed(){
+        return refQuestionFeed;
+    }
+
     public DatabaseReference getRefAnswers(String questionId) {
         //return database.getReference(questionId);
         return refQuestionFeed.child(questionId).child("answers");
@@ -74,7 +78,7 @@ public class DataHandler {
                     refQuestionFeed.child(databaseReference.getKey()).child("albums").child(album.getKey()).child("uri").setValue(album.getValue().uri);
                     refQuestionFeed.child(databaseReference.getKey()).child("albums").child(album.getKey()).child("cover").setValue(album.getValue().images.get(0).url);
                 }
-                refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").push().setValue(databaseReference.getKey());
+                refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").child(databaseReference.getKey()).setValue("true");
             }
         });
     }
