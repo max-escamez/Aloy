@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -73,6 +74,15 @@ public class IndexedFeed extends Fragment {
                 ViewCompat.getTransitionName(itemView));
 
         startActivity(intent, options.toBundle());
+    }
+
+    public void onAnswerClick(String questionId) {
+        FragmentManager fragmentManager = getFragmentManager();
+        Ask askDialog = new Ask();
+        Bundle args = new Bundle();
+        args.putString("questionId", questionId);
+        askDialog.setArguments(args);
+        askDialog.show(fragmentManager,"ask");
     }
 
 }

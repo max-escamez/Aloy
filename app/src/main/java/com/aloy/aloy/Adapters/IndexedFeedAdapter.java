@@ -74,9 +74,14 @@ public class IndexedFeedAdapter {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.i("TAG", "You clicked question " +  model.getId());
                         indexedFeed.onQuestionCLick(model,holder.itemView);
+                    }
+                });
 
+                holder.answerButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        indexedFeed.onAnswerClick(model.getId());
                     }
                 });
             }
@@ -99,7 +104,7 @@ public class IndexedFeedAdapter {
         CircularImageView profilePic;
         ImageView cover1;
         ImageView cover2;
-        //Button answerButton;
+        Button answerButton;
         //Button followButton;
 
         public QuestionHolder(View view) {
@@ -109,7 +114,7 @@ public class IndexedFeedAdapter {
             profilePic = (CircularImageView) view.findViewById(R.id.questionProfilePic);
             cover1 = (ImageView) view.findViewById(R.id.questionCover1);
             cover2 = (ImageView) view.findViewById(R.id.questionCover2);
-            //answerButton = (Button) view.findViewById(R.id.answerButton);
+            answerButton = (Button) view.findViewById(R.id.answerButton);
             //followButton = (Button) view.findViewById(R.id.followButton);
         }
     }

@@ -59,7 +59,6 @@ public class Profile extends Fragment {
     //String username = service.getMe().id;
 
     private SharedPreferenceHelper mSharedPreferenceHelper;
-    private InboxAdapter profileAdapter;
 
     public Profile(){
 
@@ -106,7 +105,7 @@ public class Profile extends Fragment {
         Fragment answers = new IndexedFeed();
         answers.setArguments(answersArgs);
 
-        profileAdapter = new InboxAdapter(getChildFragmentManager());
+        InboxAdapter profileAdapter = new InboxAdapter(getChildFragmentManager());
         profileAdapter.addFragments(questions,"Questions");
         profileAdapter.addFragments(answers,"Answers");
         viewPager.setAdapter(profileAdapter);
