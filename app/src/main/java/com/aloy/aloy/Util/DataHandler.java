@@ -62,6 +62,10 @@ public class DataHandler {
         refCategories = database.getReference("categories");
     }
 
+    public DatabaseReference getRefQuestionFeed(){
+        return refQuestionFeed;
+    }
+
     public DatabaseReference getRefAnswers(String questionId) {
         //return database.getReference(questionId);
         return refQuestionFeed.child(questionId).child("answers");
@@ -93,7 +97,7 @@ public class DataHandler {
                 for (HashMap.Entry<String, String> genre : genres.entrySet()) {
                     databaseReference.child("genres").child(genre.getKey()).child("cover").setValue(genre.getValue());
                 }
-                refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").push().setValue(databaseReference.getKey());
+                refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").child(databaseReference.getKey()).setValue("true");
             }
         });
     }
@@ -226,6 +230,7 @@ public class DataHandler {
     public void follow(final String questionId){
         final DatabaseReference mFollowersReference = refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId());
         final DatabaseReference mFollowingReference = refQuestionFeed.child(questionId).child("following").child("number");
+        final DatabaseReference mUserFollow = refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("following");
         mFollowingReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot following) {
@@ -236,9 +241,12 @@ public class DataHandler {
                             //unfollow
                             refQuestionFeed.child(questionId).child("following").child("number").setValue(following.getValue(Integer.class)-1);
                             refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId()).removeValue();
+                            mUserFollow.child(questionId).removeValue();
 
                         }else{
                             refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId()).setValue("is following");
+                            mUserFollow.child(questionId).setValue("true");
+
                             if (following.exists()) {
                                 refQuestionFeed.child(questionId).child("following").child("number").setValue(following.getValue(Integer.class)+1);
                             }else{

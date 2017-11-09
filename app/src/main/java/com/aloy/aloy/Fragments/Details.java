@@ -84,6 +84,14 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         return this.questionDetailsPresenter;
     }
 
+    @Override
+    public void onBackPressed() {
+        // finishAfterTransition()
+        finish();
+    }
+
+
+
 
 }
 

@@ -5,5 +5,7 @@
         <item name="android:colorPrimary">@color/primary_material_dark</item>
         <item name="android:colorPrimaryDark">@color/primary_dark_material_dark</item>
         <item name="android:colorAccent">@color/accent_material_dark_Aloy</item>
+        <item name="android:windowContentTransitions">true</item>
+
     </style>
 </resources>

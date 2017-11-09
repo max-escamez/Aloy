@@ -24,6 +24,7 @@ import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.NoSwipePager;
 import com.aloy.aloy.Util.SpotifyHandler;
+import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -64,17 +65,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(String token) {
-        Bundle args = new Bundle();
-        args.putString("token",token );
-
         viewPager = (NoSwipePager) findViewById(R.id.viewpager);
         viewPager.setPagingEnabled(false);
 
+        Bundle profileArgs = new Bundle();
+        profileArgs.putString("token",token );
         Fragment profile = new Profile();
-        profile.setArguments(args);
+        profile.setArguments(profileArgs);
+
+        Bundle feedArgs = new Bundle();
+        feedArgs.putString("myRef", String.valueOf(dataHandler.getRefQuestionFeed()));
+        Fragment feed = new Feed();
+        feed.setArguments(feedArgs);
 
         pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragments(new Feed());
+        pagerAdapter.addFragments(feed);
         pagerAdapter.addFragments(new Interests());
         pagerAdapter.addFragments(new Inbox());
         pagerAdapter.addFragments(profile);
@@ -115,11 +120,19 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(token);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         //viewPager.setCurrentItem(profileTabId);
+        final FloatingActionButton addQuestionFab = (FloatingActionButton) findViewById(R.id.main_fab);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
                 previousTab = viewPager.getCurrentItem();
                 viewPager.setCurrentItem(bottomBar.findPositionForTabWithId(tabId));
+                switch (bottomBar.findPositionForTabWithId(tabId)){
+                    case 0:
+                        addQuestionFab.show(true);
+                        break;
+                    default:
+                        addQuestionFab.hide(true);
+                }
 
             }
 
@@ -151,7 +164,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+
         super.onResume();
+
     }
 
     @Override

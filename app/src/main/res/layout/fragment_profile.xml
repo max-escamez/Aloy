@@ -11,23 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/Hello"
-            android:layout_width="300dp"
-            android:layout_height="55dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/hello_blank_fragment"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.957" />
-
         <android.support.constraint.ConstraintLayout
             android:id="@+id/profileHeader"
             android:layout_width="match_parent"
@@ -92,40 +75,41 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/cover"
-            android:layout_width="114dp"
-            android:layout_height="117dp"
-            android:layout_marginBottom="164dp"
-            android:layout_marginEnd="157dp"
-            android:layout_marginStart="157dp"
-            android:layout_marginTop="83dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/bb_bottom_bar_top_shadow"
-            app:layout_constraintBottom_toTopOf="@+id/Hello"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/profile_tabs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profileHeader"
-            app:layout_constraintVertical_bias="0.488" />
+            app:tabGravity="center">
 
-        <EditText
-            android:id="@+id/search_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="160dp"
-            android:layout_marginEnd="71dp"
-            android:layout_marginStart="72dp"
-            android:layout_marginTop="60dp"
-            android:ems="10"
-            android:hint="Search for tracks"
-            android:imeOptions="actionDone"
-            android:inputType="text"
-            android:visibility="gone"
+            <android.support.design.widget.TabItem
+                android:id="@+id/profile_questions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Questions" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/profile_answers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Answers" />
+
+        </android.support.design.widget.TabLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/profile_view_pager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.36" />
+            app:layout_constraintTop_toBottomOf="@+id/profile_tabs" />
 
     </android.support.constraint.ConstraintLayout>
 

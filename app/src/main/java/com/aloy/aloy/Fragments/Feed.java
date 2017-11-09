@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-import com.aloy.aloy.Adapters.MyRecyclerAdapter;
+import com.aloy.aloy.Adapters.QuestionAdapter;
 import com.aloy.aloy.Contracts.FeedContract;
 import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.Question;
@@ -35,9 +35,8 @@ public class Feed extends Fragment implements FeedContract.View {
 
     public static final String TAG = Feed.class.getSimpleName();
     private FeedContract.Presenter feedPresenter;
-    private FloatingActionButton addQuestionFab;
     private Query query;
-    private MyRecyclerAdapter myRecyclerAdapter;
+    private QuestionAdapter questionAdapter;
     private ArrayList<Question> adapterQuestions;
     private ArrayList<String> adapterKeys;
     private LinearLayoutManager layoutManager;
@@ -60,7 +59,7 @@ public class Feed extends Fragment implements FeedContract.View {
         feedPresenter = new FeedPresenter(this,MainActivity.getDataHandler());
         query = feedPresenter.getQuery();
         setupRecyclerView(feedView);
-        addQuestionFab = (FloatingActionButton) feedView.findViewById(R.id.addQuestionButton);
+        FloatingActionButton addQuestionFab = (FloatingActionButton) getActivity().findViewById(R.id.main_fab);
         addQuestionFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,12 +74,12 @@ public class Feed extends Fragment implements FeedContract.View {
     @Override
     public void setupRecyclerView(View feedView) {
         RecyclerView recyclerView = (RecyclerView) feedView.findViewById(R.id.feedRecyclerView);
-        myRecyclerAdapter = new MyRecyclerAdapter(myRef, adapterQuestions, adapterKeys,getContext(),this);
+        questionAdapter = new QuestionAdapter(myRef, adapterQuestions, adapterKeys,getContext(),this);
         layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(myRecyclerAdapter);
+        recyclerView.setAdapter(questionAdapter);
     }
 
 
@@ -112,6 +111,7 @@ public class Feed extends Fragment implements FeedContract.View {
     @Override
     public void onQuestionCLick(Question question, View itemView) {
         Intent intent = new Intent(this.getActivity(), Details.class);
+        itemView.setTransitionName(EXTRA_QUESTION_TRANSITION_NAME);
         intent.putExtra(EXTRA_QUESTION, question);
         intent.putExtra(EXTRA_QUESTION_TRANSITION_NAME, ViewCompat.getTransitionName(itemView));
 
@@ -120,7 +120,8 @@ public class Feed extends Fragment implements FeedContract.View {
                 ViewCompat.getTransitionName(itemView));
 
         startActivity(intent, options.toBundle());
-
     }
+
+
 
 }

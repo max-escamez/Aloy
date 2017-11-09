@@ -12,6 +12,8 @@ import android.widget.Adapter;
 
 import com.aloy.aloy.Adapters.InboxAdapter;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.SharedPreferenceHelper;
+import com.github.clans.fab.FloatingActionButton;
 
 
 /**
@@ -20,6 +22,7 @@ import com.aloy.aloy.R;
 public class Inbox extends Fragment {
 
     private InboxAdapter inboxAdapter;
+    private SharedPreferenceHelper mSharedPreferenceHelper;
 
     public Inbox() {
         // Required empty public constructor
@@ -37,21 +40,28 @@ public class Inbox extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_inbox, container, false);
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.container);
+        View inboxView = inflater.inflate(R.layout.fragment_inbox, container, false);
+        mSharedPreferenceHelper = new SharedPreferenceHelper(getContext());
+
+        ViewPager viewPager = (ViewPager) inboxView.findViewById(R.id.inbox_container);
         setupViewPager(viewPager);
         // Set Tabs inside Toolbar
-        TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
+        TabLayout tabs = (TabLayout) inboxView.findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-
-        return view;
+        return inboxView;
     }
 
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager) {
+        Bundle followsArgs = new Bundle();
+        followsArgs.putString("userId", mSharedPreferenceHelper.getCurrentUserId());
+        followsArgs.putString("type","following");
+        Fragment follows = new IndexedFeed();
+        follows.setArguments(followsArgs);
+
         inboxAdapter = new InboxAdapter(getChildFragmentManager());
-        inboxAdapter.addFragments(new Following(),"Following");
+        inboxAdapter.addFragments(follows,"Following");
         inboxAdapter.addFragments(new Requests(),"Requests");
         inboxAdapter.addFragments(new Chat(),"Chat");
         viewPager.setAdapter(inboxAdapter);

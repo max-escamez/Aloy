@@ -27,12 +27,27 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/main_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_add_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            fab:fab_colorNormal="@color/accent_material_dark_Aloy"
+            fab:fab_colorPressed="@color/accent_material_dark_Aloy"
+            fab:fab_colorRipple="@color/background_dark" />
+
     </android.support.constraint.ConstraintLayout>
 
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:background="@color/bb_darkBackgroundColor"
         android:clickable="false"
         app:bb_behavior="shifting|iconsOnly"
