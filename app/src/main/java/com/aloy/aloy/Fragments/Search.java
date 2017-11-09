@@ -19,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -68,6 +69,8 @@ public class Search extends DialogFragment implements SearchContract.View {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+
+
     @Override
     public void onStart()
     {
@@ -89,12 +92,10 @@ public class Search extends DialogFragment implements SearchContract.View {
         validateSearch = (Button) searchView.findViewById(R.id.validateSearch);
         searchField = (EditText) searchView.findViewById(R.id.searchSpotify);
         itemsSelected = (TextView) searchView.findViewById(R.id.elementsSelected);
-
         callingFragment = (Ask) getTargetFragment();
-
-
         Bundle args = getArguments();
         type = args.getString("type");
+
         searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {

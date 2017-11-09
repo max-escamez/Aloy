@@ -106,17 +106,4 @@ public class SearchPresenter implements SearchContract.Presenter {
         return query;
     }
 
-    /*public int getitemCount() {
-        return this.tracksNb;
-    }
-
-    @Override
-    public void setCount(int tracksNb) {
-        this.tracksNb=tracksNb;
-        //System.out.println(this.tracksNb.get(0));
-    }
-
-    public void updateCount(String searchQuery) {
-        spotifyHandler.setTrackCount(encodeQuery(searchQuery),this);
-    }*/
 }

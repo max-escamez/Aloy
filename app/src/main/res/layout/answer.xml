@@ -46,7 +46,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/answerLikeBorder"
+            android:id="@+id/upvote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
@@ -61,24 +61,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_favorite_border" />
-
-        <ImageButton
-            android:id="@+id/answerLike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="7dp"
-            android:adjustViewBounds="false"
-            android:backgroundTint="@color/light_grey_Aloy"
-            android:cropToPadding="false"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:tint="@color/accent_material_dark_Aloy"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_favorite" />
 
 
     </android.support.constraint.ConstraintLayout>

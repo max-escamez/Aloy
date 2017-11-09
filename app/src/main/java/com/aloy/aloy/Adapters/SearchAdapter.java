@@ -69,9 +69,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return this.itemNb;
     }
 
-    public void setItemCount(int count) {
-        this.itemNb=count;
-    }
 
 
     // stores and recycles views as they are scrolled off screen

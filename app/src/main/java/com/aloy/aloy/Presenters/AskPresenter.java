@@ -107,5 +107,4 @@ public class AskPresenter implements AskContract.Presenter {
     @Override
     public HashMap getAlbums() { return this.albumsSelected; }
 
-
 }

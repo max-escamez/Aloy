@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aloy.aloy.Fragments.Feed;
-import com.aloy.aloy.Fragments.QuestionDetails;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
