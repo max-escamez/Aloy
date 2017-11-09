@@ -41,6 +41,7 @@ public class Question implements Parcelable {
         username = in.readString();
         body = in.readString();
         pic = in.readString();
+        name = in.readString();
         cover1 = in.readString();
         cover2 = in.readString();
     }
@@ -111,6 +112,7 @@ public class Question implements Parcelable {
         dest.writeString(username);
         dest.writeString(body);
         dest.writeString(pic);
+        dest.writeString(name);
         dest.writeString(cover1);
         dest.writeString(cover2);
 

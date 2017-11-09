@@ -42,13 +42,24 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         supportPostponeEnterTransition();
         questionDetailsPresenter = new QuestionDetailsPresenter(this, MainActivity.getDataHandler());
         Bundle extras = getIntent().getExtras();
-        Question question = extras.getParcelable(Feed.EXTRA_QUESTION);
+        final Question question = extras.getParcelable(Feed.EXTRA_QUESTION);
         String transitionName = extras.getString(Feed.EXTRA_QUESTION_TRANSITION_NAME);
 
         setupQuestion(question,transitionName);
         setupRecyclerView(question.getId());
 
+        username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openProfile(question.getUsername());
+            }
+        });
+
         supportStartPostponedEnterTransition();
+    }
+
+    private void openProfile(String username) {
+
     }
 
     @Override
@@ -86,7 +97,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
 
     @Override
     public void onBackPressed() {
-        // finishAfterTransition()
+         //finishAfterTransition();
         finish();
     }
 

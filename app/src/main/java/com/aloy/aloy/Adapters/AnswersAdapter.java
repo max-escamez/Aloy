@@ -61,7 +61,7 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
             holder.username.setText(answer.getUsername());
         }else{
             holder.username.setText(answer.getName());
-        }
+       }
         Picasso.with(context).load(answer.getPic()).into(holder.profilePic);
         questionDetailsPresenter.getUserUpvote(questionId,answer.getId(),holder);
         //Picasso.with(context).load(question.getCover1()).into(holder.cover1);

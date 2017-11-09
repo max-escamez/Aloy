@@ -59,8 +59,10 @@ public class IndexedFeedAdapter {
                 //final Question question = getItem(position);
                 holder.questionBody.setText(model.getBody());
                 if((model.getName())==null){
+                    System.out.println(model.getUsername());
                     holder.questionUsername.setText(model.getUsername());
                 }else{
+                    System.out.println(model.getName());
                     holder.questionUsername.setText(model.getName());
                 }
                 //dataHandler.updateURL(question.getUsername());
