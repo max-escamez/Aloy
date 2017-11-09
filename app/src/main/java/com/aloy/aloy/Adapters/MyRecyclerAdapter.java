@@ -17,6 +17,7 @@ import com.aloy.aloy.Fragments.QuestionDetails;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
+import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.google.firebase.database.Query;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -33,6 +34,7 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
     private DataHandler dataHandler;
 
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView questionBody;
@@ -41,7 +43,7 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
         ImageView cover1;
         ImageView cover2;
         Button answerButton;
-        Button upvoteButton;
+        Button followButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -51,7 +53,7 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
             cover1 = (ImageView) view.findViewById(R.id.questionCover1);
             cover2 = (ImageView) view.findViewById(R.id.questionCover2);
             answerButton = (Button) view.findViewById(R.id.answerButton);
-            upvoteButton = (Button) view.findViewById(R.id.upvoteButton);
+            followButton = (Button) view.findViewById(R.id.followButton);
         }
     }
 
@@ -61,6 +63,7 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
         this.context = context;
         this.feedView=view;
         this.dataHandler = new DataHandler(context);
+
     }
 
 
@@ -78,7 +81,13 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
         //Question question = getItem(getItemCount()-position-1);
         final Question question = getItem(position);
         holder.questionBody.setText(question.getBody());
-        holder.questionUsername.setText(question.getUsername());
+        if((question.getName())==null){
+            holder.questionUsername.setText(question.getUsername());
+        }else{
+            holder.questionUsername.setText(question.getName());
+        }
+        //dataHandler.updateURL(question.getUsername());
+        //Picasso.with(context).load(dataHandler.getProfilePicture()).into(holder.profilePic);
         Picasso.with(context).load(question.getPic()).into(holder.profilePic);
         Picasso.with(context).load(question.getCover1()).into(holder.cover1);
         Picasso.with(context).load(question.getCover2()).into(holder.cover2);
@@ -101,10 +110,10 @@ public class MyRecyclerAdapter extends FirebaseRecyclerAdapter<MyRecyclerAdapter
             }
         });
 
-        holder.upvoteButton.setOnClickListener(new View.OnClickListener() {
+        holder.followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataHandler.upvote(question.getId());
+                dataHandler.follow(question.getId());
             }
         });
     }

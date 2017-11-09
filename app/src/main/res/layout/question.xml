@@ -84,12 +84,12 @@
         app:srcCompat="@drawable/aloy_transparent2x" />
 
     <Button
-        android:id="@+id/upvoteButton"
+        android:id="@+id/followButton"
         android:layout_width="75dp"
         android:layout_height="30dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="12dp"
-        android:text="upvote"
+        android:text="follow"
         android:textAppearance="@android:style/TextAppearance.Material.Button"
         android:textSize="8sp"
         android:visibility="visible"

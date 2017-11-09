@@ -17,6 +17,8 @@ import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Fragments.QuestionDetails;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.DataHandler;
+import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.google.firebase.database.Query;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -31,6 +33,8 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
 
     private Context context;
     private QuestionDetails questionDetailsView;
+    private DataHandler dataHandler;
+
 
 
 
@@ -38,6 +42,8 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
         super(query, questions, keys);
         this.context = context;
         this.questionDetailsView=view;
+        this.dataHandler = new DataHandler(context);
+
     }
 
 
@@ -53,7 +59,12 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
         //Question question = getItem(getItemCount()-position-1);
         final Question question = getItem(position);
         holder.body.setText(question.getBody());
-        holder.username.setText(question.getUsername());
+        if((question.getName())==null){
+            holder.username.setText(question.getUsername());
+        }else{
+            holder.username.setText(question.getName());
+        }
+        //dataHandler.updateURL(question.getUsername(),question.getId());
         Picasso.with(context).load(question.getPic()).into(holder.profilePic);
         //Picasso.with(context).load(question.getCover1()).into(holder.cover1);
         //Picasso.with(context).load(question.getCover2()).into(holder.cover2);

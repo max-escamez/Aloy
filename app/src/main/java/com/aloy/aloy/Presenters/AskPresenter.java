@@ -57,18 +57,16 @@ public class AskPresenter implements AskContract.Presenter {
 
     @Override
     public void createAnswer(String body, String questionID) {
-        Answer newAnswer = new Answer(sharedPreferenceHelper.getCurrentUserId(),body,sharedPreferenceHelper.getProfilePicture());
+        String name=sharedPreferenceHelper.getCurrentUserName();
+        String id=sharedPreferenceHelper.getCurrentUserId();
+        Answer newAnswer = new Answer(id,body,sharedPreferenceHelper.getProfilePicture(),name);
         dataHandler.saveAnswer(newAnswer, questionID, tracksSelected, artistsSelected, albumsSelected);
     }
     @Override
     public void createQuestion(String body) {
-        String id;
-        if(sharedPreferenceHelper.getCurrentUserName().equals("")){
-            id=sharedPreferenceHelper.getCurrentUserId();
-        }else{
-            id=sharedPreferenceHelper.getCurrentUserName();
-        }
-        Question newQuestion = new Question(id,sharedPreferenceHelper.getProfilePicture(),body);
+        String name=sharedPreferenceHelper.getCurrentUserName();
+        String id=sharedPreferenceHelper.getCurrentUserId();
+        Question newQuestion = new Question(id,sharedPreferenceHelper.getProfilePicture(),body,name);
         if (tracksSelected.size()>=2) {
             newQuestion.setCover1(new ArrayList<>(tracksSelected.values()).get(0).album.images.get(0).url );
             newQuestion.setCover2(new ArrayList<>(tracksSelected.values()).get(1).album.images.get(0).url );
@@ -108,8 +106,6 @@ public class AskPresenter implements AskContract.Presenter {
 
     @Override
     public HashMap getAlbums() { return this.albumsSelected; }
-
-    public void upvoteScheme(String questionId){dataHandler.upvote(questionId);}
 
 
 }

@@ -33,6 +33,7 @@ public class DataHandler {
     private DatabaseReference refQuestionFeed;
     private DatabaseReference refUser;
     private SharedPreferenceHelper sharedPreferenceHelper;
+    private String profilePicture;
 
 
     public DataHandler(Context context){
@@ -160,6 +161,98 @@ public class DataHandler {
             //    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
             //}
         //});
+    }
+
+    public void follow(final String questionId){
+        final DatabaseReference mFollowersReference = refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId());
+        final DatabaseReference mFollowingReference = refQuestionFeed.child(questionId).child("following").child("number");
+        mFollowingReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot following) {
+                mFollowersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot follower) {
+                        if (follower.exists()) {
+                            //unfollow
+                            refQuestionFeed.child(questionId).child("following").child("number").setValue(following.getValue(Integer.class)-1);
+                            refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId()).removeValue();
+
+                        }else{
+                            refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId()).setValue("is following");
+                            if (following.exists()) {
+                                refQuestionFeed.child(questionId).child("following").child("number").setValue(following.getValue(Integer.class)+1);
+                            }else{
+                                refQuestionFeed.child(questionId).child("following").child("number").setValue(1);
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
+
+    }
+
+    /*public void updateURL(String username,final String id){
+        final DatabaseReference picReference =refUser.child(username).child("pic");
+        final DatabaseReference questionReference=refQuestionFeed.child(id).child("pic");
+        picReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot userURL) {
+                questionReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot questionURL) {
+                        if(userURL.getValue()!=questionURL.getValue()){
+                            refQuestionFeed.child(id).child("pic").setValue(userURL.getValue());
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+
+        });
+    }*/
+
+    public void updateURL(final String username){
+        final DatabaseReference picReference = refUser.child(username).child("pic");
+        picReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot userURL) {
+                setProfilePicture(userURL.getValue().toString());
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+
+        });
+
+    }
+
+    public void setProfilePicture(String url){
+        profilePicture=url;
+    }
+
+    public String getProfilePicture(){
+        return profilePicture;
+    }
+
+    public void updateData(String username){
+        refUser.child(username).child("pic").setValue(sharedPreferenceHelper.getProfilePicture());
     }
 
 }
