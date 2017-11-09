@@ -21,6 +21,7 @@ public class Question implements Parcelable {
     private String body;
     private String pic;
     private String name;
+    private String date;
     @Exclude
     private String cover1;
     @Exclude
@@ -29,11 +30,12 @@ public class Question implements Parcelable {
     public Question() {
     }
 
-    public Question(String username, String pic, String body,String name)  {
+    public Question(String username, String pic, String body,String name, String date)  {
         this.username = username;
         this.body = body;
         this.pic = pic;
         this.name=name;
+        this.date=date;
     }
 
     protected Question(Parcel in) {
@@ -98,6 +100,8 @@ public class Question implements Parcelable {
     public String getId() {
         return id;
     }
+
+    public String getDate(){return date;}
 
 
     @Override

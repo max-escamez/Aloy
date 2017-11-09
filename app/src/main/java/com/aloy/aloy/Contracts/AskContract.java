@@ -42,5 +42,10 @@ public interface AskContract {
         void removeAlbum(AlbumSimple album);
         HashMap getAlbums();
 
+        void addGenre(String name, String url);
+        void removeGenre(String name);
+        HashMap getGenres();
+        void clearGenres();
+
     }
 }

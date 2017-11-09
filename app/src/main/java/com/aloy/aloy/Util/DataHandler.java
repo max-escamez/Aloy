@@ -1,14 +1,20 @@
 package com.aloy.aloy.Util;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.aloy.aloy.Adapters.AnswersAdapter;
+import com.aloy.aloy.Adapters.SearchAdapter;
+import com.aloy.aloy.Contracts.SearchContract;
 import com.aloy.aloy.LoginActivity;
 import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
+import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,12 +23,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.ListIterator;
 
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.CategoriesPager;
 import kaaes.spotify.webapi.android.models.Track;
 
 import static android.content.ContentValues.TAG;
@@ -35,8 +48,10 @@ public class DataHandler {
 
     private DatabaseReference refQuestionFeed;
     private DatabaseReference refUser;
+    private DatabaseReference refCategories;
     private SharedPreferenceHelper sharedPreferenceHelper;
     private String profilePicture;
+
 
 
     public DataHandler(Context context){
@@ -44,6 +59,7 @@ public class DataHandler {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         refQuestionFeed = database.getReference("questions");
         refUser = database.getReference("users");
+        refCategories = database.getReference("categories");
     }
 
     public DatabaseReference getRefAnswers(String questionId) {
@@ -51,7 +67,7 @@ public class DataHandler {
         return refQuestionFeed.child(questionId).child("answers");
     }
 
-    public void saveQuestion(final Question question, final HashMap<String,Track> tracks, final HashMap<String,Artist> artists, final HashMap<String,AlbumSimple> albums) {
+    public void saveQuestion(final Question question, final HashMap<String,Track> tracks, final HashMap<String,Artist> artists, final HashMap<String,AlbumSimple> albums, final HashMap<String,String> genres) {
         refQuestionFeed.push().setValue(question,new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -74,6 +90,9 @@ public class DataHandler {
                     refQuestionFeed.child(databaseReference.getKey()).child("albums").child(album.getKey()).child("uri").setValue(album.getValue().uri);
                     refQuestionFeed.child(databaseReference.getKey()).child("albums").child(album.getKey()).child("cover").setValue(album.getValue().images.get(0).url);
                 }
+                for (HashMap.Entry<String, String> genre : genres.entrySet()) {
+                    databaseReference.child("genres").child(genre.getKey()).child("cover").setValue(genre.getValue());
+                }
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").push().setValue(databaseReference.getKey());
             }
         });
@@ -84,7 +103,7 @@ public class DataHandler {
 
     }
 
-    public void saveAnswer(Answer answer, final String questionID, final LinkedHashMap<String, Track> tracksSelected, final HashMap<String,Artist> artistsSelected, final HashMap<String,AlbumSimple> albumsSelected) {
+    public void saveAnswer(Answer answer, final String questionID, final LinkedHashMap<String, Track> tracksSelected, final HashMap<String,Artist> artistsSelected, final HashMap<String,AlbumSimple> albumsSelected, final HashMap<String,String> genreSelected) {
         refQuestionFeed.child(questionID).child("answers").push().setValue(answer,new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError,
@@ -108,7 +127,9 @@ public class DataHandler {
                     databaseReference.child("albums").child(album.getKey()).child("uri").setValue(album.getValue().uri);
                     databaseReference.child("albums").child(album.getKey()).child("cover").setValue(album.getValue().images.get(0).url);
                 }
-
+                for (HashMap.Entry<String, String> genre : genreSelected.entrySet()) {
+                    databaseReference.child("genres").child(genre.getKey()).child("cover").setValue(genre.getValue());
+                }
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("answers").child(questionID).setValue(databaseReference.getKey());
             }
         });
@@ -164,6 +185,42 @@ public class DataHandler {
             //    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
             //}
         //});
+    }
+
+
+    public void bindGenre(final SearchAdapter.ViewHolder holder, final int position, final Context context){
+        refCategories.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                    holder.primaryText.setText(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString());
+                    holder.secondaryText.setVisibility(View.GONE);
+                    Picasso.with(context).load(dataSnapshot.child(String.valueOf(position)).child("pic").getValue().toString()).into(holder.cover);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "addListenerForSingleValueEvent:failure", databaseError.toException());
+            }
+        });
+    }
+
+    public void addGenre(final int position, final SearchContract.View searchView, final boolean add){
+        refCategories.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (add) {
+                    searchView.getAsk().getAskPresenter().addGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString(),dataSnapshot.child(String.valueOf(position)).child("pic").getValue().toString());
+                }
+                else
+                    searchView.getAsk().getAskPresenter().removeGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString());
+                searchView.updateCount("genre");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "addListenerForSingleValueEvent:failure", databaseError.toException());
+            }
+        });
     }
 
     public void follow(final String questionId){
@@ -260,6 +317,5 @@ public class DataHandler {
     public void updateData(String username){
         refUser.child(username).child("pic").setValue(sharedPreferenceHelper.getProfilePicture());
     }
-
 
 }

@@ -41,12 +41,14 @@ public class Ask extends DialogFragment implements AskContract.View{
     private Button searchTracks;
     private Button searchArtists;
     private Button searchAlbums;
+    private Button searchGenres;
     private ImageButton close;
     private String questionBody;
     private AskContract.Presenter askPresenter;
     private TextView tracksSelectedTextView;
     private TextView artistsSelectedTextView;
     private TextView albumsSelectedTextView;
+    private TextView genresSelectedTextView;
     private String questionId;
     private boolean answer;
 
@@ -78,6 +80,9 @@ public class Ask extends DialogFragment implements AskContract.View{
         albumsSelectedTextView = (TextView) askView.findViewById(R.id.albumsSelected);
         searchArtists = (Button) askView.findViewById(R.id.findArtists);
         artistsSelectedTextView = (TextView) askView.findViewById(R.id.artistsSelected);
+        searchGenres = (Button) askView.findViewById(R.id.findGenres);
+        genresSelectedTextView = (TextView) askView.findViewById(R.id.genresSelected);
+
 
         Bundle args = getArguments();
         questionId = args.getString("questionId");
@@ -127,6 +132,14 @@ public class Ask extends DialogFragment implements AskContract.View{
             }
         });
 
+        searchGenres.setOnClickListener(new View.OnClickListener(){
+            String type = "genre";
+            @Override
+            public void onClick(View v){
+                showSearch(type);
+            }
+        });
+
         return askView;
     }
 
@@ -155,6 +168,7 @@ public class Ask extends DialogFragment implements AskContract.View{
         tracksSelectedTextView.setText(askPresenter.getTracks().size() + " Tracks Selected");
         artistsSelectedTextView.setText(askPresenter.getArtists().size() + " Artists Selected");
         albumsSelectedTextView.setText(askPresenter.getAlbums().size() + " Albums Selected");
+        genresSelectedTextView.setText(askPresenter.getGenres().size()+ " Genres Selected");
     }
 
     @Override

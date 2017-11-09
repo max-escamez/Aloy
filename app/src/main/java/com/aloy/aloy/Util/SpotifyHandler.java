@@ -158,9 +158,6 @@ public class SpotifyHandler {
 
 
 
-
-
-
     public void bindTrack(String query, final SearchAdapter.ViewHolder holder, final int position, final Context context) {
         service.searchTracks(query, new SpotifyCallback<TracksPager>() {
             @Override
@@ -249,7 +246,7 @@ public class SpotifyHandler {
                 Pager<Track> trackPager = p.tracks;
                 List<Track> trackList = trackPager.items;
                 Track song = trackList.get(position);
-                if (add == true ) {
+                if (add) {
                     searchView.getAsk().getAskPresenter().addTrack(song);
                 }
                 else
@@ -268,7 +265,7 @@ public class SpotifyHandler {
             @Override
             public void success(ArtistsPager artists, Response response) {
                 Artist artist = artists.artists.items.get(position);
-                if (add == true ) {
+                if (add) {
                     searchView.getAsk().getAskPresenter().addArtist(artist);
                 }
                 else
@@ -288,7 +285,7 @@ public class SpotifyHandler {
             @Override
             public void success(AlbumsPager albumsPager, Response response) {
                 AlbumSimple album = albumsPager.albums.items.get(position);
-                if (add == true ) {
+                if (add) {
                     searchView.getAsk().getAskPresenter().addAlbum(album);
                 }
                 else

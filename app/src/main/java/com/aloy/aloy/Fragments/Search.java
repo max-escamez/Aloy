@@ -34,6 +34,7 @@ import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.SearchResult;
 import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.DataHandler;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -91,16 +92,21 @@ public class Search extends DialogFragment implements SearchContract.View {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         validateSearch = (Button) searchView.findViewById(R.id.validateSearch);
         searchField = (EditText) searchView.findViewById(R.id.searchSpotify);
-        itemsSelected = (TextView) searchView.findViewById(R.id.elementsSelected);
-        callingFragment = (Ask) getTargetFragment();
         Bundle args = getArguments();
         type = args.getString("type");
-
+        if(type.equals("genre")){
+            searchField.setVisibility(View.GONE);
+        }
+        itemsSelected = (TextView) searchView.findViewById(R.id.elementsSelected);
+        callingFragment = (Ask) getTargetFragment();
+        if(type.equals("genre")){
+            setupRecyclerView(searchView, searchQuery, type);
+        }
         searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     searchQuery = searchField.getText().toString();
-                    setupRecyclerView(searchView,searchQuery,type);
+                    setupRecyclerView(searchView, searchQuery, type);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         hideKeyboardFrom(getContext(),searchView);
                     }
@@ -146,7 +152,7 @@ public class Search extends DialogFragment implements SearchContract.View {
         else{
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 5));
         }
-        searchPresenter.setupSearchRecycler(recyclerView,searchView,getContext(), searchQuery,type);
+        searchPresenter.setupSearchRecycler(recyclerView, searchView, getContext(), searchQuery, type);
         /*searchPresenter.updateCount(searchQuery);
         searchAdapter = new SearchAdapter(searchView,getContext(), searchPresenter, searchQuery, type, searchPresenter.getitemCount());
         recyclerView.setAdapter(searchAdapter);*/
@@ -164,6 +170,8 @@ public class Search extends DialogFragment implements SearchContract.View {
             case "album" :
                 itemsSelected.setText(callingFragment.getAskPresenter().getAlbums().size() + " Albums Selected");
                 break;
+            case "genre" :
+                itemsSelected.setText(callingFragment.getAskPresenter().getGenres().size() + " Genres Selected");
         }
     }
 
