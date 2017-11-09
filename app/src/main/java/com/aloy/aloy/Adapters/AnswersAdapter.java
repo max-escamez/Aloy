@@ -2,21 +2,20 @@ package com.aloy.aloy.Adapters;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.aloy.aloy.Fragments.Feed;
-import com.aloy.aloy.Fragments.QuestionDetails;
+import com.aloy.aloy.Fragments.Details;
+import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.Question;
+import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -27,17 +26,19 @@ import java.util.ArrayList;
  * Created by tldonne on 06/11/2017.
  */
 
-public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewHolder, Question> {
+public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewHolder, Answer> {
 
     private Context context;
-    private QuestionDetails questionDetailsView;
+    private QuestionDetailsPresenter questionDetailsPresenter;
+    private DatabaseReference questionId;
 
 
 
-    public AnswersAdapter(Query query, @Nullable ArrayList<Question> questions, @Nullable ArrayList<String> keys, Context context, QuestionDetails view) {
-        super(query, questions, keys);
+    public AnswersAdapter(Query query, @Nullable ArrayList<Answer> answers, @Nullable ArrayList<String> keys, Context context, QuestionDetailsPresenter presenter) {
+        super(query, answers, keys);
         this.context = context;
-        this.questionDetailsView=view;
+        this.questionDetailsPresenter=presenter;
+        this.questionId=query.getRef();
     }
 
 
@@ -51,29 +52,23 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
     @Override
     public void onBindViewHolder(final AnswersAdapter.ViewHolder holder, int position) {
         //Question question = getItem(getItemCount()-position-1);
-        final Question question = getItem(position);
-        holder.body.setText(question.getBody());
-        holder.username.setText(question.getUsername());
-        Picasso.with(context).load(question.getPic()).into(holder.profilePic);
+        final Answer answer = getItem(position);
+        holder.body.setText(answer.getBody());
+        holder.username.setText(answer.getUsername());
+        Picasso.with(context).load(answer.getPic()).into(holder.profilePic);
+        questionDetailsPresenter.getUserUpvote(questionId,answer.getId(),holder);
+
         //Picasso.with(context).load(question.getCover1()).into(holder.cover1);
         //Picasso.with(context).load(question.getCover2()).into(holder.cover2);
 
-        holder.likeBorder.setOnClickListener(new View.OnClickListener() {
+        holder.upvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.likeBorder.setVisibility(View.INVISIBLE);
-                holder.like.setVisibility(View.VISIBLE);
+                System.out.println("Upvote : " + answer.getId());
+                questionDetailsPresenter.upvoteAnswer(questionId,answer.getId());
             }
         });
 
-        holder.like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.like.setVisibility(View.INVISIBLE);
-                holder.likeBorder.setVisibility(View.VISIBLE);
-
-            }
-        });
 
     }
 
@@ -81,8 +76,7 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
         TextView body;
         TextView username;
         CircularImageView profilePic;
-        ImageButton likeBorder;
-        ImageButton like;
+        public ImageButton upvote;
         ImageView cover1;
         ImageView cover2;
          ViewHolder(View view) {
@@ -90,8 +84,7 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
              body = (TextView) view.findViewById(R.id.answerBody);
              username = (TextView) view.findViewById(R.id.answerUsername);
              profilePic = (CircularImageView) view.findViewById(R.id.answerProfilePic);
-             likeBorder = (ImageButton) view.findViewById(R.id.answerLikeBorder);
-             like = (ImageButton) view.findViewById(R.id.answerLike);
+             upvote = (ImageButton) view.findViewById(R.id.upvote);
 
              //view.setOnClickListener(this);
           }

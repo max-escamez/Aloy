@@ -40,7 +40,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     // data is passed into the constructor
     public SearchAdapter(Context context, SearchPresenter searchPresenter, String query, String type,int itemNb) {
-        //try {
             this.mInflater = LayoutInflater.from(context);
             this.searchPresenter = searchPresenter;
             this.searchQuery = query;
@@ -48,10 +47,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             this.type = type;
             this.itemNb=itemNb;
             this.searchQuery=query;
-            /*this.searchQuery = URLEncoder.encode(searchQuery, "utf-8");
-        }catch(UnsupportedEncodingException e){
-           e.printStackTrace();
-        }*/
 
     }
 
@@ -75,9 +70,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return this.itemNb;
     }
 
-    public void setItemCount(int count) {
-        this.itemNb=count;
-    }
 
 
     // stores and recycles views as they are scrolled off screen

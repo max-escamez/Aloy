@@ -1,7 +1,10 @@
 package com.aloy.aloy.Contracts;
 
+import com.aloy.aloy.Adapters.AnswersAdapter;
 import com.aloy.aloy.Models.Question;
+import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.Util.BaseView;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
 /**
@@ -11,11 +14,19 @@ import com.google.firebase.database.Query;
 public interface QuestionDetailsContract {
 
     interface View  {
+        void setupRecyclerView(String questionId);
 
+        void setupQuestion(Question question, String transitionName);
+
+        QuestionDetailsPresenter getPresenter();
     }
 
     interface Presenter {
 
         Query getRef(String questionId);
+
+        void upvoteAnswer(DatabaseReference questionId,String answerId);
+
+        void getUserUpvote(DatabaseReference questionId, String id, AnswersAdapter.ViewHolder holder);
     }
 }

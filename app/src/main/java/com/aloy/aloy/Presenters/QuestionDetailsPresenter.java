@@ -1,7 +1,9 @@
 package com.aloy.aloy.Presenters;
 
+import com.aloy.aloy.Adapters.AnswersAdapter;
 import com.aloy.aloy.Contracts.QuestionDetailsContract;
 import com.aloy.aloy.Util.DataHandler;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
 /**
@@ -22,4 +24,17 @@ public class QuestionDetailsPresenter implements QuestionDetailsContract.Present
     public Query getRef(String questionId) {
         return dataHandler.getRefAnswers(questionId);
     }
+
+    @Override
+    public void upvoteAnswer(DatabaseReference questionId, String answerId){
+        //System.out.println(questionId + " --- " + answerId);
+        dataHandler.upvote(questionId,answerId);
+    }
+
+    @Override
+    public void getUserUpvote(DatabaseReference questionRef, String answerId, AnswersAdapter.ViewHolder holder) {
+        dataHandler.getUpvote(questionRef,answerId,holder);
+    }
+
+
 }

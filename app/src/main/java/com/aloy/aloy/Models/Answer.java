@@ -7,6 +7,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
  */
 
 public class Answer {
+    private String id;
     private String username;
     private String body;
     private String pic;
@@ -19,6 +20,14 @@ public class Answer {
         this.username = username;
         this.body = body;
         this.pic = pic;
+    }
+
+    public void setId(String id) {
+        this.id=id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getBody(){

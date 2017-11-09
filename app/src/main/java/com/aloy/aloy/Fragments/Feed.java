@@ -1,7 +1,9 @@
 package com.aloy.aloy.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewCompat;
@@ -41,6 +43,9 @@ public class Feed extends Fragment implements FeedContract.View {
     private LinearLayoutManager layoutManager;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("questions");
+    public static final String EXTRA_QUESTION = "question";
+    public static final String EXTRA_QUESTION_TRANSITION_NAME = "question_transition_name";
+
 
 
     public Feed() {
@@ -106,18 +111,16 @@ public class Feed extends Fragment implements FeedContract.View {
 
     @Override
     public void onQuestionCLick(Question question, View itemView) {
-        QuestionDetails questionDetails = QuestionDetails.newInstance(question, ViewCompat.getTransitionName(itemView));
-        FragmentManager fragmentManager = getFragmentManager();
-        questionDetails.show(fragmentManager,"details");
+        Intent intent = new Intent(this.getActivity(), Details.class);
+        intent.putExtra(EXTRA_QUESTION, question);
+        intent.putExtra(EXTRA_QUESTION_TRANSITION_NAME, ViewCompat.getTransitionName(itemView));
 
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this.getActivity(), itemView,
+                ViewCompat.getTransitionName(itemView));
 
+        startActivity(intent, options.toBundle());
 
-        /*getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .addSharedElement(itemView, ViewCompat.getTransitionName(itemView))
-                .addToBackStack(TAG)
-                .replace( ((ViewGroup)( getView().getParent())).getId(), questionDetails)
-                .commit();*/
     }
 
 }

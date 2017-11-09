@@ -109,7 +109,7 @@ public class AskPresenter implements AskContract.Presenter {
     @Override
     public HashMap getAlbums() { return this.albumsSelected; }
 
-    public void upvoteScheme(String questionId){dataHandler.upvote(questionId);}
+    //public void upvoteScheme(String questionId){dataHandler.upvote(questionId);}
 
 
 }

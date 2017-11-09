@@ -3,10 +3,13 @@ package com.aloy.aloy.Util;
 import android.content.Context;
 import android.util.Log;
 
+import com.aloy.aloy.Adapters.AnswersAdapter;
 import com.aloy.aloy.LoginActivity;
 import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;
+import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
+import com.aloy.aloy.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -110,13 +113,13 @@ public class DataHandler {
         });
     }
 
-    public void upvote(final String questionId) {
+    public void upvote(DatabaseReference questionId,String answerId) {
         //refQuestionFeed.runTransaction(new Transaction.Handler() {
            // @Override
             //public Transaction.Result doTransaction(MutableData mutableData) {
                 //Post p = mutableData.getValue(Post.class);
-                final DatabaseReference mUpvoterReference = refQuestionFeed.child(questionId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
-                final DatabaseReference mUpvotesReference = refQuestionFeed.child(questionId).child("upvotes").child("number");
+                final DatabaseReference mUpvoterReference = questionId.child(answerId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
+                final DatabaseReference mUpvotesReference = questionId.child(answerId).child("upvotes").child("number");
                 mUpvotesReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot votes) {
@@ -125,15 +128,15 @@ public class DataHandler {
                             public void onDataChange(DataSnapshot voter) {
                                 if (voter.exists()) {
                                     //Log.i("votes",""+(int)votes.getValue());
-                                    refQuestionFeed.child(questionId).child("upvotes").child("number").setValue(votes.getValue(Integer.class)-1);
-                                    refQuestionFeed.child(questionId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId()).removeValue();
+                                    mUpvotesReference.setValue(votes.getValue(Integer.class)-1);
+                                    mUpvoterReference.removeValue();
 
                                 }else{
-                                    refQuestionFeed.child(questionId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId()).setValue("voted");
+                                    mUpvoterReference.setValue("voted");
                                     if (votes.exists()) {
-                                        refQuestionFeed.child(questionId).child("upvotes").child("number").setValue(votes.getValue(Integer.class)+1);
+                                        mUpvotesReference.setValue(votes.getValue(Integer.class)+1);
                                     }else{
-                                        refQuestionFeed.child(questionId).child("upvotes").child("number").setValue(1);
+                                        mUpvotesReference.setValue(1);
                                     }
                                 }
                             }
@@ -162,4 +165,35 @@ public class DataHandler {
         //});
     }
 
+    public void getUpvote(final DatabaseReference questionRef, final String answerId, final AnswersAdapter.ViewHolder holder) {
+        final DatabaseReference mUpvoterReference = questionRef.child(answerId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
+        final DatabaseReference mUpvotesReference = questionRef.child(answerId).child("upvotes").child("number");
+        mUpvotesReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot votes) {
+                mUpvoterReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot voter) {
+                        if (voter.exists()) {
+                            //Log.i("votes",""+(int)votes.getValue());
+                            holder.upvote.setImageResource(R.drawable.ic_favorite);
+
+                        }else{
+                            holder.upvote.setImageResource(R.drawable.ic_favorite_border);
+
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
+
+    }
 }

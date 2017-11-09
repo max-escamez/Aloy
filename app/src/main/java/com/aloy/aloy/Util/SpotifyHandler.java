@@ -47,7 +47,6 @@ import retrofit.client.Response;
 
 public class SpotifyHandler {
 
-    private String username;
     private SpotifyService service;
     private DataHandler dataHandler;
     private MainUser mainUser;

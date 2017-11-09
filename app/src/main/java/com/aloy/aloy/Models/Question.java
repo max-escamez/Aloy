@@ -33,6 +33,28 @@ public class Question implements Parcelable {
         this.pic = pic;
     }
 
+    protected Question(Parcel in) {
+        id = in.readString();
+        username = in.readString();
+        body = in.readString();
+        pic = in.readString();
+        cover1 = in.readString();
+        cover2 = in.readString();
+    }
+
+    @SuppressWarnings("unused")
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel in) {
+            return new Question(in);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
+
     public String getBody(){
         return body;
     }
@@ -79,8 +101,11 @@ public class Question implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(username);
-        dest.writeString(pic);
         dest.writeString(body);
+        dest.writeString(pic);
+        dest.writeString(cover1);
+        dest.writeString(cover2);
+
 
     }
 }

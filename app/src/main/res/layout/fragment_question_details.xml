@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="10dp"
-    tools:context="com.aloy.aloy.Fragments.QuestionDetails">
+    >
 
 
     <android.support.constraint.ConstraintLayout
@@ -94,7 +94,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/questionDetail" />
+            app:layout_constraintTop_toBottomOf="@+id/questionDetail"
+            android:layoutAnimation="@anim/layout_animation_slide_right"
+            />
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>
