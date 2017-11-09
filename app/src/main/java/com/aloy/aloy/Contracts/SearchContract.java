@@ -31,7 +31,5 @@ public interface SearchContract {
         void removeItem(String type, int position, String query);
 
         void setupSearchRecycler(RecyclerView recyclerView, android.view.View searchView, Context context, String searchQuery, String type);
-
-        String encodeQuery(String query);
     }
 }

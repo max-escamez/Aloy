@@ -12,16 +12,18 @@ public class Answer {
     private String body;
     private String pic;
     private String name;
+    private String date;
     private CircularImageView profilePicture;
 
     public Answer() {
     }
 
-    public Answer(String username, String body, String pic,String name) {
+    public Answer(String username, String body, String pic,String name,String date) {
         this.username = username;
         this.body = body;
         this.pic = pic;
         this.name=name;
+        this.date=date;
     }
 
     public void setId(String id) {
@@ -41,6 +43,8 @@ public class Answer {
     public String getName() {return name; }
 
     public String getPic(){return pic;}
+
+    public String getDate(){return date;}
 
     public void setBody(String body) {
             this.body=body;

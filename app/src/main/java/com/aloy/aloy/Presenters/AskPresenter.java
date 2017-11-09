@@ -15,8 +15,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,6 +46,9 @@ public class AskPresenter implements AskContract.Presenter {
     private LinkedHashMap<String,Track> tracksSelected;
     private HashMap artistsSelected;
     private HashMap albumsSelected;
+    private HashMap genreSelected;
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private Date date;
 
     public AskPresenter(AskContract.View askView, DataHandler dataHandler, SpotifyHandler spotifyHandler, Context context) {
         sharedPreferenceHelper = new SharedPreferenceHelper(context);
@@ -52,6 +58,7 @@ public class AskPresenter implements AskContract.Presenter {
         tracksSelected = new LinkedHashMap<>();
         albumsSelected = new HashMap();
         artistsSelected = new HashMap();
+        genreSelected = new HashMap();
     }
 
 
@@ -59,19 +66,21 @@ public class AskPresenter implements AskContract.Presenter {
     public void createAnswer(String body, String questionID) {
         String name=sharedPreferenceHelper.getCurrentUserName();
         String id=sharedPreferenceHelper.getCurrentUserId();
-        Answer newAnswer = new Answer(id,body,sharedPreferenceHelper.getProfilePicture(),name);
-        dataHandler.saveAnswer(newAnswer, questionID, tracksSelected, artistsSelected, albumsSelected);
+        date=new Date();
+        Answer newAnswer = new Answer(id,body,sharedPreferenceHelper.getProfilePicture(),name,(dateFormat.format(date)));
+        dataHandler.saveAnswer(newAnswer, questionID, tracksSelected, artistsSelected, albumsSelected,genreSelected);
     }
     @Override
     public void createQuestion(String body) {
         String name=sharedPreferenceHelper.getCurrentUserName();
         String id=sharedPreferenceHelper.getCurrentUserId();
-        Question newQuestion = new Question(id,sharedPreferenceHelper.getProfilePicture(),body,name);
+        date=new Date();
+        Question newQuestion = new Question(id,sharedPreferenceHelper.getProfilePicture(),body,name,(dateFormat.format(date)));
         if (tracksSelected.size()>=2) {
             newQuestion.setCover1(new ArrayList<>(tracksSelected.values()).get(0).album.images.get(0).url );
             newQuestion.setCover2(new ArrayList<>(tracksSelected.values()).get(1).album.images.get(0).url );
         }
-        dataHandler.saveQuestion(newQuestion,tracksSelected,artistsSelected,albumsSelected);
+        dataHandler.saveQuestion(newQuestion,tracksSelected,artistsSelected,albumsSelected,genreSelected);
     }
 
     @Override
@@ -106,5 +115,20 @@ public class AskPresenter implements AskContract.Presenter {
 
     @Override
     public HashMap getAlbums() { return this.albumsSelected; }
+
+    @Override
+    public void addGenre(String name,String url){genreSelected.put(name,url);}
+
+    @Override
+    public void removeGenre(String name){genreSelected.remove(name);}
+
+    @Override
+    public HashMap getGenres(){return this.genreSelected;}
+
+    @Override
+    public void clearGenres(){this.genreSelected.clear();}
+
+
+
 
 }

@@ -79,11 +79,10 @@ public class QuestionAdapter extends FirebaseRecyclerAdapter<QuestionAdapter.Vie
         //Question question = getItem(getItemCount()-position-1);
         final Question question = getItem(position);
         holder.questionBody.setText(question.getBody());
-        if((question.getName())==null){
-            System.out.println(question.getUsername());
+
+        if((question.getName()).equals("")){
             holder.questionUsername.setText(question.getUsername());
         }else{
-            System.out.println(question.getName());
             holder.questionUsername.setText(question.getName());
         }
         //dataHandler.updateURL(question.getUsername());

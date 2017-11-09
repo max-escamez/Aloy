@@ -2,6 +2,7 @@ package com.aloy.aloy.Presenters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
@@ -13,6 +14,8 @@ import com.aloy.aloy.Util.SpotifyHandler;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by tldonne on 01/11/2017.
@@ -30,7 +33,6 @@ public class SearchPresenter implements SearchContract.Presenter {
         this.spotifyHandler = spotifyHandler;
         this.searchView = searchView;
         tracksNb=0;
-
     }
 
     @Override
@@ -45,10 +47,11 @@ public class SearchPresenter implements SearchContract.Presenter {
             case "album":
                 spotifyHandler.bindAlbum(query,holder,position,context);
                 break;
+            case "genre":
+                dataHandler.bindGenre(holder,position,context);
+                break;
         }
     }
-
-
 
 
     @Override
@@ -62,6 +65,9 @@ public class SearchPresenter implements SearchContract.Presenter {
                 break;
             case "album" :
                 spotifyHandler.addAlbum(position,query,searchView,true);
+                break;
+            case "genre" :
+                dataHandler.addGenre(position,searchView,true);
                 break;
         }
     }
@@ -78,6 +84,9 @@ public class SearchPresenter implements SearchContract.Presenter {
             case "album" :
                 spotifyHandler.addAlbum(position,query,searchView,false);
                 break;
+            case "genre" :
+                dataHandler.addGenre(position,searchView,false);
+                break;
         }
     }
 
@@ -93,17 +102,12 @@ public class SearchPresenter implements SearchContract.Presenter {
             case "album" :
                 spotifyHandler.setupSearchRecyclerAlbums(recyclerView,context,this,searchQuery,type);
                 break;
+            case "genre" :
+                this.searchView.getAsk().getAskPresenter().clearGenres();
+                SearchAdapter searchAdapter = new SearchAdapter(context, this, searchQuery, type, 26);
+                recyclerView.setAdapter(searchAdapter);
+                break;
         }
-    }
-
-    @Override
-    public String encodeQuery(String query) {
-        try {
-            query=URLEncoder.encode(query, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return query;
     }
 
 }

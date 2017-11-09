@@ -57,7 +57,7 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
 
         final Answer answer = getItem(position);
         holder.body.setText(answer.getBody());
-        if ((answer.getName()) == null) {
+        if ((answer.getName()).equals("")) {
             holder.username.setText(answer.getUsername());
         }else{
             holder.username.setText(answer.getName());
