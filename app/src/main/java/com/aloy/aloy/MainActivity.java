@@ -5,15 +5,21 @@ import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import com.aloy.aloy.Adapters.BottomBarAdapter;
+import com.aloy.aloy.Adapters.InboxAdapter;
+import com.aloy.aloy.Fragments.Chat;
 import com.aloy.aloy.Fragments.Feed;
+import com.aloy.aloy.Fragments.Following;
 import com.aloy.aloy.Fragments.Inbox;
 import com.aloy.aloy.Fragments.Interests;
 import com.aloy.aloy.Fragments.Profile;
+import com.aloy.aloy.Fragments.Requests;
 import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.NoSwipePager;
@@ -72,9 +78,8 @@ public class MainActivity extends AppCompatActivity {
         pagerAdapter.addFragments(new Interests());
         pagerAdapter.addFragments(new Inbox());
         pagerAdapter.addFragments(profile);
-
-
         viewPager.setAdapter(pagerAdapter);
+
     }
 
     public static DataHandler getDataHandler(){
@@ -119,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+
 
         if(!countdownIsRunning) {
             new CountDownTimer(expiresAt-System.currentTimeMillis()-30000, 1000) {

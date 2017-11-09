@@ -40,14 +40,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     // data is passed into the constructor
     public SearchAdapter(Context context, SearchPresenter searchPresenter, String query, String type,int itemNb) {
-            this.mInflater = LayoutInflater.from(context);
-            this.searchPresenter = searchPresenter;
-            this.searchQuery = query;
-            this.context = context;
-            this.type = type;
-            this.itemNb=itemNb;
-            this.searchQuery=query;
-
+        this.mInflater = LayoutInflater.from(context);
+        this.searchPresenter = searchPresenter;
+        this.searchQuery = query;
+        this.context = context;
+        this.type = type;
+        this.itemNb=itemNb;
+        this.searchQuery=query;
     }
 
 
