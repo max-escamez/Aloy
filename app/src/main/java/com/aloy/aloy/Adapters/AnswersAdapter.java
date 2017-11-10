@@ -90,7 +90,7 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
         holder.upvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Upvote : " + answer.getId());
+                //System.out.println("Upvote : " + answer.getId());
                 questionDetailsPresenter.upvoteAnswer(questionId,answer.getId());
             }
         });

@@ -73,7 +73,7 @@ public class SpotifyHandler {
             public void success(UserPrivate u, Response response) {
                 sharedPreferenceHelper.saveCurrentUserId(u.id);
                 sharedPreferenceHelper.saveName(u.display_name);
-                sharedPreferenceHelper.saveProfilePicture(u.images.get(0).url);
+                dataHandler.saveProfilePicture(u.images.get(0).url);
                 dataHandler.updateData(sharedPreferenceHelper.getCurrentUserId());
             }
 
@@ -83,6 +83,7 @@ public class SpotifyHandler {
             }
 
         });
+
     }
 
     public void createMainUser() {

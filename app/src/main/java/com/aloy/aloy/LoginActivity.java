@@ -88,8 +88,8 @@ public class LoginActivity extends Activity {
         refresh_token = mSharedPreferenceHelper.getCurrentSpotifyToken();
         String token = CredentialsHandler.getAccessToken(this);
 
-        if (token==null||a==1) {
-            if(refresh_token==null||a==1) {
+        if (token==null || a==1) {
+            if(refresh_token==null  || a==1) {
                 Log.i("Token State","Never logged in");
                 setContentView(R.layout.activity_login);
             }else{
@@ -146,6 +146,7 @@ public class LoginActivity extends Activity {
                                                     if (!dataSnapshot.exists()) {
                                                         spotifyHandler.createMainUser();
                                                     }
+
                                                     startMainActivity(CredentialsHandler.getAccessToken(LoginActivity.this),CredentialsHandler.getExpiresAt(LoginActivity.this));
                                                 }
                                                 @Override

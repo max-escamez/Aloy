@@ -2,8 +2,11 @@ package com.aloy.aloy.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -25,14 +28,22 @@ import com.aloy.aloy.R;
 import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.github.clans.fab.FloatingActionButton;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Target;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
@@ -72,13 +83,15 @@ public class MyProfile extends Fragment {
 
         mSharedPreferenceHelper = new SharedPreferenceHelper(getContext());
         TextView username = (TextView) profileView.findViewById(R.id.username);
-        com.mikhaellopez.circularimageview.CircularImageView profilePicture = (com.mikhaellopez.circularimageview.CircularImageView) profileView.findViewById(R.id.profilePicture);
+        CircleImageView profilePicture = (CircleImageView) profileView.findViewById(R.id.profilePicture);
 
         if(mSharedPreferenceHelper.getCurrentUserName().equals("")){
             username.setText(mSharedPreferenceHelper.getCurrentUserId());
         }else{
             username.setText(mSharedPreferenceHelper.getCurrentUserName());
         }
+        //dataHandler.getUrl(question.getPic(),holder.profilePic,context);
+
         Picasso.with(getContext()).load(mSharedPreferenceHelper.getProfilePicture()).into(profilePicture);
 
         ViewPager profileViewPager = (ViewPager) profileView.findViewById(R.id.profile_view_pager);

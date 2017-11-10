@@ -30,6 +30,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static android.content.ContentValues.TAG;
 
 /**
@@ -119,7 +121,7 @@ public class IndexedFeedAdapter {
 
         TextView questionBody;
         TextView questionUsername;
-        CircularImageView profilePic;
+        CircleImageView profilePic;
         ImageView cover1;
         ImageView cover2;
         Button answerButton;
@@ -129,7 +131,7 @@ public class IndexedFeedAdapter {
             super(view);
             questionBody = (TextView) view.findViewById(R.id.questionBody);
             questionUsername = (TextView) view.findViewById(R.id.questionUsername);
-            profilePic = (CircularImageView) view.findViewById(R.id.questionProfilePic);
+            profilePic = (CircleImageView) view.findViewById(R.id.questionProfilePic);
             cover1 = (ImageView) view.findViewById(R.id.questionCover1);
             cover2 = (ImageView) view.findViewById(R.id.questionCover2);
             answerButton = (Button) view.findViewById(R.id.answerButton);

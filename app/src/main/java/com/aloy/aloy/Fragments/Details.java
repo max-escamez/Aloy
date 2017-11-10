@@ -132,7 +132,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
                 Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
             }
         });
-        //Picasso.with(this).load(question.getPic).into(profilePic);
+        Picasso.with(this).load(question.getPic()).into(profilePic);
         Picasso.with(this).load(question.getCover1()).into(cover1);
         Picasso.with(this).load(question.getCover2()).into(cover2);
         questionView = findViewById(R.id.questionDetail);

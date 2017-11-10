@@ -35,4 +35,9 @@ public class Profile extends AppCompatActivity {
         supportStartPostponedEnterTransition();
 
     }
+
+    @Override
+    public void onBackPressed() {
+        finishAfterTransition();
+    }
 }

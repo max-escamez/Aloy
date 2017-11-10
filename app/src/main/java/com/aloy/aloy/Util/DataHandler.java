@@ -1,41 +1,42 @@
 package com.aloy.aloy.Util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
 import com.aloy.aloy.Adapters.AnswersAdapter;
+import com.aloy.aloy.Adapters.QuestionAdapter;
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
-import com.aloy.aloy.LoginActivity;
 import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;
-import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
-import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ListIterator;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.CategoriesPager;
 import kaaes.spotify.webapi.android.models.Track;
 
 import static android.content.ContentValues.TAG;
@@ -51,6 +52,7 @@ public class DataHandler {
     private DatabaseReference refCategories;
     private SharedPreferenceHelper sharedPreferenceHelper;
     private String profilePicture;
+    private Context context;
 
 
 
@@ -60,6 +62,8 @@ public class DataHandler {
         refQuestionFeed = database.getReference("questions");
         refUser = database.getReference("users");
         refCategories = database.getReference("categories");
+        this.context=context;
+
     }
 
     public DatabaseReference getRefQuestionFeed(){
@@ -298,4 +302,74 @@ public class DataHandler {
         });
     }
 
+    public void saveProfilePicture(String url) {
+        Picasso.with(context)
+                .load(url)
+                .into(new com.squareup.picasso.Target() {
+                          @Override
+                          public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                              try {
+                                  String root = Environment.getExternalStorageDirectory().toString();
+                                  File myDir = new File(context.getFilesDir() + "/Aloy");
+                                  String name = "profile_pic.jpg";
+                                  myDir = new File(myDir, name);
+                                  FileOutputStream out = new FileOutputStream(myDir);
+                                  bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+
+                                  FirebaseStorage storage = FirebaseStorage.getInstance();
+                                  final StorageReference storageReference = storage.getReference().child(sharedPreferenceHelper.getCurrentUserId()+"/profilePic.jpg");
+                                  Uri file = Uri.fromFile(new File(String.valueOf(myDir)));
+                                  UploadTask uploadTask = storageReference.putFile(file);
+                                  //StorageReference gsReference = storage.getReferenceFromUrl("gs://aloy-1995.appspot.com/"+sharedPreferenceHelper.getCurrentUserId()+"/profilePic.jpg");
+                                  sharedPreferenceHelper.saveProfilePicture("gs://aloy-1995.appspot.com/"+sharedPreferenceHelper.getCurrentUserId()+"/profilePic.jpg");
+                                  /*uploadTask.addOnFailureListener(new OnFailureListener() {
+                                      @Override
+                                      public void onFailure(@NonNull Exception exception) {
+                                          // Handle unsuccessful uploads
+                                      }
+                                  }).addOnSuccessListener(
+                                          new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                              @Override
+                                              public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                  sharedPreferenceHelper.saveProfilePicture(taskSnapshot.getDownloadUrl().toString());
+                                              }
+                                          });*/
+                                  out.flush();
+                                  out.close();
+                              } catch(Exception e){
+                                  // some action
+                              }
+                          }
+
+                          @Override
+                          public void onBitmapFailed(Drawable errorDrawable) {
+                          }
+
+                          @Override
+                          public void onPrepareLoad(Drawable placeHolderDrawable) {
+                          }
+                      }
+                );
+    }
+
+    public void getUrl(String profilePicture, final CircleImageView holder, final Context context) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference gsReference = storage.getReferenceFromUrl(profilePicture);
+        gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                System.out.println(uri.toString());
+                Picasso.with(context).load(uri.toString()).into(holder);
+                holder.setVisibility(View.VISIBLE);
+
+
+                // Got the download URL for 'users/me/profile.png'
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+    }
 }

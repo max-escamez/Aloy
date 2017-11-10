@@ -1,6 +1,8 @@
 package com.aloy.aloy.Adapters;
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -16,17 +18,21 @@ import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.mikhaellopez.circularimageview.CircularImageView;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
-import static android.content.ContentValues.TAG;
+
+import static com.aloy.aloy.Fragments.Feed.TAG;
 
 
 /**
@@ -44,7 +50,7 @@ public class QuestionAdapter extends FirebaseRecyclerAdapter<QuestionAdapter.Vie
 
         TextView questionBody;
         TextView questionUsername;
-        CircleImageView profilePic;
+        public CircleImageView profilePic;
         ImageView cover1;
         ImageView cover2;
         Button answerButton;
@@ -106,7 +112,9 @@ public class QuestionAdapter extends FirebaseRecyclerAdapter<QuestionAdapter.Vie
             }
 
         });
-        Picasso.with(context).load(question.getPic()).into(holder.profilePic);
+
+
+        //dataHandler.getUrl(question.getPic(),holder.profilePic,context);
         Picasso.with(context).load(question.getCover1()).into(holder.cover1);
         Picasso.with(context).load(question.getCover2()).into(holder.cover2);
 
