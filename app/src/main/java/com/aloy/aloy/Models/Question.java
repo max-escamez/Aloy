@@ -69,13 +69,8 @@ public class Question implements Parcelable {
 
     public String getName() {return name; }
 
-
     public String getPic(){
         return pic;
-    }
-
-    public void setBody(String body) {
-        this.body=body;
     }
 
     public String getCover1() {

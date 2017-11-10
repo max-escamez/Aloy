@@ -19,13 +19,18 @@ import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
 import com.firebase.ui.database.*;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by tldonne on 09/11/2017.
@@ -58,16 +63,27 @@ public class IndexedFeedAdapter {
             protected void onBindViewHolder(final QuestionHolder holder, int position, final Question model) {
                 //final Question question = getItem(position);
                 holder.questionBody.setText(model.getBody());
-                if((model.getName())==null){
-                    System.out.println(model.getUsername());
+
+                if((model.getName()).equals("")){
                     holder.questionUsername.setText(model.getUsername());
                 }else{
                     System.out.println(model.getName());
                     holder.questionUsername.setText(model.getName());
                 }
-                //dataHandler.updateURL(question.getUsername());
-                //Picasso.with(context).load(dataHandler.getProfilePicture()).into(holder.profilePic);
-                Picasso.with(context).load(model.getPic()).into(holder.profilePic);
+                FirebaseDatabase.getInstance().getReference("users").child(model.getUsername()).child("pic").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot userURL) {
+                        Picasso.with(context).load(userURL.getValue().toString()).into(holder.profilePic);
+                        holder.profilePic.setVisibility(View.VISIBLE);
+
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+                    }
+
+                });
+                //Picasso.with(context).load(model.getPic()).into(holder.profilePic);
                 Picasso.with(context).load(model.getCover1()).into(holder.cover1);
                 Picasso.with(context).load(model.getCover2()).into(holder.cover2);
 

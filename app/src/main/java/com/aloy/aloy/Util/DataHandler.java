@@ -98,6 +98,7 @@ public class DataHandler {
                     databaseReference.child("genres").child(genre.getKey()).child("cover").setValue(genre.getValue());
                 }
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").child(databaseReference.getKey()).setValue("true");
+                follow(databaseReference.getKey());
             }
         });
     }
@@ -105,6 +106,10 @@ public class DataHandler {
     public void saveUser(MainUser user){
         refUser.child(sharedPreferenceHelper.getCurrentUserId()).setValue(user);
 
+    }
+
+    public void updateData(String username){
+        refUser.child(username).child("pic").setValue(sharedPreferenceHelper.getProfilePicture());
     }
 
     public void saveAnswer(Answer answer, final String questionID, final LinkedHashMap<String, Track> tracksSelected, final HashMap<String,Artist> artistsSelected, final HashMap<String,AlbumSimple> albumsSelected, final HashMap<String,String> genreSelected) {
@@ -140,55 +145,37 @@ public class DataHandler {
     }
 
     public void upvote(DatabaseReference questionId,String answerId) {
-        //refQuestionFeed.runTransaction(new Transaction.Handler() {
-           // @Override
-            //public Transaction.Result doTransaction(MutableData mutableData) {
-                //Post p = mutableData.getValue(Post.class);
-                final DatabaseReference mUpvoterReference = questionId.child(answerId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
-                final DatabaseReference mUpvotesReference = questionId.child(answerId).child("upvotes").child("number");
-                mUpvotesReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference mUpvoterReference = questionId.child(answerId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
+        final DatabaseReference mUpvotesReference = questionId.child(answerId).child("upvotes").child("number");
+        mUpvotesReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot votes) {
+                mUpvoterReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(final DataSnapshot votes) {
-                        mUpvoterReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot voter) {
-                                if (voter.exists()) {
-                                    //Log.i("votes",""+(int)votes.getValue());
-                                    mUpvotesReference.setValue(votes.getValue(Integer.class)-1);
-                                    mUpvoterReference.removeValue();
-
-                                }else{
-                                    mUpvoterReference.setValue("voted");
-                                    if (votes.exists()) {
-                                        mUpvotesReference.setValue(votes.getValue(Integer.class)+1);
-                                    }else{
-                                        mUpvotesReference.setValue(1);
-                                    }
-                                }
+                    public void onDataChange(DataSnapshot voter) {
+                        if (voter.exists()) {
+                            mUpvotesReference.setValue(votes.getValue(Integer.class)-1);
+                            mUpvoterReference.removeValue();
+                         }else{
+                            mUpvoterReference.setValue("voted");
+                            if (votes.exists()) {
+                                mUpvotesReference.setValue(votes.getValue(Integer.class)+1);
+                            }else{
+                                mUpvotesReference.setValue(1);
                             }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
-                            }
-                        });
+                        }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
                     }
                 });
-
-                //mutableData.setValue(p);
-                //return Transaction.success(mutableData);
-            //}
-
-            //@Override
-            //public void onComplete(DatabaseError databaseError, boolean b,
-            //                       DataSnapshot dataSnapshot) {
-                // Transaction completed
-            //    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-            //}
-        //});
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
     }
 
 
@@ -238,7 +225,6 @@ public class DataHandler {
                     @Override
                     public void onDataChange(DataSnapshot follower) {
                         if (follower.exists()) {
-                            //unfollow
                             refQuestionFeed.child(questionId).child("following").child("number").setValue(following.getValue(Integer.class)-1);
                             refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId()).removeValue();
                             mUserFollow.child(questionId).removeValue();
@@ -303,27 +289,13 @@ public class DataHandler {
         picReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot userURL) {
-                setProfilePicture(userURL.getValue().toString());
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
             }
-
         });
-
-    }
-
-    public void setProfilePicture(String url){
-        profilePicture=url;
-    }
-
-    public String getProfilePicture(){
-        return profilePicture;
-    }
-
-    public void updateData(String username){
-        refUser.child(username).child("pic").setValue(sharedPreferenceHelper.getProfilePicture());
     }
 
 }

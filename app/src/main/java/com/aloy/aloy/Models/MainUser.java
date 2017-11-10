@@ -7,23 +7,22 @@ package com.aloy.aloy.Models;
 public class MainUser {
 
     private String pic;
+    private String name;
 
 
     public MainUser() {
 
     }
 
-    public MainUser(String username, String pic) {
+    public MainUser(String name, String pic) {
         this.pic=pic;
+        this.name=name;
     }
-
 
     public String getPic() {
         return this.pic;
     }
 
-    public void setPic(String pic) {
-        this.pic=pic;
-    }
+    public String getName(){return this.name;}
 
 }
