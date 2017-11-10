@@ -23,6 +23,7 @@ import com.aloy.aloy.Fragments.Requests;
 import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.NoSwipePager;
+import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.aloy.aloy.Util.SpotifyHandler;
 import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     public static SpotifyService service;
     private static boolean countdownIsRunning;
     private FirebaseAuth mAuth;
+    private SharedPreferenceHelper mSharedPreferenceHelper;
+
 
 
     public static Intent createIntent(Context context) {
@@ -111,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String token = intent.getStringExtra(EXTRA_TOKEN);
         long expiresAt=intent.getLongExtra(EXTRA_EXPIRES_AT,3600);
+        mSharedPreferenceHelper = new SharedPreferenceHelper(this);
         SpotifyApi api = new SpotifyApi();
         api.setAccessToken(token);
         service = api.getService();
@@ -154,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
+                    mSharedPreferenceHelper.saveFirebaseToken(LoginActivity.firebase_token);
                     CredentialsHandler.setAccessToken(getApplicationContext(), LoginActivity.access_token, 3600, TimeUnit.SECONDS);
                     this.start();
                 }

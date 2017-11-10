@@ -18,6 +18,8 @@ import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,7 +63,7 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
     @Override
     public void onBindViewHolder(final AnswersAdapter.ViewHolder holder, int position) {
         //Question question = getItem(getItemCount()-position-1);
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final Answer answer = getItem(position);
         holder.body.setText(answer.getBody());
         if ((answer.getName()).equals("")) {

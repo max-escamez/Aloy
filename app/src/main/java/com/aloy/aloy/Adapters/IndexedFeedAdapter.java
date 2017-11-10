@@ -19,6 +19,8 @@ import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
 import com.firebase.ui.database.*;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,6 +83,7 @@ public class IndexedFeedAdapter {
                     }
 
                 });
+                //Picasso.with(context).load(user.getPhotoUrl().toString()).into(holder.profilePic);
                 //Picasso.with(context).load(model.getPic()).into(holder.profilePic);
                 Picasso.with(context).load(model.getCover1()).into(holder.cover1);
                 Picasso.with(context).load(model.getCover2()).into(holder.cover2);

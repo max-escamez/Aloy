@@ -16,6 +16,8 @@ import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -103,7 +105,8 @@ public class QuestionAdapter extends FirebaseRecyclerAdapter<QuestionAdapter.Vie
             }
 
         });
-        Picasso.with(context).load(question.getPic()).into(holder.profilePic);
+
+        //Picasso.with(context).load(user.getPhotoUrl().toString()).into(holder.profilePic);
         Picasso.with(context).load(question.getCover1()).into(holder.cover1);
         Picasso.with(context).load(question.getCover2()).into(holder.cover2);
 

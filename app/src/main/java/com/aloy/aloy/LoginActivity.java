@@ -8,6 +8,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +24,8 @@ import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.aloy.aloy.Util.SpotifyHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,12 +36,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -76,6 +90,8 @@ public class LoginActivity extends Activity {
     private static int a=1;
     private SpotifyHandler spotifyHandler;
     private SharedPreferenceHelper mSharedPreferenceHelper;
+    private FirebaseStorage storage;
+    private FirebaseUser user;
 
     public LoginActivity() {
     }
@@ -86,7 +102,7 @@ public class LoginActivity extends Activity {
         mAuth = FirebaseAuth.getInstance();
         mSharedPreferenceHelper = new SharedPreferenceHelper(this);
         refresh_token = mSharedPreferenceHelper.getCurrentSpotifyToken();
-        String token = CredentialsHandler.getAccessToken(this);
+        final String token = CredentialsHandler.getAccessToken(this);
 
         if (token==null||a==1) {
             if(refresh_token==null||a==1) {
@@ -97,14 +113,36 @@ public class LoginActivity extends Activity {
                     Log.i("Token State","Expired");
                     new refreshToAccess().execute().get();
                     CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
-                    startMainActivity(CredentialsHandler.getAccessToken(LoginActivity.this), CredentialsHandler.getExpiresAt(LoginActivity.this));
+                    mAuth.signInWithCustomToken(firebase_token)
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        mSharedPreferenceHelper.saveFirebaseToken(firebase_token);
+                                        startMainActivity(token,CredentialsHandler.getExpiresAt(LoginActivity.this));
+                                    } else {
+                                        Log.w(TAG, "signInWithCustomToken:failure", task.getException());
+                                    }
+                                }
+                            });
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
             }
         } else {
             Log.i("Token State","Not yet expired");
-            startMainActivity(token,CredentialsHandler.getExpiresAt(this));
+            mAuth.signInWithCustomToken(firebase_token)
+                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                mSharedPreferenceHelper.saveFirebaseToken(firebase_token);
+                                startMainActivity(token,CredentialsHandler.getExpiresAt(LoginActivity.this));
+                            } else {
+                                Log.w(TAG, "signInWithCustomToken:failure", task.getException());
+                            }
+                        }
+                    });
         }
     }
 
@@ -137,8 +175,10 @@ public class LoginActivity extends Activity {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
+                                            user = FirebaseAuth.getInstance().getCurrentUser();
+                                            mSharedPreferenceHelper.saveFirebaseToken(firebase_token);
                                             DatabaseReference mTheReference = FirebaseDatabase.getInstance().getReference();
-                                            DatabaseReference mUsersReference = mTheReference.child("users").child(mAuth.getCurrentUser().getUid());
+                                            DatabaseReference mUsersReference = mTheReference.child("users").child(user.getUid());
                                             mUsersReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -146,7 +186,7 @@ public class LoginActivity extends Activity {
                                                     if (!dataSnapshot.exists()) {
                                                         spotifyHandler.createMainUser();
                                                     }
-                                                    startMainActivity(CredentialsHandler.getAccessToken(LoginActivity.this),CredentialsHandler.getExpiresAt(LoginActivity.this));
+                                                    startMainActivity(CredentialsHandler.getAccessToken(LoginActivity.this), CredentialsHandler.getExpiresAt(LoginActivity.this));
                                                 }
                                                 @Override
                                                 public void onCancelled(DatabaseError databaseError) {
@@ -186,6 +226,20 @@ public class LoginActivity extends Activity {
         Log.e(TAG, msg);
     }
 
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
+    }
 
     //Asyncronous tasks
     public static class codeToRefresh extends AsyncTask<String, Void, String> {
@@ -337,6 +391,7 @@ public class LoginActivity extends Activity {
                     firebase_token=reader.getString("firebase");
                     access_token=access_token.substring(2, access_token.length()-2);
                     firebase_token=firebase_token.substring(2, firebase_token.length()-2);
+
                     return null;
                 }else{
                     Log.i("refreshToAccess error",responseCode+"");
