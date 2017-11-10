@@ -1,5 +1,7 @@
 package com.aloy.aloy.Contracts;
 
+import android.content.Context;
+
 import com.aloy.aloy.Adapters.AnswersAdapter;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
@@ -16,7 +18,7 @@ public interface QuestionDetailsContract {
     interface View  {
         void setupRecyclerView(String questionId);
 
-        void setupQuestion(Question question, String transitionName);
+        void setupQuestion(Question question, String transitionName, Context context);
 
         QuestionDetailsPresenter getPresenter();
     }

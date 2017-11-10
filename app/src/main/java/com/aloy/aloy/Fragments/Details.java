@@ -1,11 +1,13 @@
 package com.aloy.aloy.Fragments;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,10 +19,16 @@ import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 public class Details extends AppCompatActivity implements QuestionDetailsContract.View {
     private QuestionDetailsPresenter questionDetailsPresenter;
@@ -45,7 +53,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         Question question = extras.getParcelable(Feed.EXTRA_QUESTION);
         String transitionName = extras.getString(Feed.EXTRA_QUESTION_TRANSITION_NAME);
 
-        setupQuestion(question,transitionName);
+        setupQuestion(question,transitionName,this);
         setupRecyclerView(question.getId());
 
         supportStartPostponedEnterTransition();
@@ -63,7 +71,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
     }
 
     @Override
-    public void setupQuestion(Question question, String transitionName){
+    public void setupQuestion(Question question, String transitionName,final Context context){
         profilePic = (CircularImageView) findViewById(R.id.questionDetailProfilePic);
         username = (TextView) findViewById(R.id.questionDetailUsername);
         body = (TextView) findViewById(R.id.questionDetailBody);
@@ -72,7 +80,19 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
 
         body.setText(question.getBody());
         username.setText(question.getUsername());
-        Picasso.with(this).load(question.getPic()).into(profilePic);
+        FirebaseDatabase.getInstance().getReference("users").child(question.getUsername()).child("pic").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot userURL) {
+                Picasso.with(context).load(userURL.getValue().toString()).into(profilePic);
+                profilePic.setVisibility(View.VISIBLE);
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
+        //Picasso.with(this).load(question.getPic).into(profilePic);
         Picasso.with(this).load(question.getCover1()).into(cover1);
         Picasso.with(this).load(question.getCover2()).into(cover2);
         questionView = findViewById(R.id.questionDetail);
