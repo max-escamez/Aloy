@@ -22,6 +22,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by tldonne on 29/10/2017.
  */
@@ -37,7 +39,7 @@ public class QuestionAdapter extends FirebaseRecyclerAdapter<QuestionAdapter.Vie
 
         TextView questionBody;
         TextView questionUsername;
-        CircularImageView profilePic;
+        CircleImageView profilePic;
         ImageView cover1;
         ImageView cover2;
         Button answerButton;
@@ -47,7 +49,7 @@ public class QuestionAdapter extends FirebaseRecyclerAdapter<QuestionAdapter.Vie
             super(view);
             questionBody = (TextView) view.findViewById(R.id.questionBody);
             questionUsername = (TextView) view.findViewById(R.id.questionUsername);
-            profilePic = (CircularImageView) view.findViewById(R.id.questionProfilePic);
+            profilePic = (CircleImageView) view.findViewById(R.id.questionProfilePic);
             cover1 = (ImageView) view.findViewById(R.id.questionCover1);
             cover2 = (ImageView) view.findViewById(R.id.questionCover2);
             answerButton = (Button) view.findViewById(R.id.answerButton);
@@ -85,6 +87,7 @@ public class QuestionAdapter extends FirebaseRecyclerAdapter<QuestionAdapter.Vie
         }else{
             holder.questionUsername.setText(question.getName());
         }
+
         //dataHandler.updateURL(question.getUsername());
         //Picasso.with(context).load(dataHandler.getProfilePicture()).into(holder.profilePic);
         Picasso.with(context).load(question.getPic()).into(holder.profilePic);
