@@ -75,6 +75,7 @@ public class AskPresenter implements AskContract.Presenter {
         String name=sharedPreferenceHelper.getCurrentUserName();
         String id=sharedPreferenceHelper.getCurrentUserId();
         date=new Date();
+        //String url = dataHandler.getUrl(sharedPreferenceHelper.getProfilePicture());
         Question newQuestion = new Question(id,sharedPreferenceHelper.getProfilePicture(),body,name,(dateFormat.format(date)));
         if (tracksSelected.size()>=2) {
             newQuestion.setCover1(new ArrayList<>(tracksSelected.values()).get(0).album.images.get(0).url );

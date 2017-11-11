@@ -1,7 +1,11 @@
 package com.aloy.aloy.Fragments;
 
+import android.content.Intent;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuView;
@@ -19,6 +23,7 @@ import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,18 +33,22 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import static android.content.ContentValues.TAG;
 
 public class Details extends AppCompatActivity implements QuestionDetailsContract.View {
     private QuestionDetailsPresenter questionDetailsPresenter;
     private ArrayList<Answer> adapterAnswer;
     private ArrayList<String> adapterKeys;
-    private CircularImageView profilePic;
+    private CircleImageView profilePic;
     private TextView username;
     private TextView body ;
     private ImageView cover1 ;
     private ImageView cover2 ;
     private View questionView;
+    public static final String USERNAME_TRANSITION_NAME = "usernameTransitionName" ;
+    public static final String PROFILE_PIC_TRANSITION_NAME = "profilePicTransitionName" ;
+
 
 
 
@@ -49,14 +58,44 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         setContentView(R.layout.fragment_question_details);
         supportPostponeEnterTransition();
         questionDetailsPresenter = new QuestionDetailsPresenter(this, MainActivity.getDataHandler());
+        SharedPreferenceHelper mSharedPreferenceHelper = new SharedPreferenceHelper(this);
+
         Bundle extras = getIntent().getExtras();
-        Question question = extras.getParcelable(Feed.EXTRA_QUESTION);
+        final Question question = extras.getParcelable(Feed.EXTRA_QUESTION);
         String transitionName = extras.getString(Feed.EXTRA_QUESTION_TRANSITION_NAME);
 
         setupQuestion(question,transitionName,this);
         setupRecyclerView(question.getId());
 
         supportStartPostponedEnterTransition();
+
+
+        if (!(question.getUsername().equals(mSharedPreferenceHelper.getCurrentUserId()))) {
+            username.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openProfile(question);
+                }
+            });
+        }
+
+    }
+
+    private void openProfile(Question question) {
+        Intent intent = new Intent(this, Profile.class);
+        ViewCompat.setTransitionName(username,question.getUsername());
+        ViewCompat.setTransitionName(profilePic,question.getPic());
+        Pair usernamePair = Pair.create(username,ViewCompat.getTransitionName(username));
+        Pair picturePair = Pair.create(profilePic,ViewCompat.getTransitionName(profilePic));
+        intent.putExtra(USERNAME_TRANSITION_NAME, ViewCompat.getTransitionName(username));
+        intent.putExtra(PROFILE_PIC_TRANSITION_NAME, ViewCompat.getTransitionName(profilePic));
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                usernamePair,
+                picturePair);
+        startActivity(intent, options.toBundle());
+
     }
 
     @Override
@@ -72,7 +111,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
 
     @Override
     public void setupQuestion(Question question, String transitionName,final Context context){
-        profilePic = (CircularImageView) findViewById(R.id.questionDetailProfilePic);
+        profilePic = (CircleImageView) findViewById(R.id.questionDetailProfilePic);
         username = (TextView) findViewById(R.id.questionDetailUsername);
         body = (TextView) findViewById(R.id.questionDetailBody);
         cover1 = (ImageView) findViewById(R.id.questionDetailCover1);
@@ -80,6 +119,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
 
         body.setText(question.getBody());
         username.setText(question.getUsername());
+
         FirebaseDatabase.getInstance().getReference("users").child(question.getUsername()).child("pic").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot userURL) {
@@ -92,7 +132,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
                 Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
             }
         });
-        //Picasso.with(this).load(question.getPic).into(profilePic);
+        Picasso.with(this).load(question.getPic()).into(profilePic);
         Picasso.with(this).load(question.getCover1()).into(cover1);
         Picasso.with(this).load(question.getCover2()).into(cover2);
         questionView = findViewById(R.id.questionDetail);
@@ -106,7 +146,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
 
     @Override
     public void onBackPressed() {
-        // finishAfterTransition()
+         //finishAfterTransition();
         finish();
     }
 

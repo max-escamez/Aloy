@@ -118,7 +118,6 @@ public class Feed extends Fragment implements FeedContract.View {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 this.getActivity(), itemView,
                 ViewCompat.getTransitionName(itemView));
-
         startActivity(intent, options.toBundle());
     }
 

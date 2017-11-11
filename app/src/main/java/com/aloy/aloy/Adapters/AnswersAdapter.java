@@ -30,7 +30,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
+import de.hdodenhof.circleimageview.CircleImageView;
 import static android.content.ContentValues.TAG;
 
 /**
@@ -92,7 +92,7 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
         holder.upvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Upvote : " + answer.getId());
+                //System.out.println("Upvote : " + answer.getId());
                 questionDetailsPresenter.upvoteAnswer(questionId,answer.getId());
             }
         });
@@ -103,7 +103,7 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView body;
         TextView username;
-        CircularImageView profilePic;
+        CircleImageView profilePic;
         public ImageButton upvote;
         ImageView cover1;
         ImageView cover2;
@@ -111,7 +111,7 @@ public class AnswersAdapter extends FirebaseRecyclerAdapter<AnswersAdapter.ViewH
              super(view);
              body = (TextView) view.findViewById(R.id.answerBody);
              username = (TextView) view.findViewById(R.id.answerUsername);
-             profilePic = (CircularImageView) view.findViewById(R.id.answerProfilePic);
+             profilePic = (CircleImageView) view.findViewById(R.id.answerProfilePic);
              upvote = (ImageButton) view.findViewById(R.id.upvote);
 
              //view.setOnClickListener(this);
