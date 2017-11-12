@@ -14,14 +14,13 @@
     <TextView
         android:id="@+id/questionBody"
         android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="16dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="Body"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/answerButton"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@+id/followButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/questionProfilePic" />
 
@@ -53,17 +52,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/answerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="37dp"
-        android:layout_marginEnd="8dp"
-        android:text="Answer"
-        android:textSize="12sp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <ImageView
         android:id="@+id/questionCover2"
         android:layout_width="30dp"
@@ -84,17 +72,32 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/aloy_transparent2x" />
 
-    <Button
-        android:id="@+id/followButton"
-        android:layout_width="75dp"
+    <ImageButton
+        android:id="@+id/answerButton"
+        android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="12dp"
-        android:text="follow"
-        android:textAppearance="@android:style/TextAppearance.Material.Button"
-        android:textSize="8sp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toStartOf="@+id/questionCover1"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@android:color/transparent"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        android:tint="@color/light_grey_Aloy"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/questionCover2"
+        app:srcCompat="@drawable/ic_reply" />
+
+    <ImageButton
+        android:id="@+id/followButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@android:color/transparent"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        android:tint="@color/light_grey_Aloy"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/answerButton"
+        app:srcCompat="@drawable/ic_playlist_add" />
 
 </android.support.constraint.ConstraintLayout>

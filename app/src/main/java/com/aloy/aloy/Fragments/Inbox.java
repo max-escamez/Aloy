@@ -8,12 +8,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 
 import com.aloy.aloy.Adapters.InboxAdapter;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
-import com.github.clans.fab.FloatingActionButton;
 
 
 /**

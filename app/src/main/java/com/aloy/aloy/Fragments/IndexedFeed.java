@@ -12,10 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.aloy.aloy.Adapters.IndexedFeedAdapter;
-import com.aloy.aloy.Adapters.QuestionAdapter;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
 

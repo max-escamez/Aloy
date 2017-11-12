@@ -5,7 +5,6 @@ import android.content.Context;
 import com.aloy.aloy.Adapters.AnswersAdapter;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
-import com.aloy.aloy.Util.BaseView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
@@ -21,8 +20,8 @@ public interface QuestionDetailsContract {
         void setupQuestion(Question question, String transitionName, Context context);
 
         QuestionDetailsPresenter getPresenter();
-
         void showRequest(String questionId);
+        void showAnswerQuestion(String questionId);
     }
 
     interface Presenter {
@@ -31,6 +30,6 @@ public interface QuestionDetailsContract {
 
         void upvoteAnswer(DatabaseReference questionId,String answerId);
 
-        void getUserUpvote(DatabaseReference questionId, String id, AnswersAdapter.ViewHolder holder);
+        void getUpvotes(String questionId, String id, AnswersAdapter.ViewHolder holder);
     }
 }

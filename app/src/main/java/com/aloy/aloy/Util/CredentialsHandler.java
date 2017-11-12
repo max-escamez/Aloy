@@ -6,7 +6,6 @@ package com.aloy.aloy.Util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.concurrent.TimeUnit;
 

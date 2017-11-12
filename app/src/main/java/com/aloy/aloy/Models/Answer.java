@@ -18,12 +18,13 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(String username, String body, String pic,String name,String date) {
+    public Answer(String username, String body, String pic,String name,String date,String answerId) {
         this.username = username;
         this.body = body;
         this.pic = pic;
         this.name=name;
         this.date=date;
+        this.id=answerId;
     }
 
     public void setId(String id) {
@@ -49,5 +50,7 @@ public class Answer {
     public void setBody(String body) {
             this.body=body;
         }
+
+
 
 }

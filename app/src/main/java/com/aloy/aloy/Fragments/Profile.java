@@ -1,14 +1,10 @@
 package com.aloy.aloy.Fragments;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.aloy.aloy.MainActivity;
-import com.aloy.aloy.Models.Question;
-import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
