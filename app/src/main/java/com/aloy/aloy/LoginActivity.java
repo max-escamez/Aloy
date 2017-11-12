@@ -104,8 +104,8 @@ public class LoginActivity extends Activity {
         refresh_token = mSharedPreferenceHelper.getCurrentSpotifyToken();
         final String token = CredentialsHandler.getAccessToken(this);
 
-        if (token==null || a==1) {
-            if(refresh_token==null  || a==1) {
+        if (token==null) {
+            if(refresh_token==null) {
                 Log.i("Token State","Never logged in");
                 setContentView(R.layout.activity_login);
             }else{
@@ -113,36 +113,15 @@ public class LoginActivity extends Activity {
                     Log.i("Token State","Expired");
                     new refreshToAccess().execute().get();
                     CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
-                    mAuth.signInWithCustomToken(firebase_token)
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        mSharedPreferenceHelper.saveFirebaseToken(firebase_token);
-                                        startMainActivity(token,CredentialsHandler.getExpiresAt(LoginActivity.this));
-                                    } else {
-                                        Log.w(TAG, "signInWithCustomToken:failure", task.getException());
-                                    }
-                                }
-                            });
+                    startMainActivity(token,CredentialsHandler.getExpiresAt(LoginActivity.this));
+
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
             }
         } else {
             Log.i("Token State","Not yet expired");
-            mAuth.signInWithCustomToken(firebase_token)
-                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                mSharedPreferenceHelper.saveFirebaseToken(firebase_token);
-                                startMainActivity(token,CredentialsHandler.getExpiresAt(LoginActivity.this));
-                            } else {
-                                Log.w(TAG, "signInWithCustomToken:failure", task.getException());
-                            }
-                        }
-                    });
+            startMainActivity(token,CredentialsHandler.getExpiresAt(LoginActivity.this));
         }
     }
 

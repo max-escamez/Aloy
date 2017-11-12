@@ -150,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
-                    mSharedPreferenceHelper.saveFirebaseToken(LoginActivity.firebase_token);
                     CredentialsHandler.setAccessToken(getApplicationContext(), LoginActivity.access_token, 3600, TimeUnit.SECONDS);
                     this.start();
                 }

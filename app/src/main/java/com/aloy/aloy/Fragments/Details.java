@@ -2,20 +2,19 @@ package com.aloy.aloy.Fragments;
 
 import android.content.Intent;
 import android.content.Context;
-import android.os.Build;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.aloy.aloy.Adapters.AnswersAdapter;
 import com.aloy.aloy.Contracts.QuestionDetailsContract;
 import com.aloy.aloy.MainActivity;
@@ -28,11 +27,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import static android.content.ContentValues.TAG;
 
@@ -42,6 +38,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
     private ArrayList<String> adapterKeys;
     private CircleImageView profilePic;
     private TextView username;
+    private Button request;
     private TextView body ;
     private ImageView cover1 ;
     private ImageView cover2 ;
@@ -59,7 +56,6 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         supportPostponeEnterTransition();
         questionDetailsPresenter = new QuestionDetailsPresenter(this, MainActivity.getDataHandler());
         SharedPreferenceHelper mSharedPreferenceHelper = new SharedPreferenceHelper(this);
-
         Bundle extras = getIntent().getExtras();
         final Question question = extras.getParcelable(Feed.EXTRA_QUESTION);
         String transitionName = extras.getString(Feed.EXTRA_QUESTION_TRANSITION_NAME);
@@ -78,6 +74,12 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
                 }
             });
         }
+        request.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                showRequest(question.getId());
+            }
+        });
 
     }
 
@@ -116,6 +118,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         body = (TextView) findViewById(R.id.questionDetailBody);
         cover1 = (ImageView) findViewById(R.id.questionDetailCover1);
         cover2 = (ImageView) findViewById(R.id.questionDetailCover2);
+        request = (Button) findViewById(R.id.requestButton);
 
         body.setText(question.getBody());
         username.setText(question.getUsername());
@@ -137,6 +140,16 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         Picasso.with(this).load(question.getCover2()).into(cover2);
         questionView = findViewById(R.id.questionDetail);
         questionView.setTransitionName(transitionName);
+    }
+
+    @Override
+    public void showRequest(String questionId) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        RequestDialog requestDialog = new RequestDialog();
+        Bundle args = new Bundle();
+        args.putString("questionId", questionId);
+        requestDialog.setArguments(args);
+        requestDialog.show(fragmentManager,"request");
     }
 
     @Override

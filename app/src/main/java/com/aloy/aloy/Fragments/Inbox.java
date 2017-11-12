@@ -55,16 +55,23 @@ public class Inbox extends Fragment {
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager) {
         Bundle followsArgs = new Bundle();
+        Bundle requestsArgs = new Bundle();
         followsArgs.putString("userId", mSharedPreferenceHelper.getCurrentUserId());
         followsArgs.putString("type","following");
+        requestsArgs.putString("userId", mSharedPreferenceHelper.getCurrentUserId());
+        requestsArgs.putString("type","requests");
+
+        Fragment requests = new IndexedFeed();
         Fragment follows = new IndexedFeed();
+        requests.setArguments(requestsArgs);
         follows.setArguments(followsArgs);
 
         inboxAdapter = new InboxAdapter(getChildFragmentManager());
         inboxAdapter.addFragments(follows,"Following");
-        inboxAdapter.addFragments(new Requests(),"Requests");
+        inboxAdapter.addFragments(requests,"Requests");
         inboxAdapter.addFragments(new Chat(),"Chat");
         viewPager.setAdapter(inboxAdapter);
+
     }
 
 

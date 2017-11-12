@@ -12,8 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-
 import com.aloy.aloy.Adapters.QuestionAdapter;
 import com.aloy.aloy.Contracts.FeedContract;
 import com.aloy.aloy.MainActivity;
@@ -24,7 +22,6 @@ import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-
 import java.util.ArrayList;
 
 
@@ -100,6 +97,7 @@ public class Feed extends Fragment implements FeedContract.View {
 
     @Override
     public void showAnswerQuestion(String questionId) {
+        FragmentManager frag = getFragmentManager();
         FragmentManager fragmentManager = getFragmentManager();
         Ask askDialog = new Ask();
         Bundle args = new Bundle();

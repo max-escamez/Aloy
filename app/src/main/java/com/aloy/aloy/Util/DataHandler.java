@@ -218,6 +218,37 @@ public class DataHandler {
         });
     }
 
+    public void request(final String target, final String questionId){
+        final DatabaseReference mRequestReference = refUser.child(target).child("requests");
+        mRequestReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot requests) {
+                if(!target.equals(sharedPreferenceHelper.getCurrentUserId())) {
+                    if (!requests.exists()) {
+                        mRequestReference.child(questionId).child("requesters").child(sharedPreferenceHelper.getCurrentUserId()).setValue("requested");
+                    } else {
+                        for (DataSnapshot request : requests.getChildren()) {
+                            if ((request.getValue().toString()).equals(questionId)) {
+                                if (!((request.child("requesters").child(sharedPreferenceHelper.getCurrentUserId())).exists())) {
+                                    mRequestReference.child(questionId).child("requesters").child(sharedPreferenceHelper.getCurrentUserId()).setValue("requested");
+                                }
+                            } else {
+                                //mRequestReference.setValue(questionId);
+                                mRequestReference.child(questionId).child("requesters").child(sharedPreferenceHelper.getCurrentUserId()).setValue("requested");
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
+
+    }
+
     public void follow(final String questionId){
         final DatabaseReference mFollowersReference = refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId());
         final DatabaseReference mFollowingReference = refQuestionFeed.child(questionId).child("following").child("number");

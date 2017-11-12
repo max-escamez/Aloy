@@ -21,6 +21,8 @@ public interface QuestionDetailsContract {
         void setupQuestion(Question question, String transitionName, Context context);
 
         QuestionDetailsPresenter getPresenter();
+
+        void showRequest(String questionId);
     }
 
     interface Presenter {

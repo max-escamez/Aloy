@@ -18,6 +18,7 @@
         android:hint="@string/askHint"
         android:imeOptions="actionDone"
         android:inputType="text"
+        android:singleLine="false"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
