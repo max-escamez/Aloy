@@ -23,7 +23,6 @@ import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-
 import java.util.ArrayList;
 
 
@@ -100,6 +99,7 @@ public class Feed extends Fragment implements FeedContract.View {
 
     @Override
     public void showAnswerQuestion(String questionId) {
+        FragmentManager frag = getFragmentManager();
         FragmentManager fragmentManager = getFragmentManager();
         Ask askDialog = new Ask();
         Bundle args = new Bundle();
