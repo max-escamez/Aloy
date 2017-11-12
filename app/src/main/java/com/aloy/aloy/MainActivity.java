@@ -2,12 +2,13 @@ package com.aloy.aloy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
 import com.aloy.aloy.Adapters.BottomBarAdapter;
 import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Fragments.Inbox;
@@ -23,10 +24,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import kaaes.spotify.webapi.android.SpotifyApi;
 
+import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 
 

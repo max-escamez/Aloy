@@ -13,8 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-import com.aloy.aloy.Adapters.QuestionAdapter;
+import com.aloy.aloy.Adapters.QuestionFeedAdapter;
 import com.aloy.aloy.Contracts.FeedContract;
 import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.Question;
@@ -36,7 +35,7 @@ public class Feed extends Fragment implements FeedContract.View {
     public static final String TAG = Feed.class.getSimpleName();
     private FeedContract.Presenter feedPresenter;
     private Query query;
-    private QuestionAdapter questionAdapter;
+    private QuestionFeedAdapter questionFeedAdapter;
     private ArrayList<Question> adapterQuestions;
     private ArrayList<String> adapterKeys;
     private LinearLayoutManager layoutManager;
@@ -74,12 +73,13 @@ public class Feed extends Fragment implements FeedContract.View {
     @Override
     public void setupRecyclerView(View feedView) {
         RecyclerView recyclerView = (RecyclerView) feedView.findViewById(R.id.feedRecyclerView);
-        questionAdapter = new QuestionAdapter(myRef, adapterQuestions, adapterKeys,getContext(),this);
+        //questionFeedAdapter = new QuestionFeedAdapter(myRef, adapterQuestions, adapterKeys,getContext(),this);
+        QuestionFeedAdapter questionAdapter = new QuestionFeedAdapter(getContext(),this);
         layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(questionAdapter);
+        recyclerView.setAdapter(questionAdapter.getAdapter());
     }
 
 

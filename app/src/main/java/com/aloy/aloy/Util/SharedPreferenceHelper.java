@@ -2,7 +2,6 @@ package com.aloy.aloy.Util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 /**
  * Created by madmax on 01/11/2017.

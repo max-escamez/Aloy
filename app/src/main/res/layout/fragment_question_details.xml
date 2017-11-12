@@ -24,7 +24,7 @@
 
             <TextView
                 android:id="@+id/questionDetailBody"
-                android:layout_width="228dp"
+                android:layout_width="0dp"
                 android:layout_height="43dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="16dp"
@@ -32,7 +32,7 @@
                 android:layout_marginTop="8dp"
                 android:text="Body"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/answerButton"
+                app:layout_constraintEnd_toStartOf="@+id/detail_follow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/questionDetailProfilePic" />
 
@@ -84,6 +84,34 @@
                 app:layout_constraintEnd_toStartOf="@+id/questionDetailCover2"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/aloy_transparent2x" />
+
+            <ImageButton
+                android:id="@+id/detail_follow"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@android:color/transparent"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/detail_answer"
+                app:srcCompat="@drawable/ic_playlist_add" />
+
+            <ImageButton
+                android:id="@+id/detail_answer"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@android:color/transparent"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/questionDetailCover2"
+                app:srcCompat="@drawable/ic_reply" />
 
         </android.support.constraint.ConstraintLayout>
 

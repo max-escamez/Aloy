@@ -28,7 +28,6 @@ import com.aloy.aloy.Contracts.SearchContract;
 import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
-import com.aloy.aloy.Util.DataHandler;
 
 /**
  * A simple {@link Fragment} subclass.

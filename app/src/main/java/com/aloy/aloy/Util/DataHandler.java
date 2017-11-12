@@ -5,20 +5,18 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.aloy.aloy.Adapters.AnswersAdapter;
-import com.aloy.aloy.Adapters.QuestionAdapter;
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
+import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -75,11 +73,17 @@ public class DataHandler {
         return refQuestionFeed.child(questionId).child("answers");
     }
 
-    public void saveQuestion(final Question question, final HashMap<String,Track> tracks, final HashMap<String,Artist> artists, final HashMap<String,AlbumSimple> albums, final HashMap<String,String> genres) {
-        refQuestionFeed.push().setValue(question,new DatabaseReference.CompletionListener() {
+    public DatabaseReference pushQuestionRef(){
+        DatabaseReference myRef = refQuestionFeed.push();
+        return myRef;
+    }
+
+
+    public void saveQuestion(final Question question, final HashMap<String,Track> tracks, final HashMap<String,Artist> artists, final HashMap<String,AlbumSimple> albums, final HashMap<String,String> genres,DatabaseReference ref) {
+        ref.setValue(question,new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                databaseReference.child("id").setValue(databaseReference.getKey());
+                //databaseReference.child("id").setValue(databaseReference.getKey());
 
                 for (HashMap.Entry<String, Track> entry : tracks.entrySet()) {
                     //refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).setValue(entry.getValue());
@@ -116,12 +120,17 @@ public class DataHandler {
         refUser.child(username).child("pic").setValue(sharedPreferenceHelper.getProfilePicture());
     }
 
-    public void saveAnswer(Answer answer, final String questionID, final LinkedHashMap<String, Track> tracksSelected, final HashMap<String,Artist> artistsSelected, final HashMap<String,AlbumSimple> albumsSelected, final HashMap<String,String> genreSelected) {
-        refQuestionFeed.child(questionID).child("answers").push().setValue(answer,new DatabaseReference.CompletionListener() {
+    public DatabaseReference pushAnswerRef(String questionId) {
+        DatabaseReference myRef = refQuestionFeed.child(questionId).child("answers").push();
+        return myRef;
+    }
+
+    public void saveAnswer(Answer answer, final String questionID,DatabaseReference answerId, final LinkedHashMap<String, Track> tracksSelected, final HashMap<String,Artist> artistsSelected, final HashMap<String,AlbumSimple> albumsSelected, final HashMap<String,String> genreSelected) {
+        answerId.setValue(answer,new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError,
                                    DatabaseReference databaseReference) {
-                databaseReference.child("id").setValue(databaseReference.getKey());
+                //databaseReference.child("id").setValue(databaseReference.getKey());
 
                 for (HashMap.Entry<String, Track> entry : tracksSelected.entrySet()) {
                     //refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).setValue(entry.getValue());
@@ -258,9 +267,10 @@ public class DataHandler {
 
     }
 
-    public void getUpvote(final DatabaseReference questionRef, final String answerId, final AnswersAdapter.ViewHolder holder) {
-        final DatabaseReference mUpvoterReference = questionRef.child(answerId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
-        final DatabaseReference mUpvotesReference = questionRef.child(answerId).child("upvotes").child("number");
+    public void getUpvote(final String questionId, final String answerId, final AnswersAdapter.ViewHolder holder) {
+        System.out.println(questionId + "----" + answerId);
+        final DatabaseReference mUpvoterReference = refQuestionFeed.child(questionId).child("answers").child(answerId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
+        final DatabaseReference mUpvotesReference = refQuestionFeed.child(questionId).child("answers").child(answerId).child("upvotes").child("number");
         mUpvotesReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot votes) {
@@ -286,6 +296,30 @@ public class DataHandler {
                 Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
             }
         });
+    }
+
+    public void getFollow(String questionId, final ImageButton follow) {
+        final DatabaseReference mFollowingUser = refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId());
+        mFollowingUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot follower) {
+                if (follower.exists()) {
+                    //Log.i("votes",""+(int)votes.getValue());
+                    follow.setImageResource(R.drawable.ic_playlist_add_check);
+                    follow.setTag(R.drawable.ic_playlist_add_check);
+
+                }else{
+                    follow.setImageResource(R.drawable.ic_playlist_add);
+                    follow.setTag(R.drawable.ic_playlist_add);
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
+
     }
 
     public void updateURL(final String username){
@@ -352,8 +386,8 @@ public class DataHandler {
                 );
     }
 
-    public void getUrl(String profilePicture, final CircleImageView holder, final Context context) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
+    public void getUrl(String userId, final CircleImageView holder, final Context context) {
+        /*FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference gsReference = storage.getReferenceFromUrl(profilePicture);
         gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -370,6 +404,22 @@ public class DataHandler {
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
             }
+        });*/
+        System.out.println("getUrl "+ userId);
+        FirebaseDatabase.getInstance().getReference("users").child(userId).child("pic").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot userURL) {
+                Picasso.with(context).load(userURL.getValue().toString()).into(holder);
+                holder.setVisibility(View.VISIBLE);
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(Feed.TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+
         });
     }
+
+
 }

@@ -1,18 +1,17 @@
 package com.aloy.aloy.Fragments;
 
-import android.content.Intent;
 import android.content.Context;
-import android.os.Build;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,17 +23,11 @@ import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import static android.content.ContentValues.TAG;
 
 public class Details extends AppCompatActivity implements QuestionDetailsContract.View {
     private QuestionDetailsPresenter questionDetailsPresenter;
@@ -42,6 +35,8 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
     private ArrayList<String> adapterKeys;
     private CircleImageView profilePic;
     private TextView username;
+    private ImageButton answer;
+    private ImageButton follow;
     private TextView body ;
     private ImageView cover1 ;
     private ImageView cover2 ;
@@ -79,6 +74,32 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
             });
         }
 
+        answer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAnswerQuestion(question.getId());
+            }
+        });
+
+        follow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.getDataHandler().follow(question.getId());
+                if (follow.getTag().equals(R.drawable.ic_playlist_add)){
+                    follow.setImageResource(R.drawable.ic_playlist_add_check);
+                    follow.setTag(R.drawable.ic_playlist_add_check);
+                }
+                else {
+                    follow.setImageResource(R.drawable.ic_playlist_add);
+                    follow.setTag(R.drawable.ic_playlist_add);
+
+                }
+                //MainActivity.getDataHandler().getFollow(question.getId(),follow);
+            }
+        });
+
+
+
     }
 
     private void openProfile(Question question) {
@@ -101,7 +122,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
     @Override
     public void setupRecyclerView(String questionId) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.answerRecyclerView);
-        AnswersAdapter answerRecyclerAdapter = new AnswersAdapter(questionDetailsPresenter.getRef(questionId), adapterAnswer, adapterKeys, this, questionDetailsPresenter);
+        AnswersAdapter answerRecyclerAdapter = new AnswersAdapter(questionDetailsPresenter.getRef(questionId), adapterAnswer, adapterKeys, this, questionDetailsPresenter,questionId);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
@@ -116,25 +137,18 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         body = (TextView) findViewById(R.id.questionDetailBody);
         cover1 = (ImageView) findViewById(R.id.questionDetailCover1);
         cover2 = (ImageView) findViewById(R.id.questionDetailCover2);
+        follow = (ImageButton) findViewById(R.id.detail_follow);
+        answer = (ImageButton) findViewById(R.id.detail_answer);
+
 
         body.setText(question.getBody());
         username.setText(question.getUsername());
-
-        FirebaseDatabase.getInstance().getReference("users").child(question.getUsername()).child("pic").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot userURL) {
-                Picasso.with(context).load(userURL.getValue().toString()).into(profilePic);
-                profilePic.setVisibility(View.VISIBLE);
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
-            }
-        });
+        MainActivity.getDataHandler().getUrl(question.getUsername(),profilePic,context);
+        MainActivity.getDataHandler().getFollow(question.getId(),follow);
         Picasso.with(this).load(question.getPic()).into(profilePic);
         Picasso.with(this).load(question.getCover1()).into(cover1);
         Picasso.with(this).load(question.getCover2()).into(cover2);
+
         questionView = findViewById(R.id.questionDetail);
         questionView.setTransitionName(transitionName);
     }
@@ -148,6 +162,16 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
     public void onBackPressed() {
          //finishAfterTransition();
         finish();
+    }
+
+    @Override
+    public void showAnswerQuestion(String questionId) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Ask askDialog = new Ask();
+        Bundle args = new Bundle();
+        args.putString("questionId", questionId);
+        askDialog.setArguments(args);
+        askDialog.show(fragmentManager,"ask");
     }
 
 

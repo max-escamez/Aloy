@@ -2,7 +2,6 @@ package com.aloy.aloy.Contracts;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Fragments.Ask;

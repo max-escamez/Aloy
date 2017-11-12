@@ -3,25 +3,19 @@ package com.aloy.aloy.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.aloy.aloy.Util.DataHandler;
 import com.google.firebase.database.Exclude;
-import com.mikhaellopez.circularimageview.CircularImageView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by tldonne on 29/10/2017.
  */
 
 public class Question implements Parcelable {
-    private String id;
     private String username;
     private String body;
     private String pic;
     private String name;
     private String date;
+    private String questionId;
     @Exclude
     private String cover1;
     @Exclude
@@ -30,16 +24,18 @@ public class Question implements Parcelable {
     public Question() {
     }
 
-    public Question(String username, String pic, String body,String name, String date)  {
+    public Question(String username, String pic, String body,String name, String date,String questionId)  {
         this.username = username;
         this.body = body;
         this.pic = pic;
         this.name=name;
         this.date=date;
+        //this.questionId= UUID.randomUUID().toString();
+        this.questionId=questionId;
     }
 
     protected Question(Parcel in) {
-        id = in.readString();
+        questionId = in.readString();
         username = in.readString();
         body = in.readString();
         pic = in.readString();
@@ -90,11 +86,11 @@ public class Question implements Parcelable {
     }
 
     public void setId(String id) {
-        this.id=id;
+        this.questionId=id;
     }
 
     public String getId() {
-        return id;
+        return questionId;
     }
 
     public String getDate(){return date;}
@@ -107,7 +103,7 @@ public class Question implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeString(questionId);
         dest.writeString(username);
         dest.writeString(body);
         dest.writeString(pic);

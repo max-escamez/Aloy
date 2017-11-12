@@ -1,37 +1,25 @@
 package com.aloy.aloy.Presenters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.aloy.aloy.Contracts.AskContract;
-import com.aloy.aloy.Fragments.Ask;
 import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.aloy.aloy.Util.SpotifyHandler;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 
-import kaaes.spotify.webapi.android.SpotifyCallback;
-import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.UserPrivate;
-import retrofit.client.Response;
 
 /**
  * Created by tldonne on 29/10/2017.
@@ -66,22 +54,25 @@ public class AskPresenter implements AskContract.Presenter {
     public void createAnswer(String body, String questionID) {
         String name=sharedPreferenceHelper.getCurrentUserName();
         String id=sharedPreferenceHelper.getCurrentUserId();
+        DatabaseReference answerRef = dataHandler.pushAnswerRef(questionID);
+        //String answerId = UUID.randomUUID().toString();
         date=new Date();
-        Answer newAnswer = new Answer(id,body,sharedPreferenceHelper.getProfilePicture(),name,(dateFormat.format(date)));
-        dataHandler.saveAnswer(newAnswer, questionID, tracksSelected, artistsSelected, albumsSelected,genreSelected);
+        Answer newAnswer = new Answer(id,body,sharedPreferenceHelper.getProfilePicture(),name,(dateFormat.format(date)),answerRef.getKey());
+        dataHandler.saveAnswer(newAnswer, questionID,answerRef, tracksSelected, artistsSelected, albumsSelected,genreSelected);
     }
     @Override
     public void createQuestion(String body) {
         String name=sharedPreferenceHelper.getCurrentUserName();
         String id=sharedPreferenceHelper.getCurrentUserId();
         date=new Date();
+        DatabaseReference myRef = dataHandler.pushQuestionRef();
         //String url = dataHandler.getUrl(sharedPreferenceHelper.getProfilePicture());
-        Question newQuestion = new Question(id,sharedPreferenceHelper.getProfilePicture(),body,name,(dateFormat.format(date)));
+        Question newQuestion = new Question(id,sharedPreferenceHelper.getProfilePicture(),body,name,(dateFormat.format(date)),myRef.getKey());
         if (tracksSelected.size()>=2) {
             newQuestion.setCover1(new ArrayList<>(tracksSelected.values()).get(0).album.images.get(0).url );
             newQuestion.setCover2(new ArrayList<>(tracksSelected.values()).get(1).album.images.get(0).url );
         }
-        dataHandler.saveQuestion(newQuestion,tracksSelected,artistsSelected,albumsSelected,genreSelected);
+        dataHandler.saveQuestion(newQuestion,tracksSelected,artistsSelected,albumsSelected,genreSelected,myRef);
     }
 
     @Override

@@ -2,18 +2,16 @@ package com.aloy.aloy.Fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.DialogFragment;;
-import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,11 +23,7 @@ import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Presenters.AskPresenter;
 import com.aloy.aloy.R;
 
-import java.util.HashMap;
-
-import kaaes.spotify.webapi.android.models.AlbumSimple;
-import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.Track;
+;
 
 /**
  * A simple {@link Fragment} subclass.

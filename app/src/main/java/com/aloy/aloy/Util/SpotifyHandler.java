@@ -1,24 +1,15 @@
 package com.aloy.aloy.Util;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
 import com.aloy.aloy.Models.MainUser;
-import com.aloy.aloy.Models.Question;
-import com.aloy.aloy.Models.SearchResult;
 import com.aloy.aloy.Presenters.SearchPresenter;
-import com.aloy.aloy.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -27,18 +18,13 @@ import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
-import kaaes.spotify.webapi.android.models.Albums;
 import kaaes.spotify.webapi.android.models.AlbumsPager;
 import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
-import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.SavedTrack;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
 import kaaes.spotify.webapi.android.models.UserPrivate;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**

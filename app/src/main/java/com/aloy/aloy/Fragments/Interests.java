@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aloy.aloy.R;
-import com.github.clans.fab.FloatingActionButton;
 
 
 /**

@@ -32,8 +32,8 @@ public class QuestionDetailsPresenter implements QuestionDetailsContract.Present
     }
 
     @Override
-    public void getUserUpvote(DatabaseReference questionRef, String answerId, AnswersAdapter.ViewHolder holder) {
-        dataHandler.getUpvote(questionRef,answerId,holder);
+    public void getUpvotes(String questionId, String answerId, AnswersAdapter.ViewHolder holder) {
+        dataHandler.getUpvote(questionId,answerId,holder);
     }
 
 

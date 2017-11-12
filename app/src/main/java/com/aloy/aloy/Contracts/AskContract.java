@@ -2,7 +2,6 @@ package com.aloy.aloy.Contracts;
 
 import android.content.Context;
 
-
 import java.util.HashMap;
 
 import kaaes.spotify.webapi.android.models.AlbumSimple;

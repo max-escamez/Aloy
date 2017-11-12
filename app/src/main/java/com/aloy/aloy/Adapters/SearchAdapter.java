@@ -6,22 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.aloy.aloy.Contracts.SearchContract;
-import com.aloy.aloy.Fragments.Search;
-import com.aloy.aloy.Models.SearchResult;
 import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
-import com.aloy.aloy.Util.SpotifyHandler;
 import com.mikhaellopez.circularimageview.CircularImageView;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by tldonne on 02/11/2017.

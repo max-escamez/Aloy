@@ -2,7 +2,6 @@ package com.aloy.aloy.Presenters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
@@ -10,12 +9,6 @@ import com.aloy.aloy.Contracts.SearchContract;
 import com.aloy.aloy.Fragments.Search;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SpotifyHandler;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by tldonne on 01/11/2017.

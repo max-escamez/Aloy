@@ -4,22 +4,18 @@ package com.aloy.aloy.Adapters;
  * Created by tldonne on 29/10/2017.
  */
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 
-        import android.support.annotation.Nullable;
-        import android.support.v7.widget.RecyclerView;
-        import android.util.Log;
-        import android.view.ViewGroup;
-
-        import com.google.firebase.database.ChildEventListener;
-        import com.google.firebase.database.DataSnapshot;
-        import com.google.firebase.database.DatabaseError;
-        import com.google.firebase.database.Query;
-
-        import java.lang.reflect.ParameterizedType;
-        import java.util.ArrayList;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 
 /**
  * Created by Matteo on 24/08/2015.

@@ -1,7 +1,5 @@
 package com.aloy.aloy.Contracts;
 
-import android.view.View;
-
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Util.BaseView;
 import com.google.firebase.database.Query;
