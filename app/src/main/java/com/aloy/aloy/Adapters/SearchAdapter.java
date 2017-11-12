@@ -13,6 +13,9 @@ import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by tldonne on 02/11/2017.
  */
@@ -25,6 +28,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private Context context;
     private String type;
     private int itemNb;
+    private List<Integer> selectedItems;
 
 
 
@@ -37,6 +41,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         this.type = type;
         this.itemNb=itemNb;
         this.searchQuery=query;
+        selectedItems = new ArrayList<>();
     }
 
 
@@ -49,8 +54,25 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     // binds the data to the textview in each cell
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         searchPresenter.bind(searchQuery,holder,position,context,type,this);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClick(v, getItemViewType(holder.getAdapterPosition()));
+                if (!selectedItems.contains(getItemViewType(holder.getAdapterPosition()))) {
+                    holder.check.setVisibility(View.VISIBLE);
+                    searchPresenter.addItem(type,getItemViewType(holder.getAdapterPosition()), searchQuery);
+                    selectedItems.add(getItemViewType(holder.getAdapterPosition()));
+                }
+                else {
+                    holder.check.setVisibility(View.INVISIBLE);
+                    searchPresenter.removeItem(type,getItemViewType(holder.getAdapterPosition()),searchQuery);
+                    selectedItems.remove(Integer.valueOf(getItemViewType(holder.getAdapterPosition())));
+                }
+            }
+        });
     }
 
     // total number of cells
@@ -59,10 +81,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return this.itemNb;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
 
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder  {
         public TextView primaryText;
         public TextView secondaryText;
         public ImageView cover;
@@ -74,21 +101,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             secondaryText = (TextView) itemView.findViewById(R.id.secondarySearchText);
             cover = (ImageView) itemView.findViewById(R.id.searchCover);
             check = (CircularImageView) itemView.findViewById(R.id.selectedTrack);
-            itemView.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View view) {
-            onItemClick(view, getAdapterPosition());
-            if (check.getVisibility() == View.INVISIBLE) {
-                check.setVisibility(View.VISIBLE);
-                searchPresenter.addItem(type,getAdapterPosition(), searchQuery);
-            }
-            else {
-                check.setVisibility(View.INVISIBLE);
-                searchPresenter.removeItem(type,getAdapterPosition(),searchQuery);
-            }
-        }
+
     }
 
 

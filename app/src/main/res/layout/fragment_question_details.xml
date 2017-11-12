@@ -69,9 +69,9 @@
                 android:id="@+id/questionDetailCover2"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="24dp"
                 android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ultra_viewpager"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/aloy_transparent2x" />
 
@@ -84,6 +84,17 @@
                 app:layout_constraintEnd_toStartOf="@+id/questionDetailCover2"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/aloy_transparent2x" />
+
+            <com.tmall.ultraviewpager.UltraViewPager
+                android:id="@+id/detail_coverFlow"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="27dp"
+                android:layout_marginTop="6dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/detail_follow"
@@ -104,13 +115,13 @@
                 android:layout_height="30dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="13dp"
                 android:backgroundTint="@android:color/transparent"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/questionDetailCover2"
+                app:layout_constraintTop_toBottomOf="@+id/ultra_viewpager"
                 app:srcCompat="@drawable/ic_reply" />
 
         </android.support.constraint.ConstraintLayout>

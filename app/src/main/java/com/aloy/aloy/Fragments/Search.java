@@ -4,6 +4,7 @@ package com.aloy.aloy.Fragments;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -22,6 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
@@ -71,6 +73,22 @@ public class Search extends DialogFragment implements SearchContract.View {
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             dialog.getWindow().setLayout(width, height);
         }
+
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        return new Dialog(getActivity(), getTheme()){
+            @Override
+            public void onBackPressed() {
+                //callingFragment.getAskPresenter().clearItems(type);
+                Toast.makeText(getActivity(), "Tracks added", Toast.LENGTH_SHORT).show();
+                //
+                callingFragment.update();
+                hideSearch();
+            }
+        };
     }
 
     @Override
@@ -80,16 +98,23 @@ public class Search extends DialogFragment implements SearchContract.View {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         validateSearch = (Button) searchView.findViewById(R.id.validateSearch);
         searchField = (EditText) searchView.findViewById(R.id.searchSpotify);
-        Bundle args = getArguments();
-        type = args.getString("type");
-        if(type.equals("genre")){
-            searchField.setVisibility(View.GONE);
-        }
         itemsSelected = (TextView) searchView.findViewById(R.id.elementsSelected);
         callingFragment = (Ask) getTargetFragment();
+
+        Bundle args = getArguments();
+        type = args.getString("type");
+
         if(type.equals("genre")){
+            searchField.setVisibility(View.GONE);
             setupRecyclerView(searchView, searchQuery, type);
         }
+        else {
+            searchField.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+
+
         searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -108,11 +133,13 @@ public class Search extends DialogFragment implements SearchContract.View {
         validateSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (searchTrack==true)
+                if (searchTrack)
                     callingFragment.update();
                 hideSearch();
             }
         });
+
+
 
 
         return searchView;
@@ -162,6 +189,10 @@ public class Search extends DialogFragment implements SearchContract.View {
                 itemsSelected.setText(callingFragment.getAskPresenter().getGenres().size() + " Genres Selected");
         }
     }
+
+
+
+
 
 
 

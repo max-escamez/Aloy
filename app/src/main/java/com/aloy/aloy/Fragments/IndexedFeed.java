@@ -43,8 +43,6 @@ public class IndexedFeed extends Fragment {
         String userId = args.getString("userId");
         String type = args.getString("type");
         setupRecyclerView(indexedFeedView,userId,type);
-
-
         return indexedFeedView;
     }
 

@@ -405,7 +405,6 @@ public class DataHandler {
                 // Handle any errors
             }
         });*/
-        System.out.println("getUrl "+ userId);
         FirebaseDatabase.getInstance().getReference("users").child(userId).child("pic").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot userURL) {

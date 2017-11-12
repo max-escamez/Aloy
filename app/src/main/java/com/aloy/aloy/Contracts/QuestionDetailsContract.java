@@ -15,7 +15,7 @@ import com.google.firebase.database.Query;
 public interface QuestionDetailsContract {
 
     interface View  {
-        void setupRecyclerView(String questionId);
+        void setupAnswers(String questionId);
 
         void setupQuestion(Question question, String transitionName, Context context);
 

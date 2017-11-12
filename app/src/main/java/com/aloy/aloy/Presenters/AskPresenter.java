@@ -120,6 +120,24 @@ public class AskPresenter implements AskContract.Presenter {
     @Override
     public void clearGenres(){this.genreSelected.clear();}
 
+    @Override
+    public void clearItems(String type){
+        switch (type) {
+            case "track" :
+                this.tracksSelected.clear();
+                break;
+            case "artist" :
+                this.artistsSelected.clear();
+                break;
+            case "album" :
+                this.albumsSelected.clear();
+                break;
+        }
+    }
+
+
+
+
 
 
 

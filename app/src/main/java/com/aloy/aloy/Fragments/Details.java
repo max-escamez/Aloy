@@ -24,6 +24,7 @@ import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
+import com.tmall.ultraviewpager.UltraViewPager;
 
 import java.util.ArrayList;
 
@@ -60,7 +61,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         String transitionName = extras.getString(Feed.EXTRA_QUESTION_TRANSITION_NAME);
 
         setupQuestion(question,transitionName,this);
-        setupRecyclerView(question.getId());
+        setupAnswers(question.getId());
 
         supportStartPostponedEnterTransition();
 
@@ -120,7 +121,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
     }
 
     @Override
-    public void setupRecyclerView(String questionId) {
+    public void setupAnswers(String questionId) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.answerRecyclerView);
         AnswersAdapter answerRecyclerAdapter = new AnswersAdapter(questionDetailsPresenter.getRef(questionId), adapterAnswer, adapterKeys, this, questionDetailsPresenter,questionId);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -140,17 +141,21 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         follow = (ImageButton) findViewById(R.id.detail_follow);
         answer = (ImageButton) findViewById(R.id.detail_answer);
 
-
         body.setText(question.getBody());
         username.setText(question.getUsername());
         MainActivity.getDataHandler().getUrl(question.getUsername(),profilePic,context);
         MainActivity.getDataHandler().getFollow(question.getId(),follow);
-        Picasso.with(this).load(question.getPic()).into(profilePic);
+        setupCoverFlow(question);
+        //Picasso.with(this).load(question.getPic()).into(profilePic);
         Picasso.with(this).load(question.getCover1()).into(cover1);
         Picasso.with(this).load(question.getCover2()).into(cover2);
 
         questionView = findViewById(R.id.questionDetail);
         questionView.setTransitionName(transitionName);
+    }
+
+    private void setupCoverFlow(Question question) {
+         UltraViewPager coverFlow = (UltraViewPager) findViewById(R.id.detail_coverFlow);
     }
 
     @Override

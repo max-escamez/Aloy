@@ -59,7 +59,6 @@ public class QuestionFeedAdapter {
                     holder.questionUsername.setText(question.getName());
                 }*/
 
-                System.out.println("feed "+ question.getUsername());
                 MainActivity.getDataHandler().getUrl(question.getUsername(),holder.profilePic,context);
                 //Picasso.with(context).load(user.getPhotoUrl().toString()).into(holder.profilePic);
                 //Picasso.with(context).load(model.getPic()).into(holder.profilePic);
@@ -114,15 +113,15 @@ public class QuestionFeedAdapter {
         ImageButton answerButton;
         ImageButton followButton;
 
-        public QuestionHolder(View view) {
-            super(view);
-            questionBody = (TextView) view.findViewById(R.id.questionBody);
-            questionUsername = (TextView) view.findViewById(R.id.questionUsername);
-            profilePic = (CircleImageView) view.findViewById(R.id.questionProfilePic);
-            cover1 = (ImageView) view.findViewById(R.id.questionCover1);
-            cover2 = (ImageView) view.findViewById(R.id.questionCover2);
-            answerButton = (ImageButton) view.findViewById(R.id.answerButton);
-            followButton = (ImageButton) view.findViewById(R.id.followButton);
+        public QuestionHolder(View itemView) {
+            super(itemView);
+            questionBody = (TextView) itemView.findViewById(R.id.questionBody);
+            questionUsername = (TextView) itemView.findViewById(R.id.questionUsername);
+            profilePic = (CircleImageView) itemView.findViewById(R.id.questionProfilePic);
+            cover1 = (ImageView) itemView.findViewById(R.id.questionCover1);
+            cover2 = (ImageView) itemView.findViewById(R.id.questionCover2);
+            answerButton = (ImageButton) itemView.findViewById(R.id.answerButton);
+            followButton = (ImageButton) itemView.findViewById(R.id.followButton);
         }
     }
 

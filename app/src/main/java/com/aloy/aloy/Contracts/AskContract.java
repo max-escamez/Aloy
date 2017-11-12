@@ -45,6 +45,7 @@ public interface AskContract {
         void removeGenre(String name);
         HashMap getGenres();
         void clearGenres();
+        void clearItems(String type);
 
     }
 }
