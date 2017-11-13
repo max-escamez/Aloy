@@ -52,8 +52,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
     private View questionView;
     public static final String USERNAME_TRANSITION_NAME = "usernameTransitionName" ;
     public static final String PROFILE_PIC_TRANSITION_NAME = "profilePicTransitionName" ;
-
-
+    public static final String FB_NAME = "fbName";
 
 
     @Override
@@ -131,6 +130,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         Pair picturePair = Pair.create(profilePic,ViewCompat.getTransitionName(profilePic));
         intent.putExtra(USERNAME_TRANSITION_NAME, ViewCompat.getTransitionName(username));
         intent.putExtra(PROFILE_PIC_TRANSITION_NAME, ViewCompat.getTransitionName(profilePic));
+        intent.putExtra(FB_NAME,question.getName());
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 this,
@@ -163,7 +163,11 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         answer = (ImageButton) findViewById(R.id.detail_answer);
 
         body.setText(question.getBody());
-        username.setText(question.getUsername());
+        if((question.getName()).equals("")){
+            username.setText(question.getUsername());
+        }else{
+            username.setText(question.getName());
+        }
         MainActivity.getDataHandler().getUrl(question.getUsername(),profilePic,context);
         MainActivity.getDataHandler().getFollow(question.getId(),follow);
         setupCoverFlow(question);
@@ -197,6 +201,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         FragmentManager fragmentManager = getSupportFragmentManager();
         RequestDialog requestDialog = new RequestDialog();
         Bundle args = new Bundle();
+        args.putString("question","false");
         args.putString("questionId", questionId);
         requestDialog.setArguments(args);
         requestDialog.show(fragmentManager,"request");
@@ -220,7 +225,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         Bundle args = new Bundle();
         args.putString("questionId", questionId);
         askDialog.setArguments(args);
-        askDialog.show(fragmentManager,"ask");
+        askDialog.show(fragmentManager,"answer");
     }
 
 

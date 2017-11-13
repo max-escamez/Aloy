@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,6 @@ public class Ask extends DialogFragment implements AskContract.View{
     private TextView albumsSelectedTextView;
     private TextView genresSelectedTextView;
     private String questionId;
-    private boolean answer;
 
 
 
@@ -64,8 +64,8 @@ public class Ask extends DialogFragment implements AskContract.View{
         final View askView = inflater.inflate(R.layout.fragment_ask, container, false);
         askPresenter = new AskPresenter(this,MainActivity.getDataHandler(),MainActivity.getSpotifyHandler(),getContext());
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
         askQuestionField = (EditText) askView.findViewById(R.id.askQuestionField);
+        if(getTag().equals("answer")){askQuestionField.setHint("Write an answer");}
         submitButton = (Button) askView.findViewById(R.id.submitQuestion);
         close = (ImageButton) askView.findViewById(R.id.closeButton);
         searchTracks = (Button) askView.findViewById(R.id.findTracks);
@@ -76,7 +76,6 @@ public class Ask extends DialogFragment implements AskContract.View{
         artistsSelectedTextView = (TextView) askView.findViewById(R.id.artistsSelected);
         searchGenres = (Button) askView.findViewById(R.id.findGenres);
         genresSelectedTextView = (TextView) askView.findViewById(R.id.genresSelected);
-
 
         Bundle args = getArguments();
         questionId = args.getString("questionId");

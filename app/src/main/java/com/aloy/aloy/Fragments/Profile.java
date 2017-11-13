@@ -26,10 +26,19 @@ public class Profile extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         String usernameTransitionName = extras.getString(Details.USERNAME_TRANSITION_NAME);
         String picTranstionName = extras.getString(Details.PROFILE_PIC_TRANSITION_NAME);
+        String fbName = extras.getString(Details.FB_NAME);
+
         TextView username = (TextView) findViewById(R.id.username);
         CircleImageView profilePicture = (CircleImageView) findViewById(R.id.profilePicture);
-        username.setText(usernameTransitionName);
         Picasso.with(this).load(picTranstionName).noFade().into(profilePicture);
+
+
+        if (fbName.equals("")){
+            username.setText(usernameTransitionName);
+        }
+        else {
+            username.setText(fbName);
+        }
 
         ViewPager profileViewPager = (ViewPager) findViewById(R.id.profile_view_pager);
         setupViewPager(profileViewPager,usernameTransitionName);
