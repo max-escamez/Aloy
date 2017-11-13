@@ -80,7 +80,7 @@ public class IndexedFeed extends Fragment {
         Bundle args = new Bundle();
         args.putString("questionId", questionId);
         askDialog.setArguments(args);
-        askDialog.show(fragmentManager,"ask");
+        askDialog.show(fragmentManager,"answer");
     }
 
 }

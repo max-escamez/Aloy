@@ -154,7 +154,11 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
 
 
         body.setText(question.getBody());
-        username.setText(question.getUsername());
+        if((question.getName()).equals("")){
+            username.setText(question.getUsername());
+        }else{
+            username.setText(question.getName());
+        }
         MainActivity.getDataHandler().getUrl(question.getUsername(),profilePic,context);
         MainActivity.getDataHandler().getFollow(question.getId(),follow);
         Picasso.with(this).load(question.getPic()).into(profilePic);
@@ -170,6 +174,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         FragmentManager fragmentManager = getSupportFragmentManager();
         RequestDialog requestDialog = new RequestDialog();
         Bundle args = new Bundle();
+        args.putString("question","false");
         args.putString("questionId", questionId);
         requestDialog.setArguments(args);
         requestDialog.show(fragmentManager,"request");
@@ -193,7 +198,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         Bundle args = new Bundle();
         args.putString("questionId", questionId);
         askDialog.setArguments(args);
-        askDialog.show(fragmentManager,"ask");
+        askDialog.show(fragmentManager,"answer");
     }
 
 

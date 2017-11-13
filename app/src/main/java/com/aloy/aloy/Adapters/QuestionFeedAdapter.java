@@ -49,17 +49,14 @@ public class QuestionFeedAdapter {
             protected void onBindViewHolder(final QuestionHolder holder, int position, final Question question) {
                 //final Question question = getItem(position);
                 holder.questionBody.setText(question.getBody());
-                holder.questionUsername.setText(question.getUsername());
+                //holder.questionUsername.setText(question.getUsername());
 
 
-               /* if((question.getName()).equals("")){
+               if((question.getName()).equals("")){
                     holder.questionUsername.setText(question.getUsername());
                 }else{
-                    System.out.println(question.getName());
                     holder.questionUsername.setText(question.getName());
-                }*/
-
-                System.out.println("feed "+ question.getUsername());
+                }
                 MainActivity.getDataHandler().getUrl(question.getUsername(),holder.profilePic,context);
                 //Picasso.with(context).load(user.getPhotoUrl().toString()).into(holder.profilePic);
                 //Picasso.with(context).load(model.getPic()).into(holder.profilePic);

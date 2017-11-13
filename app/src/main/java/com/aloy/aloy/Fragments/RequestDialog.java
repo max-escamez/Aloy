@@ -121,7 +121,7 @@ public class RequestDialog extends DialogFragment {
                         submitRequest.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //requestBody = findUserField.getText().toString();
+                                requestBody = findUserField.getText().toString();
                                 if(!requestBody.isEmpty()) {
                                     if (requestBody.equals(currentUser)) {
                                         findUserField.setText("");

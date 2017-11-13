@@ -99,13 +99,12 @@ public class Feed extends Fragment implements FeedContract.View {
 
     @Override
     public void showAnswerQuestion(String questionId) {
-        FragmentManager frag = getFragmentManager();
         FragmentManager fragmentManager = getFragmentManager();
         Ask askDialog = new Ask();
         Bundle args = new Bundle();
         args.putString("questionId", questionId);
         askDialog.setArguments(args);
-        askDialog.show(fragmentManager,"ask");
+        askDialog.show(fragmentManager,"answer");
     }
 
     @Override
