@@ -1,9 +1,12 @@
 package com.aloy.aloy.Fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import com.aloy.aloy.Adapters.InboxAdapter;
 import com.aloy.aloy.R;
 import com.squareup.picasso.Picasso;
 
@@ -28,6 +31,9 @@ public class Profile extends AppCompatActivity {
         username.setText(usernameTransitionName);
         Picasso.with(this).load(picTranstionName).noFade().into(profilePicture);
 
+        ViewPager profileViewPager = (ViewPager) findViewById(R.id.profile_view_pager);
+        setupViewPager(profileViewPager,usernameTransitionName);
+
         supportStartPostponedEnterTransition();
 
     }
@@ -36,4 +42,28 @@ public class Profile extends AppCompatActivity {
     public void onBackPressed() {
         finishAfterTransition();
     }
+
+    private void setupViewPager(ViewPager viewPager,String username) {
+
+        Bundle questionArgs = new Bundle();
+        questionArgs.putString("userId", username);
+        questionArgs.putString("type","questions");
+        Fragment questions = new IndexedFeed();
+        questions.setArguments(questionArgs);
+
+
+        Bundle answersArgs = new Bundle();
+        answersArgs.putString("userId", username);
+        answersArgs.putString("type","answers");
+        Fragment answers = new IndexedFeed();
+        answers.setArguments(answersArgs);
+
+        InboxAdapter profileAdapter = new InboxAdapter(getSupportFragmentManager());
+        profileAdapter.addFragments(questions,"Questions");
+        profileAdapter.addFragments(answers,"Answers");
+        viewPager.setAdapter(profileAdapter);
+    }
 }
+
+
+

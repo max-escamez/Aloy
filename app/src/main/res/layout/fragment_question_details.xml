@@ -24,39 +24,39 @@
 
             <Button
                 android:id="@+id/requestButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="36dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
                 android:text="Request"
+                android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/questionDetailCover1" />
+                app:layout_constraintTop_toBottomOf="@+id/detail_answer" />
 
             <TextView
                 android:id="@+id/questionDetailBody"
-                android:layout_width="0dp"
+                android:layout_width="211dp"
                 android:layout_height="43dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:text="Body"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/detail_follow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/questionDetailProfilePic" />
 
             <TextView
                 android:id="@+id/questionDetailUsername"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="16dp"
                 android:text="Username"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/questionDetailCover1"
                 app:layout_constraintStart_toEndOf="@+id/questionDetailProfilePic"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -81,9 +81,9 @@
                 android:id="@+id/questionDetailCover2"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/ultra_viewpager"
+                app:layout_constraintEnd_toStartOf="@+id/detail_recycler"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/aloy_transparent2x" />
 
@@ -97,44 +97,40 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/aloy_transparent2x" />
 
-            <com.tmall.ultraviewpager.UltraViewPager
-                android:id="@+id/detail_coverFlow"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="27dp"
-                android:layout_marginTop="6dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <ImageButton
                 android:id="@+id/detail_follow"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
                 android:backgroundTint="@android:color/transparent"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/detail_answer"
+                app:layout_constraintTop_toBottomOf="@+id/detail_recycler"
                 app:srcCompat="@drawable/ic_playlist_add" />
 
             <ImageButton
                 android:id="@+id/detail_answer"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="13dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
                 android:backgroundTint="@android:color/transparent"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ultra_viewpager"
+                app:layout_constraintTop_toBottomOf="@+id/detail_recycler"
                 app:srcCompat="@drawable/ic_reply" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/detail_recycler"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -143,12 +139,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="5dp"
+            android:layoutAnimation="@anim/layout_animation_slide_right"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/questionDetail"
-            android:layoutAnimation="@anim/layout_animation_slide_right"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/questionDetail" />
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

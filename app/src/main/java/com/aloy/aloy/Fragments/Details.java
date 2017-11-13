@@ -7,17 +7,21 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.aloy.aloy.Adapters.AnswersAdapter;
+import com.aloy.aloy.Adapters.CoverFlowAdapter;
 import com.aloy.aloy.Contracts.QuestionDetailsContract;
 import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.Answer;
@@ -27,6 +31,7 @@ import com.aloy.aloy.R;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 import com.tmall.ultraviewpager.UltraViewPager;
+import com.tmall.ultraviewpager.transformer.UltraDepthScaleTransformer;
 
 import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -73,6 +78,13 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
                 @Override
                 public void onClick(View v) {
                     openProfile(question);
+                }
+            });
+            profilePic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openProfile(question);
+
                 }
             });
         }
@@ -164,7 +176,20 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
     }
 
     private void setupCoverFlow(Question question) {
-         UltraViewPager coverFlow = (UltraViewPager) findViewById(R.id.detail_coverFlow);
+        RecyclerView items = (RecyclerView) findViewById(R.id.detail_recycler);
+        CoverFlowAdapter adapter = new CoverFlowAdapter(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        items.setLayoutManager(layoutManager);
+        items.setAdapter(adapter);
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(items);
+
+        /*UltraViewPager coverFlow = (UltraViewPager) findViewById(R.id.detail_coverFlow);
+        coverFlow.setScrollMode(UltraViewPager.ScrollMode.HORIZONTAL);
+        PagerAdapter adapter = new CoverFlowAdapter();
+        coverFlow.setAdapter(adapter);
+        coverFlow.setItemRatio(1.0f);
+        coverFlow.setPageTransformer(false, new UltraDepthScaleTransformer());*/
     }
 
     @Override
