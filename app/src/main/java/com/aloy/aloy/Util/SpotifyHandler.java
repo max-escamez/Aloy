@@ -157,7 +157,7 @@ public class SpotifyHandler {
                 //System.out.println("bind track size : "+p.tracks.items.size());
                 if (position<p.tracks.items.size()) {
                     Track track = p.tracks.items.get(position);
-                    //SearchResult result = new SearchResult(track.album.images.get(0).url, track.name, track.artists.get(0).name);
+                    //SpotifyItem result = new SpotifyItem(track.album.images.get(0).url, track.name, track.artists.get(0).name);
                     holder.primaryText.setText(track.name);
                     holder.secondaryText.setText(track.artists.get(0).name);
                     Picasso.with(context).load(track.album.images.get(0).url).into(holder.cover);

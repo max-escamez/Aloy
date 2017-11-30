@@ -1,6 +1,7 @@
 package com.aloy.aloy.Presenters;
 
-import com.aloy.aloy.Adapters.AnswersAdapter;
+import android.widget.ImageButton;
+
 import com.aloy.aloy.Contracts.QuestionDetailsContract;
 import com.aloy.aloy.Util.DataHandler;
 import com.google.firebase.database.DatabaseReference;
@@ -32,8 +33,8 @@ public class QuestionDetailsPresenter implements QuestionDetailsContract.Present
     }
 
     @Override
-    public void getUpvotes(String questionId, String answerId, AnswersAdapter.ViewHolder holder) {
-        dataHandler.getUpvote(questionId,answerId,holder);
+    public void getUpvotes(String questionId, String answerId, ImageButton upvote) {
+        dataHandler.getUpvote(questionId,answerId,upvote);
     }
 
 

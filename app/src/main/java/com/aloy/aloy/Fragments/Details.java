@@ -45,10 +45,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
     private Button request;
     private ImageButton answer;
     private ImageButton follow;
-
     private TextView body ;
-    private ImageView cover1 ;
-    private ImageView cover2 ;
     private View questionView;
     public static final String USERNAME_TRANSITION_NAME = "usernameTransitionName" ;
     public static final String PROFILE_PIC_TRANSITION_NAME = "profilePicTransitionName" ;
@@ -143,12 +140,12 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
     @Override
     public void setupAnswers(String questionId) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.answerRecyclerView);
-        AnswersAdapter answerRecyclerAdapter = new AnswersAdapter(questionDetailsPresenter.getRef(questionId), adapterAnswer, adapterKeys, this, questionDetailsPresenter,questionId);
+        AnswersAdapter answerRecyclerAdapter = new AnswersAdapter(this, questionDetailsPresenter,questionId,this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(answerRecyclerAdapter);
+        recyclerView.setAdapter(answerRecyclerAdapter.getAdapter());
     }
 
     @Override
@@ -156,8 +153,6 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         profilePic = (CircleImageView) findViewById(R.id.questionDetailProfilePic);
         username = (TextView) findViewById(R.id.questionDetailUsername);
         body = (TextView) findViewById(R.id.questionDetailBody);
-        cover1 = (ImageView) findViewById(R.id.questionDetailCover1);
-        cover2 = (ImageView) findViewById(R.id.questionDetailCover2);
         request = (Button) findViewById(R.id.requestButton);
         follow = (ImageButton) findViewById(R.id.detail_follow);
         answer = (ImageButton) findViewById(R.id.detail_answer);
@@ -172,28 +167,19 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         MainActivity.getDataHandler().getFollow(question.getId(),follow);
         setupCoverFlow(question);
         //Picasso.with(this).load(question.getPic()).into(profilePic);
-        Picasso.with(this).load(question.getCover1()).into(cover1);
-        Picasso.with(this).load(question.getCover2()).into(cover2);
-
         questionView = findViewById(R.id.questionDetail);
         questionView.setTransitionName(transitionName);
     }
 
     private void setupCoverFlow(Question question) {
         RecyclerView items = (RecyclerView) findViewById(R.id.detail_recycler);
-        CoverFlowAdapter adapter = new CoverFlowAdapter(this);
+        CoverFlowAdapter adapter = new CoverFlowAdapter(this,MainActivity.getDataHandler().getRefQuestionFeed().child(question.getId()),this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         items.setLayoutManager(layoutManager);
-        items.setAdapter(adapter);
+        items.setAdapter(adapter.getAdapter());
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(items);
 
-        /*UltraViewPager coverFlow = (UltraViewPager) findViewById(R.id.detail_coverFlow);
-        coverFlow.setScrollMode(UltraViewPager.ScrollMode.HORIZONTAL);
-        PagerAdapter adapter = new CoverFlowAdapter();
-        coverFlow.setAdapter(adapter);
-        coverFlow.setItemRatio(1.0f);
-        coverFlow.setPageTransformer(false, new UltraDepthScaleTransformer());*/
     }
 
     @Override
@@ -214,7 +200,8 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
 
     @Override
     public void onBackPressed() {
-         //finishAfterTransition();
+        //finishAfterTransition();
+
         finish();
     }
 

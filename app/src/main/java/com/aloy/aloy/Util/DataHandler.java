@@ -1,6 +1,7 @@
 package com.aloy.aloy.Util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -10,13 +11,16 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.aloy.aloy.Adapters.AnswersAdapter;
+import com.aloy.aloy.Adapters.CoverFlowAdapter;
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
 import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;
+import com.aloy.aloy.Models.SpotifyItem;
 import com.aloy.aloy.R;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -84,23 +88,35 @@ public class DataHandler {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 //databaseReference.child("id").setValue(databaseReference.getKey());
+                int index = 0;
 
                 for (HashMap.Entry<String, Track> entry : tracks.entrySet()) {
                     //refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).setValue(entry.getValue());
-                    refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).child("name").setValue(entry.getValue().name);
-                    refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).child("uri").setValue(entry.getValue().uri);
-                    refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).child("artist").setValue(entry.getValue().artists.get(0).name);
-                    refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).child("cover").setValue(entry.getValue().album.images.get(0).url);
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("type").setValue("track");
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("spotifyId").setValue(entry.getKey());
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("name").setValue(entry.getValue().name);
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("uri").setValue(entry.getValue().uri);
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("artist").setValue(entry.getValue().artists.get(0).name);
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("cover").setValue(entry.getValue().album.images.get(0).url);
+                    index++;
                 }
                 for (HashMap.Entry<String, Artist> artist : artists.entrySet()) {
-                    refQuestionFeed.child(databaseReference.getKey()).child("artists").child(artist.getKey()).child("name").setValue(artist.getValue().name);
-                    refQuestionFeed.child(databaseReference.getKey()).child("artists").child(artist.getKey()).child("uri").setValue(artist.getValue().uri);
-                    refQuestionFeed.child(databaseReference.getKey()).child("artists").child(artist.getKey()).child("cover").setValue(artist.getValue().images.get(0).url);
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("type").setValue("artist");
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("spotifyId").setValue(artist.getKey());
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("name").setValue(artist.getValue().name);
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("uri").setValue(artist.getValue().uri);
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("cover").setValue(artist.getValue().images.get(0).url);
+                    index++;
+
                 }
                 for (HashMap.Entry<String, AlbumSimple> album : albums.entrySet()) {
-                    refQuestionFeed.child(databaseReference.getKey()).child("albums").child(album.getKey()).child("name").setValue(album.getValue().name);
-                    refQuestionFeed.child(databaseReference.getKey()).child("albums").child(album.getKey()).child("uri").setValue(album.getValue().uri);
-                    refQuestionFeed.child(databaseReference.getKey()).child("albums").child(album.getKey()).child("cover").setValue(album.getValue().images.get(0).url);
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("type").setValue("album");
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("spotifyId").setValue(album.getKey());
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("name").setValue(album.getValue().name);
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("uri").setValue(album.getValue().uri);
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("cover").setValue(album.getValue().images.get(0).url);
+                    index++;
+
                 }
                 for (HashMap.Entry<String, String> genre : genres.entrySet()) {
                     databaseReference.child("genres").child(genre.getKey()).child("cover").setValue(genre.getValue());
@@ -131,23 +147,31 @@ public class DataHandler {
             public void onComplete(DatabaseError databaseError,
                                    DatabaseReference databaseReference) {
                 //databaseReference.child("id").setValue(databaseReference.getKey());
+                int index = 0;
 
                 for (HashMap.Entry<String, Track> entry : tracksSelected.entrySet()) {
                     //refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).setValue(entry.getValue());
-                    databaseReference.child("tracks").child(entry.getKey()).child("name").setValue(entry.getValue().name);
-                    databaseReference.child("tracks").child(entry.getKey()).child("uri").setValue(entry.getValue().uri);
-                    databaseReference.child("tracks").child(entry.getKey()).child("artist").setValue(entry.getValue().artists.get(0).name);
-                    databaseReference.child("tracks").child(entry.getKey()).child("cover").setValue(entry.getValue().album.images.get(0).url);
+                    databaseReference.child("items").child(Integer.toString(index)).child("type").setValue("track");
+                    databaseReference.child("items").child(Integer.toString(index)).child("spotifyId").setValue(entry.getKey());
+                    databaseReference.child("items").child(Integer.toString(index)).child("name").setValue(entry.getValue().name);
+                    databaseReference.child("items").child(Integer.toString(index)).child("uri").setValue(entry.getValue().uri);
+                    databaseReference.child("items").child(Integer.toString(index)).child("artist").setValue(entry.getValue().artists.get(0).name);
+                    databaseReference.child("items").child(Integer.toString(index)).child("cover").setValue(entry.getValue().album.images.get(0).url);
+                    index++;
                 }
                 for (HashMap.Entry<String, Artist> artist : artistsSelected.entrySet()) {
-                    databaseReference.child("artists").child(artist.getKey()).child("name").setValue(artist.getValue().name);
-                    databaseReference.child("artists").child(artist.getKey()).child("uri").setValue(artist.getValue().uri);
-                    databaseReference.child("artists").child(artist.getKey()).child("cover").setValue(artist.getValue().images.get(0).url);
+                    databaseReference.child("items").child(Integer.toString(index)).child("type").setValue("artist");
+                    databaseReference.child("items").child(Integer.toString(index)).child("spotifyId").setValue(artist.getKey());
+                    databaseReference.child("items").child(Integer.toString(index)).child("name").setValue(artist.getValue().name);
+                    databaseReference.child("items").child(Integer.toString(index)).child("uri").setValue(artist.getValue().uri);
+                    databaseReference.child("items").child(Integer.toString(index)).child("cover").setValue(artist.getValue().images.get(0).url);
                 }
                 for (HashMap.Entry<String, AlbumSimple> album : albumsSelected.entrySet()) {
-                    databaseReference.child("albums").child(album.getKey()).child("name").setValue(album.getValue().name);
-                    databaseReference.child("albums").child(album.getKey()).child("uri").setValue(album.getValue().uri);
-                    databaseReference.child("albums").child(album.getKey()).child("cover").setValue(album.getValue().images.get(0).url);
+                    databaseReference.child("items").child(Integer.toString(index)).child("type").setValue("album");
+                    databaseReference.child("items").child(Integer.toString(index)).child("spotifyId").setValue(album.getKey());
+                    databaseReference.child("items").child(Integer.toString(index)).child("name").setValue(album.getValue().name);
+                    databaseReference.child("items").child(Integer.toString(index)).child("uri").setValue(album.getValue().uri);
+                    databaseReference.child("items").child(Integer.toString(index)).child("cover").setValue(album.getValue().images.get(0).url);
                 }
                 for (HashMap.Entry<String, String> genre : genreSelected.entrySet()) {
                     databaseReference.child("genres").child(genre.getKey()).child("cover").setValue(genre.getValue());
@@ -298,35 +322,28 @@ public class DataHandler {
 
     }
 
-    public void getUpvote(final String questionId, final String answerId, final AnswersAdapter.ViewHolder holder) {
-        System.out.println(questionId + "----" + answerId);
+    public void getUpvote(final String questionId, final String answerId, final ImageButton upvote) {
         final DatabaseReference mUpvoterReference = refQuestionFeed.child(questionId).child("answers").child(answerId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
         final DatabaseReference mUpvotesReference = refQuestionFeed.child(questionId).child("answers").child(answerId).child("upvotes").child("number");
-        mUpvotesReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        mUpvoterReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(final DataSnapshot votes) {
-                mUpvoterReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot voter) {
-                        if (voter.exists()) {
-                            //Log.i("votes",""+(int)votes.getValue());
-                            holder.upvote.setImageResource(R.drawable.ic_favorite);
+            public void onDataChange(DataSnapshot voter) {
+                if (voter.exists()) {
+                    //Log.i("votes",""+(int)votes.getValue());
+                    upvote.setImageResource(R.drawable.ic_favorite);
+                    upvote.setTag(R.drawable.ic_favorite);
 
-                        }else{
-                            holder.upvote.setImageResource(R.drawable.ic_favorite_border);
-                        }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
-                    }
-                });
+                }else{
+                    upvote.setImageResource(R.drawable.ic_favorite_border);
+                    upvote.setTag(R.drawable.ic_favorite_border);
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
             }
         });
+
     }
 
     public void getFollow(String questionId, final ImageButton follow) {
@@ -449,6 +466,77 @@ public class DataHandler {
             }
 
         });
+    }
+
+    /*public void getSpotifyItemCount(DatabaseReference entry, final FirebaseRecyclerAdapter<Answer, AnswersAdapter.AnswerHolder> adapter) {
+        entry.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot entry) {
+                if (entry.child("items").exists()){
+                    System.out.println(entry.child("items").getChildrenCount());
+                    adapter.getsetItemCount((int) entry.child("items").getChildrenCount());
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
+    }*/
+
+
+
+
+    public void loadSpotifyItems(DatabaseReference entry, final CoverFlowAdapter.SpotifyItemHolder holder) {
+        entry.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot entry) {
+                if (entry.child("items").exists()){
+                    DataSnapshot item = entry.child("items").child(Integer.toString(holder.getAdapterPosition()));
+                    holder.getCover().setVisibility(View.VISIBLE);
+                    Picasso.with(context).load(item.child("cover").getValue().toString()).into(holder.getCover());
+                    switch (item.child("type").getValue().toString()) {
+                        case "track" :
+                            holder.getPrimaryText().setText(item.child("name").getValue().toString());
+                            holder.getSecondaryText().setText(item.child("artist").getValue().toString());
+                            break;
+                        case "artist" :
+                            holder.getPrimaryText().setText(item.child("name").getValue().toString());
+                            holder.getSecondaryText().setVisibility(View.GONE);
+                            break;
+                        case "album" :
+                            holder.getPrimaryText().setText(item.child("name").getValue().toString());
+                            holder.getSecondaryText().setVisibility(View.GONE);
+                            break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
+    }
+
+
+
+    public void openUri(DatabaseReference entry, final int position) {
+        entry.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot entry) {
+                if (entry.child("items").exists()){
+                    DataSnapshot item = entry.child("items").child(Integer.toString(position));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.child("uri").getValue().toString()));
+                    context.startActivity(intent);
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
+
     }
 
 

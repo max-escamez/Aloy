@@ -47,12 +47,8 @@ public class QuestionFeedAdapter {
         return new FirebaseRecyclerAdapter<Question,QuestionHolder>(options) {
             @Override
             protected void onBindViewHolder(final QuestionHolder holder, int position, final Question question) {
-                //final Question question = getItem(position);
                 holder.questionBody.setText(question.getBody());
-                //holder.questionUsername.setText(question.getUsername());
-
-
-               if((question.getName()).equals("")){
+                if((question.getName()).equals("")){
                     holder.questionUsername.setText(question.getUsername());
                 }else{
                     holder.questionUsername.setText(question.getName());

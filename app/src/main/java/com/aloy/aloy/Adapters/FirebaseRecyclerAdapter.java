@@ -216,10 +216,10 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     }
 
     /**
-     * Returns the item in the specified position
+     * Returns the spotify_item in the specified position
      *
-     * @param position Position of the item in the adapter
-     * @return the item
+     * @param position Position of the spotify_item in the adapter
+     * @return the spotify_item
      */
     public T getItem(int position) {
         return mItems.get(position);
@@ -230,7 +230,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     }
 
     /**
-     * Returns the position of the item in the adapter
+     * Returns the position of the spotify_item in the adapter
      *
      * @param item Item to be searched
      * @return the position in the adapter if found, -1 otherwise
@@ -240,10 +240,10 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     }
 
     /**
-     * Check if the searched item is in the adapter
+     * Check if the searched spotify_item is in the adapter
      *
      * @param item Item to be searched
-     * @return true if the item is in the adapter, false otherwise
+     * @return true if the spotify_item is in the adapter, false otherwise
      */
     public boolean contains(T item) {
         return mItems != null && mItems.contains(item);
@@ -254,46 +254,46 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
      */
 
     /**
-     * Called after an item has been added to the adapter
+     * Called after an spotify_item has been added to the adapter
      *
-     * @param item     Added item
-     * @param key      Key of the added item
-     * @param position Position of the added item in the adapter
+     * @param item     Added spotify_item
+     * @param key      Key of the added spotify_item
+     * @param position Position of the added spotify_item in the adapter
      */
     protected void itemAdded(T item, String key, int position) {
 
     }
 
     /**
-     * Called after an item changed
+     * Called after an spotify_item changed
      *
-     * @param oldItem  Old version of the changed item
-     * @param newItem  Current version of the changed item
-     * @param key      Key of the changed item
-     * @param position Position of the changed item in the adapter
+     * @param oldItem  Old version of the changed spotify_item
+     * @param newItem  Current version of the changed spotify_item
+     * @param key      Key of the changed spotify_item
+     * @param position Position of the changed spotify_item in the adapter
      */
     protected void itemChanged(T oldItem, T newItem, String key, int position) {
 
     }
 
     /**
-     * Called after an item has been removed from the adapter
+     * Called after an spotify_item has been removed from the adapter
      *
-     * @param item     Removed item
-     * @param key      Key of the removed item
-     * @param position Position of the removed item in the adapter
+     * @param item     Removed spotify_item
+     * @param key      Key of the removed spotify_item
+     * @param position Position of the removed spotify_item in the adapter
      */
     protected void itemRemoved(T item, String key, int position) {
 
     }
 
     /**
-     * Called after an item changed position
+     * Called after an spotify_item changed position
      *
-     * @param item        Moved item
-     * @param key         Key of the moved item
-     * @param oldPosition Old position of the changed item in the adapter
-     * @param newPosition New position of the changed item in the adapter
+     * @param item        Moved spotify_item
+     * @param key         Key of the moved spotify_item
+     * @param oldPosition Old position of the changed spotify_item in the adapter
+     * @param newPosition New position of the changed spotify_item in the adapter
      */
     protected void itemMoved(T item, String key, int oldPosition, int newPosition) {
 

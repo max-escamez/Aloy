@@ -1,6 +1,7 @@
 package com.aloy.aloy.Fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,8 @@ public class Profile extends AppCompatActivity {
 
         TextView username = (TextView) findViewById(R.id.username);
         CircleImageView profilePicture = (CircleImageView) findViewById(R.id.profilePicture);
+        ViewPager profileViewPager = (ViewPager) findViewById(R.id.profile_view_pager);
+
         Picasso.with(this).load(picTranstionName).noFade().into(profilePicture);
 
 
@@ -40,8 +43,9 @@ public class Profile extends AppCompatActivity {
             username.setText(fbName);
         }
 
-        ViewPager profileViewPager = (ViewPager) findViewById(R.id.profile_view_pager);
         setupViewPager(profileViewPager,usernameTransitionName);
+        TabLayout tabs = (TabLayout) findViewById(R.id.profile_tabs);
+        tabs.setupWithViewPager(profileViewPager);
 
         supportStartPostponedEnterTransition();
 
