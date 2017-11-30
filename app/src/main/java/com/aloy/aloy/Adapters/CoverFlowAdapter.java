@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aloy.aloy.MainActivity;
-import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.SpotifyItem;
 import com.aloy.aloy.R;
 import com.firebase.ui.database.*;
@@ -53,22 +52,22 @@ public class CoverFlowAdapter {
 
             @Override
             protected void onBindViewHolder(SpotifyItemHolder holder, final int position, final SpotifyItem model) {
-                MainActivity.getDataHandler().loadSpotifyItems(entry,holder,position);
+                //MainActivity.getDataHandler().loadSpotifyItems(entry,holder,position);
 
                 holder.cover.setVisibility(View.VISIBLE);
                 Picasso.with(context).load(model.getCover()).into(holder.cover);
                 switch (model.getType()) {
                     case "track" :
-                        holder.primaryText.setText(model.getPrimaryText());
-                        holder.secondaryText.setText(model.getSecondaryText());
+                        holder.name.setText(model.getName());
+                        holder.artist.setText(model.getArtist());
                         break;
                     case "artist" :
-                        holder.primaryText.setText(model.getPrimaryText());
-                        holder.secondaryText.setVisibility(View.GONE);
+                        holder.name.setText(model.getName());
+                        holder.artist.setVisibility(View.GONE);
                         break;
                     case "album" :
-                        holder.primaryText.setText(model.getPrimaryText());
-                        holder.secondaryText.setVisibility(View.GONE);
+                        holder.name.setText(model.getName());
+                        holder.artist.setText(model.getArtist());
                         break;
                 }
 
@@ -88,26 +87,14 @@ public class CoverFlowAdapter {
     public class SpotifyItemHolder extends RecyclerView.ViewHolder {
 
         private ImageView cover;
-        private TextView primaryText;
-        private TextView secondaryText;
+        private TextView name;
+        private TextView artist;
 
         public SpotifyItemHolder(View itemView) {
             super(itemView);
             this.cover = (ImageView) itemView.findViewById(R.id.spotify_item_cover);
-            this.primaryText = (TextView) itemView.findViewById(R.id.spotify_item_primary);
-            this.secondaryText = (TextView) itemView.findViewById(R.id.spotify_item_secondary);
-        }
-
-        public ImageView getCover() {
-            return cover;
-        }
-
-        public TextView getPrimaryText() {
-            return primaryText;
-        }
-
-        public TextView getSecondaryText() {
-            return secondaryText;
+            this.name = (TextView) itemView.findViewById(R.id.spotify_item_primary);
+            this.artist = (TextView) itemView.findViewById(R.id.spotify_item_secondary);
         }
 
     }

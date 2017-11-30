@@ -273,12 +273,24 @@ public class SpotifyHandler {
             @Override
             public void success(AlbumsPager albumsPager, Response response) {
                 AlbumSimple album = albumsPager.albums.items.get(position);
-                if (add) {
-                    searchView.getAsk().getAskPresenter().addAlbum(album);
-                }
-                else
-                    searchView.getAsk().getAskPresenter().removeAlbum(album);
-                searchView.updateCount("album");
+                service.getAlbum(album.id, new SpotifyCallback<Album>() {
+                    @Override
+                    public void failure(SpotifyError spotifyError) {
+
+                    }
+
+                    @Override
+                    public void success(Album album, Response response) {
+                        if (add) {
+                            searchView.getAsk().getAskPresenter().addAlbum(album);
+                        }
+                        else
+                            searchView.getAsk().getAskPresenter().removeAlbum(album);
+                        searchView.updateCount("album");
+
+                    }
+                });
+
 
             }
         });

@@ -41,6 +41,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
@@ -87,7 +88,7 @@ public class DataHandler {
     }
 
 
-    public void saveQuestion(final Question question, final HashMap<String,Track> tracks, final HashMap<String,Artist> artists, final HashMap<String,AlbumSimple> albums, final HashMap<String,String> genres,DatabaseReference ref) {
+    public void saveQuestion(final Question question, final HashMap<String,Track> tracks, final HashMap<String,Artist> artists, final HashMap<String,Album> albums, final HashMap<String,String> genres, DatabaseReference ref) {
         ref.setValue(question,new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -95,30 +96,34 @@ public class DataHandler {
                 int index = 0;
 
                 for (HashMap.Entry<String, Track> entry : tracks.entrySet()) {
-                    //refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).setValue(entry.getValue());
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("type").setValue("track");
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("spotifyId").setValue(entry.getKey());
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("name").setValue(entry.getValue().name);
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("uri").setValue(entry.getValue().uri);
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("artist").setValue(entry.getValue().artists.get(0).name);
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("cover").setValue(entry.getValue().album.images.get(0).url);
+                    String cover = entry.getValue().album.images.get(0).url;
+                    String name = entry.getValue().name;
+                    String artist = entry.getValue().artists.get(0).name;
+                    String spotifyId = entry.getKey();
+                    String type = "track";
+                    String uri = entry.getValue().uri;
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).setValue(new SpotifyItem(cover,name,artist,spotifyId,type,uri));
                     index++;
                 }
-                for (HashMap.Entry<String, Artist> artist : artists.entrySet()) {
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("type").setValue("artist");
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("spotifyId").setValue(artist.getKey());
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("name").setValue(artist.getValue().name);
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("uri").setValue(artist.getValue().uri);
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("cover").setValue(artist.getValue().images.get(0).url);
+                for (HashMap.Entry<String, Artist> artistEntry : artists.entrySet()) {
+                    String cover = artistEntry.getValue().images.get(0).url;
+                    String name = artistEntry.getValue().name;
+                    String artist = artistEntry.getValue().name;
+                    String spotifyId = artistEntry.getKey();
+                    String type = "artist";
+                    String uri = artistEntry.getValue().uri;
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).setValue(new SpotifyItem(cover,name,artist,spotifyId,type,uri));
                     index++;
 
                 }
-                for (HashMap.Entry<String, AlbumSimple> album : albums.entrySet()) {
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("type").setValue("album");
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("spotifyId").setValue(album.getKey());
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("name").setValue(album.getValue().name);
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("uri").setValue(album.getValue().uri);
-                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).child("cover").setValue(album.getValue().images.get(0).url);
+                for (HashMap.Entry<String, Album> album : albums.entrySet()) {
+                    String cover = album.getValue().images.get(0).url;
+                    String name = album.getValue().name;
+                    String artist = album.getValue().artists.get(0).name;
+                    String spotifyId = album.getKey();
+                    String type = "album";
+                    String uri = album.getValue().uri;
+                    refQuestionFeed.child(databaseReference.getKey()).child("items").child(Integer.toString(index)).setValue(new SpotifyItem(cover,name,artist,spotifyId,type,uri));
                     index++;
 
                 }
@@ -145,7 +150,7 @@ public class DataHandler {
         return myRef;
     }
 
-    public void saveAnswer(Answer answer, final String questionID,DatabaseReference answerId, final LinkedHashMap<String, Track> tracksSelected, final HashMap<String,Artist> artistsSelected, final HashMap<String,AlbumSimple> albumsSelected, final HashMap<String,String> genreSelected) {
+    public void saveAnswer(Answer answer, final String questionID,DatabaseReference answerId, final LinkedHashMap<String, Track> tracksSelected, final HashMap<String,Artist> artistsSelected, final HashMap<String,Album> albumsSelected, final HashMap<String,String> genreSelected) {
         answerId.setValue(answer,new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError,
@@ -154,28 +159,38 @@ public class DataHandler {
                 int index = 0;
 
                 for (HashMap.Entry<String, Track> entry : tracksSelected.entrySet()) {
-                    //refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).setValue(entry.getValue());
-                    databaseReference.child("items").child(Integer.toString(index)).child("type").setValue("track");
-                    databaseReference.child("items").child(Integer.toString(index)).child("spotifyId").setValue(entry.getKey());
-                    databaseReference.child("items").child(Integer.toString(index)).child("name").setValue(entry.getValue().name);
-                    databaseReference.child("items").child(Integer.toString(index)).child("uri").setValue(entry.getValue().uri);
-                    databaseReference.child("items").child(Integer.toString(index)).child("artist").setValue(entry.getValue().artists.get(0).name);
-                    databaseReference.child("items").child(Integer.toString(index)).child("cover").setValue(entry.getValue().album.images.get(0).url);
+                    String cover = entry.getValue().album.images.get(0).url;
+                    String name = entry.getValue().name;
+                    String artist = entry.getValue().artists.get(0).name;
+                    String spotifyId = entry.getKey();
+                    String type = "track";
+                    String uri = entry.getValue().uri;
+                    databaseReference.child("items").child(Integer.toString(index)).setValue(new SpotifyItem(cover,name,artist,spotifyId,type,uri));
                     index++;
+
+                    //refQuestionFeed.child(databaseReference.getKey()).child("tracks").child(entry.getKey()).setValue(entry.getValue());
                 }
-                for (HashMap.Entry<String, Artist> artist : artistsSelected.entrySet()) {
-                    databaseReference.child("items").child(Integer.toString(index)).child("type").setValue("artist");
-                    databaseReference.child("items").child(Integer.toString(index)).child("spotifyId").setValue(artist.getKey());
-                    databaseReference.child("items").child(Integer.toString(index)).child("name").setValue(artist.getValue().name);
-                    databaseReference.child("items").child(Integer.toString(index)).child("uri").setValue(artist.getValue().uri);
-                    databaseReference.child("items").child(Integer.toString(index)).child("cover").setValue(artist.getValue().images.get(0).url);
+                for (HashMap.Entry<String, Artist> artistEntry : artistsSelected.entrySet()) {
+                    String cover = artistEntry.getValue().images.get(0).url;
+                    String name = artistEntry.getValue().name;
+                    String artist = artistEntry.getValue().name;
+                    String spotifyId = artistEntry.getKey();
+                    String type = "artist";
+                    String uri = artistEntry.getValue().uri;
+                    databaseReference.child("items").child(Integer.toString(index)).setValue(new SpotifyItem(cover,name,artist,spotifyId,type,uri));
+                    index++;
+
                 }
-                for (HashMap.Entry<String, AlbumSimple> album : albumsSelected.entrySet()) {
-                    databaseReference.child("items").child(Integer.toString(index)).child("type").setValue("album");
-                    databaseReference.child("items").child(Integer.toString(index)).child("spotifyId").setValue(album.getKey());
-                    databaseReference.child("items").child(Integer.toString(index)).child("name").setValue(album.getValue().name);
-                    databaseReference.child("items").child(Integer.toString(index)).child("uri").setValue(album.getValue().uri);
-                    databaseReference.child("items").child(Integer.toString(index)).child("cover").setValue(album.getValue().images.get(0).url);
+                for (HashMap.Entry<String, Album> album : albumsSelected.entrySet()) {
+                    String cover = album.getValue().images.get(0).url;
+                    String name = album.getValue().name;
+                    String artist = album.getValue().artists.get(0).name;
+                    String spotifyId = album.getKey();
+                    String type = "album";
+                    String uri = album.getValue().uri;
+                    databaseReference.child("items").child(Integer.toString(index)).setValue(new SpotifyItem(cover,name,artist,spotifyId,type,uri));
+                    index++;
+
                 }
                 for (HashMap.Entry<String, String> genre : genreSelected.entrySet()) {
                     databaseReference.child("genres").child(genre.getKey()).child("cover").setValue(genre.getValue());
@@ -426,40 +441,6 @@ public class DataHandler {
         });
     }
 
-
-
-
-    public void loadSpotifyItems(DatabaseReference entry, final CoverFlowAdapter.SpotifyItemHolder holder, final int position) {
-        entry.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot entry) {
-                if (entry.child("items").exists()){
-                    DataSnapshot item = entry.child("items").child(Integer.toString(position));
-                    //holder.getCover().setVisibility(View.VISIBLE);
-                    //Picasso.with(context).load(item.child("cover").getValue().toString()).into(holder.getCover());
-                    System.out.println(position);
-                    switch (item.child("type").getValue().toString()) {
-                        case "track" :
-                            holder.getPrimaryText().setText(item.child("name").getValue().toString());
-                            holder.getSecondaryText().setText(item.child("artist").getValue().toString());
-                            break;
-                        case "artist" :
-                            holder.getPrimaryText().setText(item.child("name").getValue().toString());
-                            holder.getSecondaryText().setVisibility(View.GONE);
-                            break;
-                        case "album" :
-                            holder.getPrimaryText().setText(item.child("name").getValue().toString());
-                            holder.getSecondaryText().setVisibility(View.GONE);
-                            break;
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
-            }
-        });
-    }
 
 
 

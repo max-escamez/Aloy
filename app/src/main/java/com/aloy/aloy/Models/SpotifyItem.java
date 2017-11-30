@@ -14,8 +14,8 @@ import com.aloy.aloy.R;
 public class SpotifyItem {
 
     private String cover;
-    private String primaryText;
-    private String secondaryText;
+    private String name;
+    private String artist;
     private String spotifyId;
     private String type;
     private String uri;
@@ -26,8 +26,8 @@ public class SpotifyItem {
 
     public SpotifyItem(String cover,String primaryText,String secondaryText,String spotifyId,String type,String uri) {
         this.cover=cover;
-        this.primaryText=primaryText;
-        this.secondaryText=secondaryText;
+        this.name=primaryText;
+        this.artist=secondaryText;
         this.spotifyId=spotifyId;
         this.type=type;
         this.uri=uri;
@@ -37,12 +37,12 @@ public class SpotifyItem {
         return cover;
     }
 
-    public String getPrimaryText() {
-        return primaryText;
+    public String getName() {
+        return name;
     }
 
-    public String getSecondaryText() {
-        return secondaryText;
+    public String getArtist() {
+        return artist;
     }
 
     public String getUri() {
@@ -52,4 +52,5 @@ public class SpotifyItem {
     public String getType() {
         return type;
     }
+
 }

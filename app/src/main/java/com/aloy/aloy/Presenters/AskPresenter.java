@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
@@ -100,10 +101,10 @@ public class AskPresenter implements AskContract.Presenter {
     public HashMap getArtists() { return this.artistsSelected ; }
 
     @Override
-    public void addAlbum(AlbumSimple album) { albumsSelected.put(album.id,album); }
+    public void addAlbum(Album album) { albumsSelected.put(album.id,album); }
 
     @Override
-    public void removeAlbum(AlbumSimple album) { albumsSelected.remove(album.id); }
+    public void removeAlbum(Album album) { albumsSelected.remove(album.id); }
 
     @Override
     public HashMap getAlbums() { return this.albumsSelected; }

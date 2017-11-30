@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.HashMap;
 
+import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
@@ -37,8 +38,8 @@ public interface AskContract {
         void removeArtist(Artist artist);
         HashMap getArtists();
 
-        void addAlbum(AlbumSimple album);
-        void removeAlbum(AlbumSimple album);
+        void addAlbum(Album album);
+        void removeAlbum(Album album);
         HashMap getAlbums();
 
         void addGenre(String name, String url);
