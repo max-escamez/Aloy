@@ -27,10 +27,14 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
@@ -213,10 +217,19 @@ public class DataHandler {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (add) {
-                    searchView.getAsk().getAskPresenter().addGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString(),dataSnapshot.child(String.valueOf(position)).child("pic").getValue().toString());
+                    if(searchView.getAsk()!=null) {
+                        searchView.getAsk().getAskPresenter().addGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString(), dataSnapshot.child(String.valueOf(position)).child("pic").getValue().toString());
+                    }else{
+                        searchView.getInterests().getInterestPresenter().addGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString(), dataSnapshot.child(String.valueOf(position)).child("pic").getValue().toString());
+                    }
                 }
-                else
-                    searchView.getAsk().getAskPresenter().removeGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString());
+                else {
+                    if(searchView.getAsk()!=null) {
+                        searchView.getAsk().getAskPresenter().removeGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString());
+                    }else{
+                        searchView.getInterests().getInterestPresenter().removeGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString());
+                    }
+                }
                 searchView.updateCount("genre");
             }
 
@@ -226,6 +239,8 @@ public class DataHandler {
             }
         });
     }
+
+
 
     public void request(final String target, final String questionId){
         final DatabaseReference mRequestReference = refUser.child(target).child("requests");
@@ -353,90 +368,9 @@ public class DataHandler {
 
     }
 
-    public void updateURL(final String username){
-        final DatabaseReference picReference = refUser.child(username).child("pic");
-        picReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot userURL) {
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
-            }
-        });
-    }
-
-    public void saveProfilePicture(String url) {
-        Picasso.with(context)
-                .load(url)
-                .into(new com.squareup.picasso.Target() {
-                          @Override
-                          public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                              try {
-                                  String root = Environment.getExternalStorageDirectory().toString();
-                                  File myDir = new File(context.getFilesDir() + "/Aloy");
-                                  String name = "profile_pic.jpg";
-                                  myDir = new File(myDir, name);
-                                  FileOutputStream out = new FileOutputStream(myDir);
-                                  bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-
-                                  FirebaseStorage storage = FirebaseStorage.getInstance();
-                                  final StorageReference storageReference = storage.getReference().child(sharedPreferenceHelper.getCurrentUserId()+"/profilePic.jpg");
-                                  Uri file = Uri.fromFile(new File(String.valueOf(myDir)));
-                                  UploadTask uploadTask = storageReference.putFile(file);
-                                  //StorageReference gsReference = storage.getReferenceFromUrl("gs://aloy-1995.appspot.com/"+sharedPreferenceHelper.getCurrentUserId()+"/profilePic.jpg");
-                                  sharedPreferenceHelper.saveProfilePicture("gs://aloy-1995.appspot.com/"+sharedPreferenceHelper.getCurrentUserId()+"/profilePic.jpg");
-                                  /*uploadTask.addOnFailureListener(new OnFailureListener() {
-                                      @Override
-                                      public void onFailure(@NonNull Exception exception) {
-                                          // Handle unsuccessful uploads
-                                      }
-                                  }).addOnSuccessListener(
-                                          new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                              @Override
-                                              public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                  sharedPreferenceHelper.saveProfilePicture(taskSnapshot.getDownloadUrl().toString());
-                                              }
-                                          });*/
-                                  out.flush();
-                                  out.close();
-                              } catch(Exception e){
-                                  // some action
-                              }
-                          }
-
-                          @Override
-                          public void onBitmapFailed(Drawable errorDrawable) {
-                          }
-
-                          @Override
-                          public void onPrepareLoad(Drawable placeHolderDrawable) {
-                          }
-                      }
-                );
-    }
 
     public void getUrl(String userId, final CircleImageView holder, final Context context) {
-        /*FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference gsReference = storage.getReferenceFromUrl(profilePicture);
-        gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                System.out.println(uri.toString());
-                Picasso.with(context).load(uri.toString()).into(holder);
-                holder.setVisibility(View.VISIBLE);
-
-
-                // Got the download URL for 'users/me/profile.png'
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });*/
-        FirebaseDatabase.getInstance().getReference("users").child(userId).child("pic").addListenerForSingleValueEvent(new ValueEventListener() {
+        refUser.child(userId).child("pic").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot userURL) {
                 Picasso.with(context).load(userURL.getValue().toString()).into(holder);
@@ -451,5 +385,39 @@ public class DataHandler {
         });
     }
 
+    public void getInterests(){
+        String userId = sharedPreferenceHelper.getCurrentUserId();
+        final StringBuilder sb = new StringBuilder();
+        refUser.child(userId).child("interests").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot interests) {
+                if(interests.exists()) {
+                    for (DataSnapshot interest : interests.getChildren()) {
+                        sb.append(interest.getKey());
+                        sb.append(",");
+                        sharedPreferenceHelper.saveInterests(sb.toString());
+                    }
+                }else{
+                    sharedPreferenceHelper.saveInterests("null");
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(Feed.TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+
+        });
+    }
+
+    public void saveInterests(HashMap<String, String> genres){
+        String userId = sharedPreferenceHelper.getCurrentUserId();
+        final StringBuilder sb = new StringBuilder();
+        for(String name : genres.keySet()) {
+            refUser.child(userId).child("interests").child(name).setValue("true");
+            sb.append(name);
+            sb.append(",");
+        }
+        sharedPreferenceHelper.saveInterests(sb.toString());
+    }
 
 }
