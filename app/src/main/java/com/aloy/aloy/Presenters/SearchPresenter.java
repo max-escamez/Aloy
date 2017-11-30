@@ -96,7 +96,8 @@ public class SearchPresenter implements SearchContract.Presenter {
                 spotifyHandler.setupSearchRecyclerAlbums(recyclerView,context,this,searchQuery,type);
                 break;
             case "genre" :
-                this.searchView.getAsk().getAskPresenter().clearGenres();
+                if(this.searchView.getAsk()!=null)
+                    this.searchView.getAsk().getAskPresenter().clearGenres();
                 SearchAdapter searchAdapter = new SearchAdapter(context, this, searchQuery, type, 26);
                 recyclerView.setAdapter(searchAdapter);
                 break;

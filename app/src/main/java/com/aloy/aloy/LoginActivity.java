@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.aloy.aloy.Util.CredentialsHandler;
+import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.aloy.aloy.Util.SpotifyHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -68,6 +69,7 @@ public class LoginActivity extends Activity {
     private static final int REQUEST_CODE = 1337;
     private static int a=1;
     private SpotifyHandler spotifyHandler;
+    private DataHandler dataHandler;
     private SharedPreferenceHelper mSharedPreferenceHelper;
     private FirebaseStorage storage;
     private FirebaseUser user;
@@ -127,6 +129,7 @@ public class LoginActivity extends Activity {
                         new refreshToAccess().execute().get();
                         System.out.println("Token : " +access_token);
                         CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
+                        dataHandler = new DataHandler(this);
                         spotifyHandler = new SpotifyHandler(CredentialsHandler.getAccessToken(this),this);
                         mAuth.signInWithCustomToken(firebase_token)
                                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -144,6 +147,7 @@ public class LoginActivity extends Activity {
                                                     if (!dataSnapshot.exists()) {
                                                         spotifyHandler.createMainUser();
                                                     }
+                                                    dataHandler.getInterests();
                                                     startMainActivity(CredentialsHandler.getAccessToken(LoginActivity.this), CredentialsHandler.getExpiresAt(LoginActivity.this));
                                                 }
                                                 @Override

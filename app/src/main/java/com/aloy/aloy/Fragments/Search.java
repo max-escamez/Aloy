@@ -12,8 +12,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,12 +40,14 @@ public class Search extends DialogFragment implements SearchContract.View {
 
     private SearchPresenter searchPresenter;
     private String type;
+    private String interest;
     private EditText searchField;
     private String searchQuery;
     private Button validateSearch;
     private SearchAdapter searchAdapter;
     private TextView itemsSelected;
     private Ask callingFragment;
+    private Interests interestsCallingFragment;
     private boolean searchTrack = false;
 
     //    android:background="?attr/selectableItemBackground"
@@ -99,11 +103,14 @@ public class Search extends DialogFragment implements SearchContract.View {
         validateSearch = (Button) searchView.findViewById(R.id.validateSearch);
         searchField = (EditText) searchView.findViewById(R.id.searchSpotify);
         itemsSelected = (TextView) searchView.findViewById(R.id.elementsSelected);
-        callingFragment = (Ask) getTargetFragment();
-
         Bundle args = getArguments();
         type = args.getString("type");
-
+        interest=args.getString("interest");
+        if(interest==null) {
+            callingFragment = (Ask) getTargetFragment();
+        }else{
+            interestsCallingFragment= (Interests) getTargetFragment();
+        }
         if(type.equals("genre")){
             searchField.setVisibility(View.GONE);
             setupRecyclerView(searchView, searchQuery, type);
@@ -133,8 +140,15 @@ public class Search extends DialogFragment implements SearchContract.View {
         validateSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (searchTrack)
-                    callingFragment.update();
+                if (searchTrack) {
+                    if(interest==null) {
+                        callingFragment.update();
+                    }else{
+                        interestsCallingFragment.getInterestPresenter().update();
+                        getFragmentManager().beginTransaction().detach(interestsCallingFragment).attach(interestsCallingFragment).commit();
+
+                    }
+                }
                 hideSearch();
             }
         });
@@ -154,6 +168,11 @@ public class Search extends DialogFragment implements SearchContract.View {
     @Override
     public Ask getAsk() {
         return callingFragment;
+    }
+
+    @Override
+    public Interests getInterests() {
+        return interestsCallingFragment;
     }
 
 
@@ -186,7 +205,11 @@ public class Search extends DialogFragment implements SearchContract.View {
                 itemsSelected.setText(callingFragment.getAskPresenter().getAlbums().size() + " Albums Selected");
                 break;
             case "genre" :
-                itemsSelected.setText(callingFragment.getAskPresenter().getGenres().size() + " Genres Selected");
+                if(interest==null) {
+                    itemsSelected.setText(callingFragment.getAskPresenter().getGenres().size() + " Genres Selected");
+                }else{
+                    itemsSelected.setText(interestsCallingFragment.getInterestPresenter().getGenres().size() + " Genres Selected");
+                }
         }
     }
 

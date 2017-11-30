@@ -103,14 +103,14 @@
     <TextView
         android:id="@+id/genresSelected"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="98dp"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="50dp"
-        android:text="0 Genres Selected"
+        android:layout_marginTop="40dp"
+        android:text="  0 Genres Selected\n\n(Choosing genres will \nget you more answers)"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/findAlbums"
-        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/albumsSelected" />
 

@@ -53,7 +53,7 @@ public class CoverFlowAdapter {
 
             @Override
             protected void onBindViewHolder(SpotifyItemHolder holder, final int position, final SpotifyItem model) {
-                MainActivity.getDataHandler().loadSpotifyItems(entry,holder);
+                MainActivity.getDataHandler().loadSpotifyItems(entry,holder,position);
 
                 holder.cover.setVisibility(View.VISIBLE);
                 Picasso.with(context).load(model.getCover()).into(holder.cover);
