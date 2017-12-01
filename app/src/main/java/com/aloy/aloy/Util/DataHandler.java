@@ -9,9 +9,12 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.aloy.aloy.Adapters.AnswersAdapter;
 import com.aloy.aloy.Adapters.CoverFlowAdapter;
+import com.aloy.aloy.Adapters.QuestionFeedAdapter;
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
 import com.aloy.aloy.Fragments.Feed;
@@ -455,4 +458,149 @@ public class DataHandler {
         sharedPreferenceHelper.saveInterests(sb.toString());
     }
 
+    public void getItems(final String id, final QuestionFeedAdapter.QuestionHolder holder, final Context context) {
+        refQuestionFeed.child(id).child("items").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot items) {
+                if (items.exists()){
+                    System.out.println(id + "---" + items.getChildrenCount());
+                    switch ((int) items.getChildrenCount()) {
+                        case 1 :
+                            Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(holder.getCover1());
+                            holder.getTextCover1().setText(items.child("0").child("artist").getValue().toString());
+                            holder.getCover1().setVisibility(View.VISIBLE);
+                            holder.getTextCover1().setVisibility(View.VISIBLE);
+                            break;
+                        case 2 :
+                            Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(holder.getCover1());
+                            holder.getTextCover1().setText(items.child("0").child("artist").getValue().toString());
+                            Picasso.with(context).load(items.child("1").child("cover").getValue().toString()).into(holder.getCover2());
+                            holder.getTextCover2().setText(items.child("1").child("artist").getValue().toString());
+                            holder.getCover1().setVisibility(View.VISIBLE);
+                            holder.getTextCover1().setVisibility(View.VISIBLE);
+                            holder.getCover2().setVisibility(View.VISIBLE);
+                            holder.getTextCover2().setVisibility(View.VISIBLE);
+                            break;
+                        default:
+                            Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(holder.getCover1());
+                            holder.getTextCover1().setText(items.child("0").child("artist").getValue().toString());
+                            Picasso.with(context).load(items.child("1").child("cover").getValue().toString()).into(holder.getCover2());
+                            holder.getTextCover2().setText(items.child("1").child("artist").getValue().toString());
+                            Picasso.with(context).load(items.child("2").child("cover").getValue().toString()).into(holder.getCover3());
+                            holder.getTextCover3().setText(items.child("2").child("artist").getValue().toString());
+                            holder.getCover1().setVisibility(View.VISIBLE);
+                            holder.getTextCover1().setVisibility(View.VISIBLE);
+                            holder.getCover2().setVisibility(View.VISIBLE);
+                            holder.getTextCover2().setVisibility(View.VISIBLE);
+                            holder.getCover3().setVisibility(View.VISIBLE);
+                            holder.getTextCover3().setVisibility(View.VISIBLE);
+
+                            break;
+                    }
+                }
+                else {
+                    //holder.getItems().setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getStyles(final String id, final QuestionFeedAdapter.QuestionHolder holder, final Context context) {
+        refQuestionFeed.child(id).child("styles").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot styles) {
+                if (styles.exists()){
+                    switch ((int) styles.getChildrenCount()) {
+                        case 1 :
+                            holder.getStyle1().setText(styles.child("0").getValue().toString());
+                            holder.getStyle1().setVisibility(View.VISIBLE);
+                            break;
+                        case 2 :
+                            holder.getStyle1().setText(styles.child("0").getValue().toString());
+                            holder.getStyle2().setText(styles.child("1").getValue().toString());
+                            holder.getStyle1().setVisibility(View.VISIBLE);
+                            holder.getStyle2().setVisibility(View.VISIBLE);
+                            break;
+                        default:
+                            holder.getStyle1().setText(styles.child("0").getValue().toString());
+                            holder.getStyle2().setText(styles.child("1").getValue().toString());
+                            holder.getStyle3().setText(styles.child("2").getValue().toString());
+                            holder.getStyle1().setVisibility(View.VISIBLE);
+                            holder.getStyle2().setVisibility(View.VISIBLE);
+                            holder.getStyle3().setVisibility(View.VISIBLE);
+                            break;
+                    }
+
+                }
+                else {
+                    holder.getStyles().setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    public void getItems(String id, final ImageView cover1, final ImageView cover2, final ImageView cover3,
+                         final TextView textCover1, final TextView textCover2, final TextView textCover3,
+                         final View itemsView, final Context context) {
+
+        refQuestionFeed.child(id).child("items").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot items) {
+                if (items.exists()){
+                    switch ((int) items.getChildrenCount()) {
+                        case 1 :
+                            Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(cover1);
+                            textCover1.setText(items.child("0").child("artist").getValue().toString());
+                            cover1.setVisibility(View.VISIBLE);
+                            textCover1.setVisibility(View.VISIBLE);
+                            break;
+                        case 2 :
+                            Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(cover1);
+                            textCover1.setText(items.child("0").child("artist").getValue().toString());
+                            Picasso.with(context).load(items.child("1").child("cover").getValue().toString()).into(cover2);
+                            textCover2.setText(items.child("1").child("artist").getValue().toString());
+                            cover1.setVisibility(View.VISIBLE);
+                            textCover1.setVisibility(View.VISIBLE);
+                            cover2.setVisibility(View.VISIBLE);
+                            textCover2.setVisibility(View.VISIBLE);
+                            break;
+                        default:
+                            Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(cover1);
+                            textCover1.setText(items.child("0").child("artist").getValue().toString());
+                            Picasso.with(context).load(items.child("1").child("cover").getValue().toString()).into(cover2);
+                            textCover2.setText(items.child("1").child("artist").getValue().toString());
+                            Picasso.with(context).load(items.child("2").child("cover").getValue().toString()).into(cover3);
+                            textCover3.setText(items.child("2").child("artist").getValue().toString());
+                            cover1.setVisibility(View.VISIBLE);
+                            textCover1.setVisibility(View.VISIBLE);
+                            cover2.setVisibility(View.VISIBLE);
+                            textCover2.setVisibility(View.VISIBLE);
+                            cover3.setVisibility(View.VISIBLE);
+                            textCover3.setVisibility(View.VISIBLE);
+
+                            break;
+                    }
+                }
+                else {
+                    //itemsView.setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 }
