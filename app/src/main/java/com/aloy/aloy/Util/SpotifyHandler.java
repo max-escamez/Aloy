@@ -157,7 +157,7 @@ public class SpotifyHandler {
                 //System.out.println("bind track size : "+p.tracks.items.size());
                 if (position<p.tracks.items.size()) {
                     Track track = p.tracks.items.get(position);
-                    //SearchResult result = new SearchResult(track.album.images.get(0).url, track.name, track.artists.get(0).name);
+                    //SpotifyItem result = new SpotifyItem(track.album.images.get(0).url, track.name, track.artists.get(0).name);
                     holder.primaryText.setText(track.name);
                     holder.secondaryText.setText(track.artists.get(0).name);
                     Picasso.with(context).load(track.album.images.get(0).url).into(holder.cover);
@@ -273,12 +273,24 @@ public class SpotifyHandler {
             @Override
             public void success(AlbumsPager albumsPager, Response response) {
                 AlbumSimple album = albumsPager.albums.items.get(position);
-                if (add) {
-                    searchView.getAsk().getAskPresenter().addAlbum(album);
-                }
-                else
-                    searchView.getAsk().getAskPresenter().removeAlbum(album);
-                searchView.updateCount("album");
+                service.getAlbum(album.id, new SpotifyCallback<Album>() {
+                    @Override
+                    public void failure(SpotifyError spotifyError) {
+
+                    }
+
+                    @Override
+                    public void success(Album album, Response response) {
+                        if (add) {
+                            searchView.getAsk().getAskPresenter().addAlbum(album);
+                        }
+                        else
+                            searchView.getAsk().getAskPresenter().removeAlbum(album);
+                        searchView.updateCount("album");
+
+                    }
+                });
+
 
             }
         });

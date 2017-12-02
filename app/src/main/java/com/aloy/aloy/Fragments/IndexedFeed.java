@@ -52,10 +52,12 @@ public class IndexedFeed extends Fragment {
         RecyclerView recyclerView = (RecyclerView) indexedFeedView.findViewById(R.id.feedRecyclerView);
         indexedFeedAdapter = new IndexedFeedAdapter(userId,type, getContext(), this);
         layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(indexedFeedAdapter.getAdapter());
+        //layoutManager.scrollToPositionWithOffset(0, 0);
+
     }
 
 

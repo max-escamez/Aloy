@@ -1,8 +1,8 @@
 package com.aloy.aloy.Contracts;
 
 import android.content.Context;
+import android.widget.ImageButton;
 
-import com.aloy.aloy.Adapters.AnswersAdapter;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +30,6 @@ public interface QuestionDetailsContract {
 
         void upvoteAnswer(DatabaseReference questionId,String answerId);
 
-        void getUpvotes(String questionId, String id, AnswersAdapter.ViewHolder holder);
+        void getUpvotes(String questionId, String answerId, ImageButton holder);
     }
 }

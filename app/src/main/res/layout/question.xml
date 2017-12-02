@@ -15,14 +15,17 @@
         android:id="@+id/questionBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="Body"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/followButton"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/items"
+        app:layout_constraintEnd_toStartOf="@+id/side"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/questionProfilePic" />
+        app:layout_constraintTop_toBottomOf="@+id/questionProfilePic"
+        app:layout_constraintVertical_bias="0.25" />
 
     <TextView
         android:id="@+id/questionUsername"
@@ -52,52 +55,188 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/questionCover2"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/aloy_transparent2x" />
 
-    <ImageView
-        android:id="@+id/questionCover1"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/questionCover2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/aloy_transparent2x" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageButton
-        android:id="@+id/answerButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/transparent"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:tint="@color/light_grey_Aloy"
+        <ImageView
+            android:id="@+id/item_1"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/item_1_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/aloy_transparent2x" />
+
+        <ImageView
+            android:id="@+id/item_3"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="16dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/item_3_text"
+            app:layout_constraintStart_toEndOf="@+id/item_2"
+            app:srcCompat="@drawable/aloy_transparent2x" />
+
+        <ImageView
+            android:id="@+id/item_2"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="16dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/item_2_text"
+            app:layout_constraintStart_toEndOf="@+id/item_1"
+            app:srcCompat="@drawable/aloy_transparent2x" />
+
+        <TextView
+            android:id="@+id/item_1_text"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/item_1"
+            app:layout_constraintStart_toStartOf="@+id/item_1" />
+
+        <TextView
+            android:id="@+id/item_2_text"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/item_2"
+            app:layout_constraintStart_toStartOf="@+id/item_2" />
+
+        <TextView
+            android:id="@+id/item_3_text"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/item_3"
+            app:layout_constraintStart_toStartOf="@+id/item_3" />
+
+        <ImageView
+            android:id="@+id/more_items"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:tint="@color/light_grey_Aloy"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/item_3_text"
+            app:layout_constraintStart_toEndOf="@+id/item_3"
+            app:layout_constraintTop_toTopOf="@+id/item_3"
+            app:srcCompat="@drawable/ic_add" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/side"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/questionCover2"
-        app:srcCompat="@drawable/ic_reply" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageButton
-        android:id="@+id/followButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="8dp"
-        android:backgroundTint="@android:color/transparent"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:tint="@color/light_grey_Aloy"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/answerButton"
-        app:srcCompat="@drawable/ic_playlist_add" />
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/styles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/style_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:text="TextView"
+                android:textAlignment="viewEnd"
+                android:textStyle="italic"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/style_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:text="TextView"
+                android:textAlignment="viewEnd"
+                android:textStyle="italic"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/style_1" />
+
+            <TextView
+                android:id="@+id/style_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:text="TextView"
+                android:textAlignment="viewEnd"
+                android:textStyle="italic"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/style_2" />
+        </android.support.constraint.ConstraintLayout>
+
+        <ImageButton
+            android:id="@+id/answerButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@android:color/transparent"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:tint="@color/light_grey_Aloy"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/followButton"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/ic_reply" />
+
+        <ImageButton
+            android:id="@+id/followButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@android:color/transparent"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:tint="@color/light_grey_Aloy"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/styles"
+            app:srcCompat="@drawable/ic_playlist_add" />
+
+    </android.support.constraint.ConstraintLayout>
+
 
 </android.support.constraint.ConstraintLayout>

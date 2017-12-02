@@ -1,6 +1,7 @@
 package com.aloy.aloy.Fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import com.aloy.aloy.Adapters.InboxAdapter;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.AchievementsHandler;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -20,7 +22,6 @@ public class Profile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportPostponeEnterTransition();
-
         setContentView(R.layout.fragment_profile);
         //profilePresenter = new ProfilePresenter(this, MainActivity.getDataHandler());
         Bundle extras = getIntent().getExtras();
@@ -28,8 +29,22 @@ public class Profile extends AppCompatActivity {
         String picTranstionName = extras.getString(Details.PROFILE_PIC_TRANSITION_NAME);
         String fbName = extras.getString(Details.FB_NAME);
 
+        final AchievementsHandler mAchievementsHandler = new AchievementsHandler(this,usernameTransitionName);
+
         TextView username = (TextView) findViewById(R.id.username);
         CircleImageView profilePicture = (CircleImageView) findViewById(R.id.profilePicture);
+        ViewPager profileViewPager = (ViewPager) findViewById(R.id.profile_view_pager);
+        CircleImageView achievement1 = (CircleImageView) findViewById(R.id.achievement_1);
+        CircleImageView achievement2 = (CircleImageView) findViewById(R.id.achievement_2);
+        CircleImageView achievement3 = (CircleImageView) findViewById(R.id.achievement_3);
+        CircleImageView achievement4 = (CircleImageView) findViewById(R.id.achievement_4);
+        CircleImageView achievement5 = (CircleImageView) findViewById(R.id.achievement_5);
+        CircleImageView achievement6 = (CircleImageView) findViewById(R.id.achievement_6);
+        CircleImageView achievement7 = (CircleImageView) findViewById(R.id.achievement_7);
+        CircleImageView achievement8 = (CircleImageView) findViewById(R.id.achievement_8);
+        CircleImageView achievement9 = (CircleImageView) findViewById(R.id.achievement_9);
+        CircleImageView achievement10 = (CircleImageView) findViewById(R.id.achievement_10);
+
         Picasso.with(this).load(picTranstionName).noFade().into(profilePicture);
 
 
@@ -40,8 +55,20 @@ public class Profile extends AppCompatActivity {
             username.setText(fbName);
         }
 
-        ViewPager profileViewPager = (ViewPager) findViewById(R.id.profile_view_pager);
+        mAchievementsHandler.getAchievements(achievement1,"questions");
+        mAchievementsHandler.getAchievements(achievement2,"answers");
+        mAchievementsHandler.getAchievements(achievement3,"requests");
+        mAchievementsHandler.getAchievements(achievement4,"answersVIP");
+        mAchievementsHandler.getAchievements(achievement5,"upvotesVIP");
+        mAchievementsHandler.getAchievements(achievement6,"followersTOP");
+        mAchievementsHandler.getAchievements(achievement7,"answersTOP");
+        mAchievementsHandler.getAchievements(achievement8,"upvotesTOP");
+        mAchievementsHandler.getAchievements(achievement9,"requestsVIP");
+        mAchievementsHandler.getAchievements(achievement10,"followersVIP");
+
         setupViewPager(profileViewPager,usernameTransitionName);
+        TabLayout tabs = (TabLayout) findViewById(R.id.profile_tabs);
+        tabs.setupWithViewPager(profileViewPager);
 
         supportStartPostponedEnterTransition();
 
