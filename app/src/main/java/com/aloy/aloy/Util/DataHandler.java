@@ -639,25 +639,25 @@ public class DataHandler {
     }
 
     public void getStyles(final String id, final QuestionHolder holder, final Context context) {
-        refQuestionFeed.child(id).child("styles").addListenerForSingleValueEvent(new ValueEventListener() {
+        refQuestionFeed.child(id).child("genres").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot styles) {
-                if (styles.exists()){
-                    switch ((int) styles.getChildrenCount()) {
+            public void onDataChange(DataSnapshot genres) {
+                if (genres.exists()){
+                    switch ((int) genres.getChildrenCount()) {
                         case 1 :
-                            holder.getStyle1().setText(styles.child("0").getValue().toString());
+                            holder.getStyle1().setText(genres.child("0").getValue().toString());
                             holder.getStyle1().setVisibility(View.VISIBLE);
                             break;
                         case 2 :
-                            holder.getStyle1().setText(styles.child("0").getValue().toString());
-                            holder.getStyle2().setText(styles.child("1").getValue().toString());
+                            holder.getStyle1().setText(genres.child("0").getValue().toString());
+                            holder.getStyle2().setText(genres.child("1").getValue().toString());
                             holder.getStyle1().setVisibility(View.VISIBLE);
                             holder.getStyle2().setVisibility(View.VISIBLE);
                             break;
                         default:
-                            holder.getStyle1().setText(styles.child("0").getValue().toString());
-                            holder.getStyle2().setText(styles.child("1").getValue().toString());
-                            holder.getStyle3().setText(styles.child("2").getValue().toString());
+                            holder.getStyle1().setText(genres.child("0").getValue().toString());
+                            holder.getStyle2().setText(genres.child("1").getValue().toString());
+                            holder.getStyle3().setText(genres.child("2").getValue().toString());
                             holder.getStyle1().setVisibility(View.VISIBLE);
                             holder.getStyle2().setVisibility(View.VISIBLE);
                             holder.getStyle3().setVisibility(View.VISIBLE);
