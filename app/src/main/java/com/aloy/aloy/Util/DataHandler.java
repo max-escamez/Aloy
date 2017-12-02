@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -188,66 +189,47 @@ public class DataHandler {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
-
             }
         });
     }
 
-
-    public void displayAchievement(final FragmentActivity activity, final String achievement) {
-        final DatabaseReference userAchievements = refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("achievements").child(achievement);
-        userAchievements.addListenerForSingleValueEvent(new ValueEventListener() {
+    public void updateTopAchievement (DatabaseReference usernameRef,final String achievement,final DatabaseReference countRef) {
+        usernameRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(final DataSnapshot achievementSnapshot) {
-                    switch (achievement) {
-                        case "questions" :
-                            if (achievementSnapshot.exists()) {
-                                Toast.makeText(activity, "You asked " + achievementSnapshot.getValue(Integer.class) + " questions", Toast.LENGTH_SHORT).show();
+            public void onDataChange(DataSnapshot username) {
+                final DatabaseReference userAchievement = refUser.child(username.getValue().toString()).child("achievements").child(achievement);
+                userAchievement.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot achievement) {
+                        countRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot count) {
+                                if (achievement.exists()) {
+                                    if ((int) count.getChildrenCount() > achievement.getValue(Integer.class))
+                                        userAchievement.setValue((int) count.getChildrenCount());
+                                }
+                                else
+                                    userAchievement.setValue(1);
                             }
-                            else {
-                                Toast.makeText(activity, "You asked " + 0 + " questions", Toast.LENGTH_SHORT).show();
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
                             }
-                            break;
-                        case "answers" :
-                            if (achievementSnapshot.exists()) {
-                                Toast.makeText(activity, "You answered " + achievementSnapshot.getValue(Integer.class) + " questions", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Toast.makeText(activity, "You answered " + 0 + " questions", Toast.LENGTH_SHORT).show();
-                            }
-                            break;
-                        case "requests" :
-                            if (achievementSnapshot.exists()) {
-                                Toast.makeText(activity, "You requested " + achievementSnapshot.getValue(Integer.class) + " persons", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Toast.makeText(activity, "You requested " + 0 + " person", Toast.LENGTH_SHORT).show();
-                            }
-                            break;
-                        case "answersVIP" :
-                            if (achievementSnapshot.exists()) {
-                                Toast.makeText(activity, "You got answered " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Toast.makeText(activity, "You never got answered", Toast.LENGTH_SHORT).show();
-                            }
-                            break;
-                        case "upvotesVIP" :
-                            if (achievementSnapshot.exists()) {
-                                Toast.makeText(activity, "You got upvoted " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Toast.makeText(activity, "You never got upvoted", Toast.LENGTH_SHORT).show();
-                            }
-                            break;
+                        });
                     }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+                    }
+                });
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
             }
         });
+
     }
+
 
 
 
@@ -265,8 +247,8 @@ public class DataHandler {
         return myRef;
     }
 
-    public void saveAnswer(Answer answer, final String questionID,DatabaseReference answerId, final LinkedHashMap<String, Track> tracksSelected, final HashMap<String,Artist> artistsSelected, final HashMap<String,Album> albumsSelected, final HashMap<String,String> genreSelected) {
-        answerId.setValue(answer,new DatabaseReference.CompletionListener() {
+    public void saveAnswer(Answer answer, final String questionID, final DatabaseReference answerRef, final LinkedHashMap<String, Track> tracksSelected, final HashMap<String,Artist> artistsSelected, final HashMap<String,Album> albumsSelected, final HashMap<String,String> genreSelected) {
+        answerRef.setValue(answer,new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError,
                                    DatabaseReference databaseReference) {
@@ -312,6 +294,8 @@ public class DataHandler {
                 }
                 updateAchievement("answers");
                 updateVipAchievement(refQuestionFeed.child(questionID).child("username"),"answersVIP",true);
+                updateTopAchievement(refQuestionFeed.child(questionID).child("username"),"answersTOP", answerRef.getParent());
+
 
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("answers").child(questionID).setValue(databaseReference.getKey());
             }
@@ -320,29 +304,30 @@ public class DataHandler {
 
 
 
-    public void upvote(final DatabaseReference questionId, final String answerId) {
-        final DatabaseReference mUpvoterReference = questionId.child(answerId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
-        final DatabaseReference mUpvotesReference = questionId.child(answerId).child("upvotes").child("number");
+    public void upvote(final DatabaseReference questionRef, final String answerId) {
+        final DatabaseReference mUpvotersReference = questionRef.child(answerId).child("upvotes").child("users");
+        final DatabaseReference mUpvotesReference = questionRef.child(answerId).child("upvotes").child("number");
         mUpvotesReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot votes) {
-                mUpvoterReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                mUpvotersReference.child(sharedPreferenceHelper.getCurrentUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot voter) {
                         if (voter.exists()) {
                             mUpvotesReference.setValue(votes.getValue(Integer.class)-1);
-                            mUpvoterReference.removeValue();
-                            updateVipAchievement(questionId.child(answerId).child("username"),"upvotesVIP",false);
+                            voter.getRef().removeValue();
+                            updateVipAchievement(questionRef.child(answerId).child("username"),"upvotesVIP",false);
 
                         }else{
-                            mUpvoterReference.setValue("voted");
-                            updateVipAchievement(questionId.child(answerId).child("username"),"upvotesVIP",true);
+                            voter.getRef().setValue("voted");
+                            updateVipAchievement(questionRef.child(answerId).child("username"),"upvotesVIP",true);
                             if (votes.exists()) {
                                 mUpvotesReference.setValue(votes.getValue(Integer.class)+1);
                             }else{
                                 mUpvotesReference.setValue(1);
                             }
                         }
+                        updateTopAchievement(questionRef.child(answerId).child("username"),"upvotesTOP", mUpvotersReference);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -417,6 +402,8 @@ public class DataHandler {
                             if ((request.getValue().toString()).equals(questionId)) {
                                 if (!((request.child("requesters").child(sharedPreferenceHelper.getCurrentUserId())).exists())) {
                                     mRequestReference.child(questionId).child("requesters").child(sharedPreferenceHelper.getCurrentUserId()).setValue("requested");
+                                    updateVipAchievement(refUser.child(target),"requestsVIP",true);
+
                                 }
                             } else {
                                 //mRequestReference.setValue(questionId);
@@ -437,29 +424,34 @@ public class DataHandler {
     }
 
     public void follow(final String questionId){
-        final DatabaseReference mFollowersReference = refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId());
+        final DatabaseReference mFollowersReference = refQuestionFeed.child(questionId).child("following").child("users");
         final DatabaseReference mFollowingReference = refQuestionFeed.child(questionId).child("following").child("number");
         final DatabaseReference mUserFollow = refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("following");
         mFollowingReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot following) {
-                mFollowersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                mFollowersReference.child(sharedPreferenceHelper.getCurrentUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot follower) {
                         if (follower.exists()) {
                             refQuestionFeed.child(questionId).child("following").child("number").setValue(following.getValue(Integer.class)-1);
                             refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId()).removeValue();
                             mUserFollow.child(questionId).removeValue();
+                            updateVipAchievement(refQuestionFeed.child(questionId).child("username"),"followersVIP",false);
+
 
                         }else{
                             refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId()).setValue("is following");
                             mUserFollow.child(questionId).setValue("true");
+                            updateVipAchievement(refQuestionFeed.child(questionId).child("username"),"followersVIP",true);
 
                             if (following.exists()) {
                                 refQuestionFeed.child(questionId).child("following").child("number").setValue(following.getValue(Integer.class)+1);
                             }else{
                                 refQuestionFeed.child(questionId).child("following").child("number").setValue(1);
                             }
+                            updateTopAchievement(refQuestionFeed.child(questionId).child("username"),"followersTOP", mFollowersReference);
+
                         }
                     }
                     @Override
@@ -740,5 +732,6 @@ public class DataHandler {
         });
 
     }
+
 
 }
