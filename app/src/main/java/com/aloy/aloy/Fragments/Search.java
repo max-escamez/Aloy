@@ -87,7 +87,7 @@ public class Search extends DialogFragment implements SearchContract.View {
             @Override
             public void onBackPressed() {
                 //callingFragment.getAskPresenter().clearItems(type);
-                Toast.makeText(getActivity(), "Tracks added", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Tracks added", Toast.LENGTH_SHORT).show();
                 //
                 callingFragment.update();
                 hideSearch();

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.aloy.aloy.Fragments.IndexedFeed;
 import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.Question;
+import com.aloy.aloy.Models.QuestionHolder;
 import com.aloy.aloy.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -47,29 +48,32 @@ public class IndexedFeedAdapter {
     }
 
 
-
-
     public RecyclerView.Adapter getAdapter(){
         return new FirebaseRecyclerAdapter<Question,QuestionHolder>(options) {
+
+            @Override
+            public int getItemViewType(int position) {
+                return position;
+            }
+
             @Override
             protected void onBindViewHolder(final QuestionHolder holder, int position, final Question model) {
                 //final Question question = getItem(position);
-                holder.questionBody.setText(model.getBody());
+                holder.getQuestionBody().setText(model.getBody());
 
                 if((model.getName()).equals("")){
-                    holder.questionUsername.setText(model.getUsername());
+                    holder.getQuestionUsername().setText(model.getUsername());
                 }else{
                     System.out.println(model.getName());
-                    holder.questionUsername.setText(model.getName());
+                    holder.getQuestionUsername().setText(model.getName());
                 }
 
-                MainActivity.getDataHandler().getUrl(model.getUsername(),holder.profilePic,context);
                 //Picasso.with(context).load(user.getPhotoUrl().toString()).into(holder.profilePic);
                 //Picasso.with(context).load(model.getPic()).into(holder.profilePic);
-                Picasso.with(context).load(model.getCover1()).into(holder.cover1);
-                Picasso.with(context).load(model.getCover2()).into(holder.cover2);
-
-                MainActivity.getDataHandler().getFollow(model.getId(),holder.followButton);
+                MainActivity.getDataHandler().getItems(model.getId(), holder,context);
+                MainActivity.getDataHandler().getStyles(model.getId(),holder,context);
+                MainActivity.getDataHandler().getUrl(model.getUsername(),holder.getProfilePic(),context);
+                MainActivity.getDataHandler().getFollow(model.getId(),holder.getFollowButton());
 
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -79,14 +83,14 @@ public class IndexedFeedAdapter {
                     }
                 });
 
-                holder.answerButton.setOnClickListener(new View.OnClickListener() {
+                holder.getAnswerButton().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         indexedFeed.onAnswerClick(model.getId());
                     }
                 });
 
-                holder.followButton.setOnClickListener(new View.OnClickListener() {
+                holder.getFollowButton().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         MainActivity.getDataHandler().follow(model.getId());
@@ -107,25 +111,4 @@ public class IndexedFeedAdapter {
 
     }
 
-    public static class QuestionHolder extends RecyclerView.ViewHolder {
-
-        TextView questionBody;
-        TextView questionUsername;
-        CircleImageView profilePic;
-        ImageView cover1;
-        ImageView cover2;
-        ImageButton answerButton;
-        ImageButton followButton;
-
-        public QuestionHolder(View view) {
-            super(view);
-            questionBody = (TextView) view.findViewById(R.id.questionBody);
-            questionUsername = (TextView) view.findViewById(R.id.questionUsername);
-            profilePic = (CircleImageView) view.findViewById(R.id.questionProfilePic);
-            cover1 = (ImageView) view.findViewById(R.id.questionCover1);
-            cover2 = (ImageView) view.findViewById(R.id.questionCover2);
-            answerButton = (ImageButton) view.findViewById(R.id.answerButton);
-            followButton = (ImageButton) view.findViewById(R.id.followButton);
-        }
-    }
 }

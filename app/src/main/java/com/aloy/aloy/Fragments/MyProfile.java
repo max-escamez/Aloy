@@ -7,9 +7,12 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aloy.aloy.Adapters.InboxAdapter;
+import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
@@ -36,6 +39,48 @@ public class MyProfile extends Fragment {
         mSharedPreferenceHelper = new SharedPreferenceHelper(getContext());
         TextView username = (TextView) profileView.findViewById(R.id.username);
         CircleImageView profilePicture = (CircleImageView) profileView.findViewById(R.id.profilePicture);
+        CircleImageView achievement1 = (CircleImageView) profileView.findViewById(R.id.achievement_1);
+        CircleImageView achievement2 = (CircleImageView) profileView.findViewById(R.id.achievement_2);
+        CircleImageView achievement3 = (CircleImageView) profileView.findViewById(R.id.achievement_3);
+        CircleImageView achievement4 = (CircleImageView) profileView.findViewById(R.id.achievement_4);
+        CircleImageView achievement5 = (CircleImageView) profileView.findViewById(R.id.achievement_5);
+
+
+
+        achievement1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.getDataHandler().displayAchievement(getActivity(),"questions");
+            }
+        });
+
+        achievement2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.getDataHandler().displayAchievement(getActivity(),"answers");
+            }
+        });
+
+        achievement3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.getDataHandler().displayAchievement(getActivity(),"requests");
+            }
+        });
+
+        achievement4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.getDataHandler().displayAchievement(getActivity(),"answersVIP");
+            }
+        });
+        achievement5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.getDataHandler().displayAchievement(getActivity(),"upvotesVIP");
+            }
+        });
+
 
         if(mSharedPreferenceHelper.getCurrentUserName().equals("")){
             username.setText(mSharedPreferenceHelper.getCurrentUserId());

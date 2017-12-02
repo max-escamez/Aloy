@@ -6,11 +6,13 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aloy.aloy.Adapters.AnswersAdapter;
 import com.aloy.aloy.Adapters.CoverFlowAdapter;
@@ -21,6 +23,7 @@ import com.aloy.aloy.Fragments.Feed;
 import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;
+import com.aloy.aloy.Models.QuestionHolder;
 import com.aloy.aloy.Models.SpotifyItem;
 import com.aloy.aloy.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -73,7 +76,6 @@ public class DataHandler {
         refUser = database.getReference("users");
         refCategories = database.getReference("categories");
         this.context=context;
-
     }
 
     public DatabaseReference getRefQuestionFeed(){
@@ -134,10 +136,120 @@ public class DataHandler {
                     databaseReference.child("genres").child(genre.getKey()).child("cover").setValue(genre.getValue());
                 }
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").child(databaseReference.getKey()).setValue("true");
+                updateAchievement("questions");
                 follow(databaseReference.getKey());
             }
         });
     }
+
+    public void updateAchievement(String achievement){
+        final DatabaseReference userAchievement = refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("achievements").child(achievement);
+        userAchievement.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot achievement) {
+                if (achievement.exists()) {
+                    userAchievement.setValue(achievement.getValue(Integer.class)+1);
+                }
+                else {
+                    userAchievement.setValue(1);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
+    }
+
+    public void updateVipAchievement(DatabaseReference usernameRef, final String achievement, final boolean add) {
+        usernameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot username) {
+                final DatabaseReference userAchievement = refUser.child(username.getValue().toString()).child("achievements").child(achievement);
+                userAchievement.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot achievement) {
+                        if (achievement.exists()) {
+                            if (add)
+                                userAchievement.setValue(achievement.getValue(Integer.class)+1);
+                            else
+                                userAchievement.setValue(achievement.getValue(Integer.class)-1);
+                        }
+                        else {
+                            userAchievement.setValue(1);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+
+            }
+        });
+    }
+
+
+    public void displayAchievement(final FragmentActivity activity, final String achievement) {
+        final DatabaseReference userAchievements = refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("achievements").child(achievement);
+        userAchievements.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot achievementSnapshot) {
+                    switch (achievement) {
+                        case "questions" :
+                            if (achievementSnapshot.exists()) {
+                                Toast.makeText(activity, "You asked " + achievementSnapshot.getValue(Integer.class) + " questions", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(activity, "You asked " + 0 + " questions", Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                        case "answers" :
+                            if (achievementSnapshot.exists()) {
+                                Toast.makeText(activity, "You answered " + achievementSnapshot.getValue(Integer.class) + " questions", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(activity, "You answered " + 0 + " questions", Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                        case "requests" :
+                            if (achievementSnapshot.exists()) {
+                                Toast.makeText(activity, "You requested " + achievementSnapshot.getValue(Integer.class) + " persons", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(activity, "You requested " + 0 + " person", Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                        case "answersVIP" :
+                            if (achievementSnapshot.exists()) {
+                                Toast.makeText(activity, "You got answered " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(activity, "You never got answered", Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                        case "upvotesVIP" :
+                            if (achievementSnapshot.exists()) {
+                                Toast.makeText(activity, "You got upvoted " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(activity, "You never got upvoted", Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                    }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
+            }
+        });
+    }
+
+
 
     public void saveUser(MainUser user){
         refUser.child(sharedPreferenceHelper.getCurrentUserId()).setValue(user);
@@ -198,12 +310,17 @@ public class DataHandler {
                 for (HashMap.Entry<String, String> genre : genreSelected.entrySet()) {
                     databaseReference.child("genres").child(genre.getKey()).child("cover").setValue(genre.getValue());
                 }
+                updateAchievement("answers");
+                updateVipAchievement(refQuestionFeed.child(questionID).child("username"),"answersVIP",true);
+
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("answers").child(questionID).setValue(databaseReference.getKey());
             }
         });
     }
 
-    public void upvote(DatabaseReference questionId,String answerId) {
+
+
+    public void upvote(final DatabaseReference questionId, final String answerId) {
         final DatabaseReference mUpvoterReference = questionId.child(answerId).child("upvotes").child("users").child(sharedPreferenceHelper.getCurrentUserId());
         final DatabaseReference mUpvotesReference = questionId.child(answerId).child("upvotes").child("number");
         mUpvotesReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -215,8 +332,11 @@ public class DataHandler {
                         if (voter.exists()) {
                             mUpvotesReference.setValue(votes.getValue(Integer.class)-1);
                             mUpvoterReference.removeValue();
-                         }else{
+                            updateVipAchievement(questionId.child(answerId).child("username"),"upvotesVIP",false);
+
+                        }else{
                             mUpvoterReference.setValue("voted");
+                            updateVipAchievement(questionId.child(answerId).child("username"),"upvotesVIP",true);
                             if (votes.exists()) {
                                 mUpvotesReference.setValue(votes.getValue(Integer.class)+1);
                             }else{
@@ -304,6 +424,7 @@ public class DataHandler {
                             }
                         }
                     }
+                    updateAchievement("requests");
                 }
             }
 
@@ -458,7 +579,7 @@ public class DataHandler {
         sharedPreferenceHelper.saveInterests(sb.toString());
     }
 
-    public void getItems(final String id, final QuestionFeedAdapter.QuestionHolder holder, final Context context) {
+    public void getItems(final String id, final QuestionHolder holder, final Context context) {
         refQuestionFeed.child(id).child("items").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot items) {
@@ -481,6 +602,20 @@ public class DataHandler {
                             holder.getCover2().setVisibility(View.VISIBLE);
                             holder.getTextCover2().setVisibility(View.VISIBLE);
                             break;
+                        case 3:
+                            Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(holder.getCover1());
+                            holder.getTextCover1().setText(items.child("0").child("artist").getValue().toString());
+                            Picasso.with(context).load(items.child("1").child("cover").getValue().toString()).into(holder.getCover2());
+                            holder.getTextCover2().setText(items.child("1").child("artist").getValue().toString());
+                            Picasso.with(context).load(items.child("2").child("cover").getValue().toString()).into(holder.getCover3());
+                            holder.getTextCover3().setText(items.child("2").child("artist").getValue().toString());
+                            holder.getCover1().setVisibility(View.VISIBLE);
+                            holder.getTextCover1().setVisibility(View.VISIBLE);
+                            holder.getCover2().setVisibility(View.VISIBLE);
+                            holder.getTextCover2().setVisibility(View.VISIBLE);
+                            holder.getCover3().setVisibility(View.VISIBLE);
+                            holder.getTextCover3().setVisibility(View.VISIBLE);
+                            break;
                         default:
                             Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(holder.getCover1());
                             holder.getTextCover1().setText(items.child("0").child("artist").getValue().toString());
@@ -494,12 +629,14 @@ public class DataHandler {
                             holder.getTextCover2().setVisibility(View.VISIBLE);
                             holder.getCover3().setVisibility(View.VISIBLE);
                             holder.getTextCover3().setVisibility(View.VISIBLE);
-
+                            holder.getMoreItems().setVisibility(View.VISIBLE);
                             break;
+
                     }
                 }
                 else {
-                    //holder.getItems().setVisibility(View.GONE);
+                    holder.getItems().setVisibility(View.GONE);
+                    holder.getMoreItems().setVisibility(View.GONE);
                 }
             }
             @Override
@@ -509,7 +646,7 @@ public class DataHandler {
         });
     }
 
-    public void getStyles(final String id, final QuestionFeedAdapter.QuestionHolder holder, final Context context) {
+    public void getStyles(final String id, final QuestionHolder holder, final Context context) {
         refQuestionFeed.child(id).child("styles").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot styles) {
@@ -593,7 +730,7 @@ public class DataHandler {
                     }
                 }
                 else {
-                    //itemsView.setVisibility(View.GONE);
+                    itemsView.setVisibility(View.GONE);
                 }
             }
             @Override
@@ -603,4 +740,5 @@ public class DataHandler {
         });
 
     }
+
 }
