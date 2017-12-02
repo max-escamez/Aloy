@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -147,7 +148,8 @@ public class LoginActivity extends Activity {
                                                     if (!dataSnapshot.exists()) {
                                                         spotifyHandler.createMainUser();
                                                     }
-                                                    dataHandler.getInterests();
+                                                    FirebaseMessaging.getInstance().subscribeToTopic("my_questions");
+                                                    FirebaseMessaging.getInstance().subscribeToTopic("following");
                                                     startMainActivity(CredentialsHandler.getAccessToken(LoginActivity.this), CredentialsHandler.getExpiresAt(LoginActivity.this));
                                                 }
                                                 @Override
