@@ -58,9 +58,8 @@ public class MyProfile extends Fragment {
         }else{
             username.setText(mSharedPreferenceHelper.getCurrentUserName());
         }
-        //dataHandler.getUrl(question.getPic(),holder.profilePic,context);
-
         Picasso.with(getContext()).load(mSharedPreferenceHelper.getProfilePicture()).into(profilePicture);
+
         mAchievementsHandler.getAchievements(achievement1,"questions");
         mAchievementsHandler.getAchievements(achievement2,"answers");
         mAchievementsHandler.getAchievements(achievement3,"requests");
@@ -169,88 +168,4 @@ public class MyProfile extends Fragment {
         profileAdapter.addFragments(answers,"Answers");
         viewPager.setAdapter(profileAdapter);
     }
-
-    /*search_bar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    try {
-
-                        search_query = search_bar.getText().toString();
-                        Log.i("Before encoding",search_query);
-                        search_query=URLEncoder.encode(search_query,"utf-8");
-                        Log.i("After encoding",search_query);
-
-
-                        search_bar.setText("");
-                        SpotifyApi api = new SpotifyApi();
-                        api.setAccessToken(CredentialsHandler.getAccessToken(getContext()));
-                        SpotifyService spotify = api.getService();
-
-                        Thread t = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                SpotifyApi api = new SpotifyApi();
-                                api.setAccessToken(CredentialsHandler.getAccessToken(getContext()));
-                                SpotifyService spotify = api.getService();
-                                UserPrivate u = spotify.getMe();
-                                Log.i("Name",u.id);
-                                try {
-                                    TracksPager p = spotify.searchTracks(search_query);
-                                    Pager<Track> trackPager = p.tracks;
-                                    List<Track> trackList = trackPager.items;
-                                    for (Track s : trackList) {
-                                        Log.i("Song", s.name);
-                                    }
-                                }catch(IndexOutOfBoundsException e){
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                        t.start();
-
-
-                        spotify.searchTracks(search_query, new SpotifyCallback<TracksPager>() {
-                            @Override
-                            public void failure(SpotifyError spotifyError) {
-                             Log.e("Tracks", "Could not get tracks");
-                            }
-                            @Override
-                            public void success(TracksPager p, Response response) {
-                                try {
-                                Pager<Track> trackPager = p.tracks;
-                                List<Track> trackList = trackPager.items;
-                                Track song = trackList.get(0);
-                                AlbumSimple album = song.album;
-                                List<Image> imageList = album.images;
-                                image_url = imageList.get(0).url;
-
-                                    Picasso.with(getContext()).load(image_url).into(cover);
-                                    link = song.uri;
-                                    cover.setOnClickListener(new View.OnClickListener() {
-
-                                        public void onClick(View arg0) {
-                                            Intent viewIntent = new Intent("android.intent.action.VIEW",
-                                                    Uri.parse(link));
-                                            startActivity(viewIntent);
-                                        }
-                                    });
-                                }catch(IndexOutOfBoundsException e){
-                                    e.printStackTrace();
-
-                                }
-                            }
-
-                        });
-
-                    } catch (UnsupportedEncodingException | IndexOutOfBoundsException e) {
-                        e.printStackTrace();
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });*/
-
-
-
 }

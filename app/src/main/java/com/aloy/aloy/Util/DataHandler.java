@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aloy.aloy.Adapters.AnswersAdapter;
+import com.aloy.aloy.Adapters.InterestsAdapter;
 import com.aloy.aloy.Adapters.CoverFlowAdapter;
 import com.aloy.aloy.Adapters.QuestionFeedAdapter;
 import com.aloy.aloy.Adapters.SearchAdapter;
@@ -135,6 +136,7 @@ public class DataHandler {
                 }
                 for (HashMap.Entry<String, String> genre : genres.entrySet()) {
                     databaseReference.child("genres").child(genre.getKey()).child("cover").setValue(genre.getValue());
+                    refCategories.child(genreToNumber(genre.getKey())).child("questions").child(databaseReference.getKey()).setValue("true");
                 }
                 refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("questions").child(databaseReference.getKey()).setValue("true");
                 updateAchievement("questions");
@@ -359,23 +361,31 @@ public class DataHandler {
         });
     }
 
+    public void bindInterests(final InterestsAdapter.ViewHolder holder, final int position, final Context context){
+        refCategories.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                holder.primaryText.setText(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString());
+                holder.secondaryText.setVisibility(View.GONE);
+                Picasso.with(context).load(dataSnapshot.child(String.valueOf(position)).child("pic").getValue().toString()).into(holder.cover);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "addListenerForSingleValueEvent:failure", databaseError.toException());
+            }
+        });
+    }
+
     public void addGenre(final int position, final SearchContract.View searchView, final boolean add){
         refCategories.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (add) {
-                    if(searchView.getAsk()!=null) {
                         searchView.getAsk().getAskPresenter().addGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString(), dataSnapshot.child(String.valueOf(position)).child("pic").getValue().toString());
-                    }else{
-                        searchView.getInterests().getInterestPresenter().addGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString(), dataSnapshot.child(String.valueOf(position)).child("pic").getValue().toString());
-                    }
                 }
                 else {
-                    if(searchView.getAsk()!=null) {
                         searchView.getAsk().getAskPresenter().removeGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString());
-                    }else{
-                        searchView.getInterests().getInterestPresenter().removeGenre(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString());
-                    }
                 }
                 searchView.updateCount("genre");
             }
@@ -533,42 +543,174 @@ public class DataHandler {
         });
     }
 
-    public void getInterests(){
-        String userId = sharedPreferenceHelper.getCurrentUserId();
-        final StringBuilder sb = new StringBuilder();
-        refUser.child(userId).child("interests").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot interests) {
-                if(interests.exists()) {
-                    for (DataSnapshot interest : interests.getChildren()) {
-                        sb.append(interest.getKey());
-                        sb.append(",");
-                        sharedPreferenceHelper.saveInterests(sb.toString());
-                    }
-                }else{
-                    sharedPreferenceHelper.saveInterests("null");
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(Feed.TAG,"addListenerForSingleValueEvent:failure",databaseError.toException());
-            }
-
-        });
+    public String genreToNumber(String category){
+        String result="";
+        switch(category){
+            case "Blues" :
+                result="0";
+                break;
+            case "Chill" :
+                result="1";
+                break;
+            case "Christmas" :
+                result="2";
+                break;
+            case "Classical" :
+                result="3";
+                break;
+            case "Country" :
+                result="4";
+                break;
+            case "Electro" :
+                result="5";
+                break;
+            case "Focus" :
+                result="6";
+                break;
+            case "Folk" :
+                result="7";
+                break;
+            case "Funk" :
+                result="8";
+                break;
+            case "Gaming" :
+                result="9";
+                break;
+            case "Hip-Hop" :
+                result="10";
+                break;
+            case "Indie" :
+                result="11";
+                break;
+            case "Jazz" :
+                result="12";
+                break;
+            case "Latin" :
+                result="13";
+                break;
+            case "Metal" :
+                result="14";
+                break;
+            case "Mood" :
+                result="15";
+                break;
+            case "Party" :
+                result="16";
+                break;
+            case "Pop" :
+                result="17";
+                break;
+            case "Punk" :
+                result="18";
+                break;
+            case "Reggae" :
+                result="19";
+                break;
+            case "RnB" :
+                result="20";
+                break;
+            case "Rock" :
+                result="21";
+                break;
+            case "Sleep" :
+                result="22";
+                break;
+            case "Soul" :
+                result="23";
+                break;
+            case "Travel" :
+                result="24";
+                break;
+            case "Workout" :
+                result="25";
+                break;
+        }
+        return result;
     }
 
-
-
-
-    public void saveInterests(HashMap<String, String> genres){
-        String userId = sharedPreferenceHelper.getCurrentUserId();
-        final StringBuilder sb = new StringBuilder();
-        for(String name : genres.keySet()) {
-            refUser.child(userId).child("interests").child(name).setValue("true");
-            sb.append(name);
-            sb.append(",");
+    public String NumberToGenre(String number) {
+        String result = "";
+        switch (number) {
+            case "0":
+                result = "Blues";
+                break;
+            case "1":
+                result = "Chill";
+                break;
+            case "2":
+                result = "Christmas";
+                break;
+            case "3":
+                result = "Classical";
+                break;
+            case "4":
+                result = "Country";
+                break;
+            case "5":
+                result = "Electro";
+                break;
+            case "6":
+                result = "Focus";
+                break;
+            case "7":
+                result = "Folk";
+                break;
+            case "8":
+                result = "Funk";
+                break;
+            case "9":
+                result = "Gaming";
+                break;
+            case "10":
+                result = "Hip-Hop";
+                break;
+            case "11":
+                result = "Indie";
+                break;
+            case "12":
+                result = "Jazz";
+                break;
+            case "13":
+                result = "Latin";
+                break;
+            case "14":
+                result = "Metal";
+                break;
+            case "15":
+                result = "Mood";
+                break;
+            case "16":
+                result = "Party";
+                break;
+            case "17":
+                result = "Pop";
+                break;
+            case "18":
+                result = "Punk";
+                break;
+            case "19":
+                result = "Reggae";
+                break;
+            case "20":
+                result = "RnB";
+                break;
+            case "21":
+                result = "Rock";
+                break;
+            case "22":
+                result = "Sleep";
+                break;
+            case "23":
+                result = "Soul";
+                break;
+            case "24":
+                result = "Travel";
+                break;
+            case "25":
+                result = "Workout";
+                break;
         }
-        sharedPreferenceHelper.saveInterests(sb.toString());
+        return result;
     }
 
     public void getItems(final String id, final QuestionHolder holder, final Context context) {
@@ -678,60 +820,4 @@ public class DataHandler {
 
 
     }
-
-    public void getItems(String id, final ImageView cover1, final ImageView cover2, final ImageView cover3,
-                         final TextView textCover1, final TextView textCover2, final TextView textCover3,
-                         final View itemsView, final Context context) {
-
-        refQuestionFeed.child(id).child("items").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot items) {
-                if (items.exists()){
-                    switch ((int) items.getChildrenCount()) {
-                        case 1 :
-                            Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(cover1);
-                            textCover1.setText(items.child("0").child("artist").getValue().toString());
-                            cover1.setVisibility(View.VISIBLE);
-                            textCover1.setVisibility(View.VISIBLE);
-                            break;
-                        case 2 :
-                            Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(cover1);
-                            textCover1.setText(items.child("0").child("artist").getValue().toString());
-                            Picasso.with(context).load(items.child("1").child("cover").getValue().toString()).into(cover2);
-                            textCover2.setText(items.child("1").child("artist").getValue().toString());
-                            cover1.setVisibility(View.VISIBLE);
-                            textCover1.setVisibility(View.VISIBLE);
-                            cover2.setVisibility(View.VISIBLE);
-                            textCover2.setVisibility(View.VISIBLE);
-                            break;
-                        default:
-                            Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(cover1);
-                            textCover1.setText(items.child("0").child("artist").getValue().toString());
-                            Picasso.with(context).load(items.child("1").child("cover").getValue().toString()).into(cover2);
-                            textCover2.setText(items.child("1").child("artist").getValue().toString());
-                            Picasso.with(context).load(items.child("2").child("cover").getValue().toString()).into(cover3);
-                            textCover3.setText(items.child("2").child("artist").getValue().toString());
-                            cover1.setVisibility(View.VISIBLE);
-                            textCover1.setVisibility(View.VISIBLE);
-                            cover2.setVisibility(View.VISIBLE);
-                            textCover2.setVisibility(View.VISIBLE);
-                            cover3.setVisibility(View.VISIBLE);
-                            textCover3.setVisibility(View.VISIBLE);
-
-                            break;
-                    }
-                }
-                else {
-                    itemsView.setVisibility(View.GONE);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-
 }

@@ -18,7 +18,6 @@ public interface SearchContract {
         void hideKeyboardFrom(Context context, android.view.View view);
         void hideSearch();
         Ask getAsk();
-        Interests getInterests();
         void setupRecyclerView(android.view.View searchView, String searchQuery, String type);
         void updateCount(String type);
 

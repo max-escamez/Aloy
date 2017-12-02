@@ -4,7 +4,6 @@ package com.aloy.aloy.Fragments;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,10 +11,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +22,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
@@ -88,7 +84,6 @@ public class Search extends DialogFragment implements SearchContract.View {
             public void onBackPressed() {
                 //callingFragment.getAskPresenter().clearItems(type);
                 //Toast.makeText(getActivity(), "Tracks added", Toast.LENGTH_SHORT).show();
-                //
                 callingFragment.update();
                 hideSearch();
             }
@@ -106,11 +101,7 @@ public class Search extends DialogFragment implements SearchContract.View {
         Bundle args = getArguments();
         type = args.getString("type");
         interest=args.getString("interest");
-        if(interest==null) {
-            callingFragment = (Ask) getTargetFragment();
-        }else{
-            interestsCallingFragment= (Interests) getTargetFragment();
-        }
+        callingFragment = (Ask) getTargetFragment();
         if(type.equals("genre")){
             searchField.setVisibility(View.GONE);
             setupRecyclerView(searchView, searchQuery, type);
@@ -141,13 +132,7 @@ public class Search extends DialogFragment implements SearchContract.View {
             @Override
             public void onClick(View v) {
                 if (searchTrack) {
-                    if(interest==null) {
-                        callingFragment.update();
-                    }else{
-                        interestsCallingFragment.getInterestPresenter().update();
-                        getFragmentManager().beginTransaction().detach(interestsCallingFragment).attach(interestsCallingFragment).commit();
-
-                    }
+                    callingFragment.update();
                 }
                 hideSearch();
             }
@@ -170,16 +155,11 @@ public class Search extends DialogFragment implements SearchContract.View {
         return callingFragment;
     }
 
-    @Override
-    public Interests getInterests() {
-        return interestsCallingFragment;
-    }
-
 
     @Override
     public void setupRecyclerView(View searchView, String searchQuery, String type) {
         searchTrack = true;
-        RecyclerView recyclerView = (RecyclerView) searchView.findViewById(R.id.searchGrid);
+        RecyclerView recyclerView = (RecyclerView) searchView.findViewById(R.id.searchGridInterest);
         if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         }
@@ -205,11 +185,7 @@ public class Search extends DialogFragment implements SearchContract.View {
                 itemsSelected.setText(callingFragment.getAskPresenter().getAlbums().size() + " Albums Selected");
                 break;
             case "genre" :
-                if(interest==null) {
-                    itemsSelected.setText(callingFragment.getAskPresenter().getGenres().size() + " Genres Selected");
-                }else{
-                    itemsSelected.setText(interestsCallingFragment.getInterestPresenter().getGenres().size() + " Genres Selected");
-                }
+                itemsSelected.setText(callingFragment.getAskPresenter().getGenres().size() + " Genres Selected");
         }
     }
 
