@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aloy.aloy.R;
@@ -51,6 +53,57 @@ public class AchievementsHandler {
                     pic.setBorderColor(context.getResources().getColor(R.color.level_3_Aloy));
                 else if (score>199 )
                     pic.setBorderColor(context.getResources().getColor(R.color.level_4_Aloy));
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getScore(final FragmentActivity activity){
+        achievementsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot achievements) {
+                int score = 0;
+                if (achievements.exists()){
+                    for (DataSnapshot achievement : achievements.getChildren()) {
+                        score += achievement.getValue(Integer.class);
+                    }
+                }
+                if (score<10) {
+                    Toast toast = Toast.makeText(activity, "You have a score of " + score + ", try to reach 10 !", Toast.LENGTH_LONG);
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    if (v != null) v.setGravity(Gravity.CENTER);
+                    toast.show();
+                }
+                else if (score>9 && score < 50) {
+                    Toast toast = Toast.makeText(activity, "You have a score of " + score + ", try to reach 50 !", Toast.LENGTH_LONG);
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    if (v != null) v.setGravity(Gravity.CENTER);
+                    toast.show();
+                }
+                else if (score>49 && score < 100){
+                    Toast toast = Toast.makeText(activity, "You have a score of " + score + ", try to reach 100 !", Toast.LENGTH_LONG);
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    if (v != null) v.setGravity(Gravity.CENTER);
+                    toast.show();
+                }
+                else if (score>99 && score < 200 ) {
+                    Toast toast = Toast.makeText(activity, "You have a score of " + score + ", try to reach 200 !", Toast.LENGTH_LONG);
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    if (v != null) v.setGravity(Gravity.CENTER);
+                    toast.show();
+                }
+                else if (score>199 ) {
+                    Toast toast = Toast.makeText(activity, "You have a score of " + score + " ! You're a master !", Toast.LENGTH_LONG);
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    if (v != null) v.setGravity(Gravity.CENTER);
+                    toast.show();
+
+                }
 
             }
 

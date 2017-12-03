@@ -56,7 +56,7 @@ public class MyProfile extends Fragment {
             username.setText(mSharedPreferenceHelper.getCurrentUserName());
         }
         Picasso.with(getContext()).load(mSharedPreferenceHelper.getProfilePicture()).into(profilePicture);
-        AchievementsHandler achievementsHandler = new AchievementsHandler(getContext(),mSharedPreferenceHelper.getCurrentUserId());
+        final AchievementsHandler achievementsHandler = new AchievementsHandler(getContext(),mSharedPreferenceHelper.getCurrentUserId());
         achievementsHandler.setProfilePicBorder(profilePicture);
 
         mAchievementsHandler.getAchievements(achievement1,"questions");
@@ -75,6 +75,13 @@ public class MyProfile extends Fragment {
         // Set Tabs inside Toolbar
         TabLayout tabs = (TabLayout) profileView.findViewById(R.id.profile_tabs);
         tabs.setupWithViewPager(profileViewPager);
+
+        profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                achievementsHandler.getScore(getActivity());
+            }
+        });
 
 
         achievement1.setOnClickListener(new View.OnClickListener() {
