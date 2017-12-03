@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * Created by tldonne on 25/10/2017.
+ * Manage the navigation through the bottom tabs.
+ * Each tab is linked to a fragment.
  */
 
 public class BottomBarAdapter extends SmartFragmentStatePagerAdapter {

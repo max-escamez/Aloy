@@ -14,6 +14,7 @@ import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Models.QuestionHolder;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.AchievementsHandler;
 import com.aloy.aloy.Util.DataHandler;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -47,6 +48,11 @@ public class FeedAdapter {
 
     }
 
+    /**
+     *This method is used to create a FirebaseRecyclerAdapter, loading the entire question feed
+     *and binding every data stored in a Question into an QuestionHolder.
+     * @return the FirebaseRecyclerAdapter
+     */
     public RecyclerView.Adapter getAdapter(){
         return new FirebaseRecyclerAdapter<Question,QuestionHolder>(options) {
 
@@ -64,8 +70,9 @@ public class FeedAdapter {
                     holder.getQuestionUsername().setText(question.getName());
 
                 }
-
                 dataHandler.getUrl(question.getUsername(),holder.getProfilePic(),context);
+                AchievementsHandler achievementsHandler = new AchievementsHandler(context,question.getUsername());
+                achievementsHandler.setProfilePicBorder(holder.getProfilePic());
                 dataHandler.getItems(question.getId(), holder,context);
                 dataHandler.getStyles(question.getId(),holder,context);
                 dataHandler.getFollow(question.getId(),holder.getFollowButton());

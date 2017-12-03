@@ -21,6 +21,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 
 /**
  * Created by madmax on 2017-11-30.
+ * Adapter used to bind interests (Cover and title) into a recyclerView for the Interest Tab.
  */
 
 public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.ViewHolder> {
@@ -33,7 +34,6 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
     private SharedPreferenceHelper sharedPreferenceHelper;
     private FragmentManager fragmentManager;
 
-    // data is passed into the constructor
     public InterestsAdapter(Context context, int itemNb, View view, FragmentManager fragmentManager) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
@@ -78,18 +78,8 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
         SimpleTabAdapter interestsAdapter = new SimpleTabAdapter(fragmentManager);
         interestsAdapter.addFragments(interests,"Interests");
         viewPager.setAdapter(interestsAdapter);
-
-        //FragmentTransaction transaction = fragmentManager.beginTransaction();
-        //transaction.replace(R.id., interests);
-        //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        //transaction.addToBackStack(null);
-        //transaction.commit();
-
-
-
     }
 
-    // total number of cells
     @Override
     public int getItemCount() {
         return this.itemNb;

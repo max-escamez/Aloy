@@ -28,6 +28,7 @@ import com.aloy.aloy.R;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Enable the user to forge a question and engage searches through Spotify API
  */
 public class Ask extends DialogFragment implements AskContract.View{
 
@@ -45,8 +46,6 @@ public class Ask extends DialogFragment implements AskContract.View{
     private TextView albumsSelectedTextView;
     private TextView genresSelectedTextView;
     private String questionId;
-
-
 
 
     public Ask() {
@@ -156,6 +155,9 @@ public class Ask extends DialogFragment implements AskContract.View{
     }
 
 
+    /**
+     * Update the counters of selected items after completing a search
+     */
     @Override
     public void update() {
         tracksSelectedTextView.setText(askPresenter.getTracks().size() + " Tracks Selected");

@@ -127,7 +127,6 @@ public class Search extends DialogFragment implements SearchContract.View {
             }
         });
 
-
         validateSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,9 +136,6 @@ public class Search extends DialogFragment implements SearchContract.View {
                 hideSearch();
             }
         });
-
-
-
 
         return searchView;
     }

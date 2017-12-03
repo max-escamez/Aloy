@@ -122,7 +122,8 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
 
     }
 
-    private void openProfile(Question question) {
+    @Override
+    public void openProfile(Question question) {
         Intent intent = new Intent(this, Profile.class);
         ViewCompat.setTransitionName(username,question.getUsername());
         ViewCompat.setTransitionName(profilePic,question.getPic());
@@ -174,10 +175,11 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         questionView.setTransitionName(transitionName);
     }
 
-    private void setupCoverFlow(Question question) {
+    @Override
+    public void setupCoverFlow(Question question) {
         RecyclerView items = (RecyclerView) findViewById(R.id.detail_recycler);
         dataHandler.checkItems(items,question.getId());
-        CoverFlowAdapter adapter = new CoverFlowAdapter(this,dataHandler.getRefQuestionFeed().child(question.getId()),this, items);
+        CoverFlowAdapter adapter = new CoverFlowAdapter(this,dataHandler.getRefQuestionFeed().child(question.getId()),this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         items.setLayoutManager(layoutManager);
         items.setAdapter(adapter.getAdapter());

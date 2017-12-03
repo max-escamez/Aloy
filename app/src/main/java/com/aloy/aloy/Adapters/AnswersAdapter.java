@@ -59,7 +59,11 @@ public class AnswersAdapter {
     }
 
 
-
+    /**
+     *This method is used to create a FirebaseRecyclerAdapter, loading answers corresponding
+     * to a question, and binding every data stored in an Answer into an AnswerHolder.
+     * @return the FirebaseRecyclerAdapter
+     */
     public RecyclerView.Adapter getAdapter() {
         return new FirebaseRecyclerAdapter<Answer,AnswerHolder>(options) {
             @Override
@@ -83,7 +87,7 @@ public class AnswersAdapter {
                 dataHandler.getUpvote(questionId,answer.getId(),holder.upvote);
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                CoverFlowAdapter adapter = new CoverFlowAdapter(context,answerRef.child(answer.getId()),activity,holder.getItems());
+                CoverFlowAdapter adapter = new CoverFlowAdapter(context,answerRef.child(answer.getId()),activity);
                 holder.getItems().setLayoutManager(layoutManager);
                 holder.getItems().setAdapter(adapter.getAdapter());
                 holder.getItems().setOnFlingListener(null);
@@ -117,28 +121,27 @@ public class AnswersAdapter {
         };
     }
 
+
+
     public static class AnswerHolder extends RecyclerView.ViewHolder{
         TextView body;
         TextView username;
         CircleImageView profilePic;
         ImageButton upvote;
         private RecyclerView items;
-         AnswerHolder(View view,Context context) {
-             super(view);
-             body = (TextView) view.findViewById(R.id.answerBody);
-             username = (TextView) view.findViewById(R.id.answerUsername);
-             profilePic = (CircleImageView) view.findViewById(R.id.answerProfilePic);
-             upvote = (ImageButton) view.findViewById(R.id.upvote);
-             this.items = (RecyclerView) view.findViewById(R.id.answer_recycler);
-         }
 
-          public RecyclerView getItems(){
-             return this.items;
-          }
+        AnswerHolder(View view,Context context) {
+            super(view);
+            body = (TextView) view.findViewById(R.id.answerBody);
+            username = (TextView) view.findViewById(R.id.answerUsername);
+            profilePic = (CircleImageView) view.findViewById(R.id.answerProfilePic);
+            upvote = (ImageButton) view.findViewById(R.id.upvote);
+            this.items = (RecyclerView) view.findViewById(R.id.answer_recycler);
         }
 
+        public RecyclerView getItems(){
+             return this.items;
+          }
 
-
-
-
+    }
 }

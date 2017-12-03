@@ -31,6 +31,36 @@ public class AchievementsHandler {
         this.achievementsRef= FirebaseDatabase.getInstance().getReference("users").child(username).child("achievements");
     }
 
+    public void setProfilePicBorder(final CircleImageView pic){
+        achievementsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot achievements) {
+                int score = 0;
+                if (achievements.exists()){
+                    for (DataSnapshot achievement : achievements.getChildren()) {
+                        score += achievement.getValue(Integer.class);
+                    }
+                }
+                if (score<10)
+                    pic.setBorderColor(context.getResources().getColor(R.color.level_0_Aloy));
+                else if (score>9 && score < 25)
+                    pic.setBorderColor(context.getResources().getColor(R.color.level_1_Aloy));
+                else if (score>24 && score < 50)
+                    pic.setBorderColor(context.getResources().getColor(R.color.level_2_Aloy));
+                else if (score>49 && score < 100 )
+                    pic.setBorderColor(context.getResources().getColor(R.color.level_3_Aloy));
+                else if (score>99 )
+                    pic.setBorderColor(context.getResources().getColor(R.color.level_4_Aloy));
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void displayAchievement(final FragmentActivity activity, final String achievement) {
         final DatabaseReference userAchievements = achievementsRef.child(achievement);
         userAchievements.addListenerForSingleValueEvent(new ValueEventListener() {

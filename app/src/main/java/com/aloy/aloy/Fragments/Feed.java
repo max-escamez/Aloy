@@ -32,17 +32,10 @@ import java.util.ArrayList;
 public class Feed extends Fragment implements FeedContract.View {
 
     public static final String TAG = Feed.class.getSimpleName();
-    private FeedContract.Presenter feedPresenter;
-    private Query query;
-    private FeedAdapter feedAdapter;
-    private ArrayList<Question> adapterQuestions;
-    private ArrayList<String> adapterKeys;
     private LinearLayoutManager layoutManager;
     private FloatingActionButton addQuestionFab;
     public static final String EXTRA_QUESTION = "question";
     public static final String EXTRA_QUESTION_TRANSITION_NAME = "question_transition_name";
-    private int position;
-
 
 
     public Feed() {
@@ -54,8 +47,6 @@ public class Feed extends Fragment implements FeedContract.View {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View feedView = inflater.inflate(R.layout.fragment_feed, container, false);
-        feedPresenter = new FeedPresenter(this,MainActivity.getDataHandler());
-        query = feedPresenter.getQuery();
         setupRecyclerView(feedView);
         addQuestionFab = (FloatingActionButton) getActivity().findViewById(R.id.main_fab);
         addQuestionFab.setOnClickListener(new View.OnClickListener() {
@@ -92,11 +83,6 @@ public class Feed extends Fragment implements FeedContract.View {
 
     }
 
-
-    @Override
-    public void setPresenter(FeedContract.Presenter presenter) {
-        feedPresenter = presenter;
-    }
 
     @Override
     public void showAddQuestion() {

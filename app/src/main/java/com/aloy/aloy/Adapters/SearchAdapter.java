@@ -18,6 +18,8 @@ import java.util.List;
 
 /**
  * Created by tldonne on 02/11/2017.
+ * Adapter used to bind search results from the Spotify Api (Cover, name, artist, album)
+ * into a recyclerView for the Search DialogFragment.
  */
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
@@ -87,8 +89,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     }
 
 
-
-    // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder  {
         public TextView primaryText;
         public TextView secondaryText;
@@ -106,8 +106,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     }
 
-
-    // Method that executes your code for the action received
     public void onItemClick(View view, int position) {
         Log.i("TAG", "You clicked number " +  position);
     }

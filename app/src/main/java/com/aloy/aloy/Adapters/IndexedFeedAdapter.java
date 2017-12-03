@@ -15,6 +15,7 @@ import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Models.QuestionHolder;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.AchievementsHandler;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -64,6 +65,13 @@ public class IndexedFeedAdapter {
     }
 
 
+    /**
+     *This method is used to create a FirebaseRecyclerAdapter, loading specific questions from the
+     *feed based on a indexed list specified by variable keyRef.
+     *Binds every data stored in a Question into an QuestionHolder.
+     * @return the FirebaseRecyclerAdapter
+     */
+
     public RecyclerView.Adapter getAdapter(){
         return new FirebaseRecyclerAdapter<Question,QuestionHolder>(options) {
 
@@ -89,6 +97,8 @@ public class IndexedFeedAdapter {
                 dataHandler.getItems(model.getId(), holder,context);
                 dataHandler.getStyles(model.getId(),holder,context);
                 dataHandler.getUrl(model.getUsername(),holder.getProfilePic(),context);
+                AchievementsHandler achievementsHandler = new AchievementsHandler(context,model.getUsername());
+                achievementsHandler.setProfilePicBorder(holder.getProfilePic());
                 dataHandler.getFollow(model.getId(),holder.getFollowButton());
 
 

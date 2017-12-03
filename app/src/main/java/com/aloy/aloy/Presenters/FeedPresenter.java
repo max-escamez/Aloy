@@ -23,13 +23,4 @@ public class FeedPresenter implements FeedContract.Presenter {
         this.dataHandler = dataHandler;
     }
 
-    @Override
-    public void addQuestion() {
-
-    }
-
-    @Override
-    public Query getQuery() {
-        return myRef;
-    }
 }

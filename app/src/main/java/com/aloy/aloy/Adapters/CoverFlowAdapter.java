@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.SpotifyItem;
 import com.aloy.aloy.R;
 import com.firebase.ui.database.*;
@@ -25,24 +23,15 @@ import com.squareup.picasso.Picasso;
 public class CoverFlowAdapter {
 
     private Context context;
-    private String questionId;
-    private String answerId;
-    private int itemCount;
+
     private static FirebaseRecyclerOptions<SpotifyItem> options;
-    private DatabaseReference entry;
-    private RecyclerView items;
-    private boolean isEmpty;
 
-
-    public CoverFlowAdapter(Context context, DatabaseReference reference, AppCompatActivity activity, RecyclerView items){
+    public CoverFlowAdapter(Context context, DatabaseReference reference, AppCompatActivity activity){
         options = new FirebaseRecyclerOptions.Builder<SpotifyItem>()
                 .setQuery(reference.child("items"), SpotifyItem.class)
                 .setLifecycleOwner(activity)
                 .build();
         this.context=context;
-        this.entry=reference;
-        this.items=items;
-        this.isEmpty=true;
     }
 
     public RecyclerView.Adapter getAdapter() {
@@ -56,7 +45,6 @@ public class CoverFlowAdapter {
 
             @Override
             protected void onBindViewHolder(SpotifyItemHolder holder, final int position, final SpotifyItem model) {
-                //MainActivity.getDataHandler().loadSpotifyItems(entry,holder,position);
                 Picasso.with(context).load(model.getCover()).into(holder.cover);
                 holder.cover.setVisibility(View.VISIBLE);
                 switch (model.getType()) {
