@@ -60,7 +60,10 @@ public class SpotifyHandler {
                 sharedPreferenceHelper.saveCurrentUserId(u.id);
                 sharedPreferenceHelper.saveName(u.display_name);
                 //dataHandler.saveProfilePicture(u.images.get(0).url);
-                sharedPreferenceHelper.saveProfilePicture(u.images.get(0).url);
+                if (!u.images.isEmpty())
+                    sharedPreferenceHelper.saveProfilePicture(u.images.get(0).url);
+                else
+                    sharedPreferenceHelper.saveProfilePicture("http://zupimages.net/up/17/48/ava2.png");
                 dataHandler.updateData(sharedPreferenceHelper.getCurrentUserId());
             }
 

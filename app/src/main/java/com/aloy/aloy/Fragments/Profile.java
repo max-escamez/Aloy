@@ -46,6 +46,8 @@ public class Profile extends AppCompatActivity {
         CircleImageView achievement10 = (CircleImageView) findViewById(R.id.achievement_10);
 
         Picasso.with(this).load(picTranstionName).noFade().into(profilePicture);
+        AchievementsHandler achievementsHandler = new AchievementsHandler(this,usernameTransitionName);
+        achievementsHandler.setProfilePicBorder(profilePicture);
 
 
         if (fbName.equals("")){

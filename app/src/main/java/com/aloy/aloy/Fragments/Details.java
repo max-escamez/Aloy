@@ -28,6 +28,7 @@ import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.AchievementsHandler;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
@@ -87,6 +88,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
                 }
             });
         }
+
         request.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -167,6 +169,8 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         }else{
             username.setText(question.getName());
         }
+        AchievementsHandler achievementsHandler = new AchievementsHandler(this,question.getUsername());
+        achievementsHandler.setProfilePicBorder(profilePic);
         dataHandler.getUrl(question.getUsername(),profilePic,context);
         dataHandler.getFollow(question.getId(),follow);
         setupCoverFlow(question);

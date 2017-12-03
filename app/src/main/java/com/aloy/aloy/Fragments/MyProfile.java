@@ -56,6 +56,8 @@ public class MyProfile extends Fragment {
             username.setText(mSharedPreferenceHelper.getCurrentUserName());
         }
         Picasso.with(getContext()).load(mSharedPreferenceHelper.getProfilePicture()).into(profilePicture);
+        AchievementsHandler achievementsHandler = new AchievementsHandler(getContext(),mSharedPreferenceHelper.getCurrentUserId());
+        achievementsHandler.setProfilePicBorder(profilePicture);
 
         mAchievementsHandler.getAchievements(achievement1,"questions");
         mAchievementsHandler.getAchievements(achievement2,"answers");

@@ -43,13 +43,13 @@ public class AchievementsHandler {
                 }
                 if (score<10)
                     pic.setBorderColor(context.getResources().getColor(R.color.level_0_Aloy));
-                else if (score>9 && score < 25)
+                else if (score>9 && score < 50)
                     pic.setBorderColor(context.getResources().getColor(R.color.level_1_Aloy));
-                else if (score>24 && score < 50)
+                else if (score>49 && score < 100)
                     pic.setBorderColor(context.getResources().getColor(R.color.level_2_Aloy));
-                else if (score>49 && score < 100 )
+                else if (score>99 && score < 200 )
                     pic.setBorderColor(context.getResources().getColor(R.color.level_3_Aloy));
-                else if (score>99 )
+                else if (score>199 )
                     pic.setBorderColor(context.getResources().getColor(R.color.level_4_Aloy));
 
             }
