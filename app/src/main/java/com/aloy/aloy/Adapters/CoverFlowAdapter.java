@@ -30,15 +30,17 @@ public class CoverFlowAdapter {
     private int itemCount;
     private static FirebaseRecyclerOptions<SpotifyItem> options;
     private DatabaseReference entry;
+    private RecyclerView items;
 
 
-    public CoverFlowAdapter(Context context, DatabaseReference reference, AppCompatActivity activity){
+    public CoverFlowAdapter(Context context, DatabaseReference reference, AppCompatActivity activity, RecyclerView items){
         options = new FirebaseRecyclerOptions.Builder<SpotifyItem>()
                 .setQuery(reference.child("items"), SpotifyItem.class)
                 .setLifecycleOwner(activity)
                 .build();
         this.context=context;
         this.entry=reference;
+        this.items=items;
     }
 
     public RecyclerView.Adapter getAdapter() {
@@ -53,9 +55,8 @@ public class CoverFlowAdapter {
             @Override
             protected void onBindViewHolder(SpotifyItemHolder holder, final int position, final SpotifyItem model) {
                 //MainActivity.getDataHandler().loadSpotifyItems(entry,holder,position);
-
-                holder.cover.setVisibility(View.VISIBLE);
                 Picasso.with(context).load(model.getCover()).into(holder.cover);
+                holder.cover.setVisibility(View.VISIBLE);
                 switch (model.getType()) {
                     case "track" :
                         holder.name.setText(model.getName());
@@ -69,6 +70,8 @@ public class CoverFlowAdapter {
                         holder.name.setText(model.getName());
                         holder.artist.setText(model.getArtist());
                         break;
+                    default :
+                        items.setVisibility(View.GONE);
                 }
 
                 holder.cover.setOnClickListener(new View.OnClickListener() {

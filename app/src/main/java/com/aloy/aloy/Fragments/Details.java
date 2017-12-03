@@ -42,7 +42,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
     private ArrayList<String> adapterKeys;
     private CircleImageView profilePic;
     private TextView username;
-    private Button request;
+    private ImageButton request;
     private ImageButton answer;
     private ImageButton follow;
     private TextView body ;
@@ -153,7 +153,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         profilePic = (CircleImageView) findViewById(R.id.questionDetailProfilePic);
         username = (TextView) findViewById(R.id.questionDetailUsername);
         body = (TextView) findViewById(R.id.questionDetailBody);
-        request = (Button) findViewById(R.id.requestButton);
+        request = (ImageButton) findViewById(R.id.requestButton);
         follow = (ImageButton) findViewById(R.id.detail_follow);
         answer = (ImageButton) findViewById(R.id.detail_answer);
 
@@ -173,7 +173,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
 
     private void setupCoverFlow(Question question) {
         RecyclerView items = (RecyclerView) findViewById(R.id.detail_recycler);
-        CoverFlowAdapter adapter = new CoverFlowAdapter(this,MainActivity.getDataHandler().getRefQuestionFeed().child(question.getId()),this);
+        CoverFlowAdapter adapter = new CoverFlowAdapter(this,MainActivity.getDataHandler().getRefQuestionFeed().child(question.getId()),this, items);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         items.setLayoutManager(layoutManager);
         items.setAdapter(adapter.getAdapter());

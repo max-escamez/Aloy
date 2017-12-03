@@ -368,6 +368,7 @@ public class DataHandler {
                 holder.primaryText.setText(dataSnapshot.child(String.valueOf(position)).child("name").getValue().toString());
                 holder.secondaryText.setVisibility(View.GONE);
                 Picasso.with(context).load(dataSnapshot.child(String.valueOf(position)).child("pic").getValue().toString()).into(holder.cover);
+                holder.cover.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -787,7 +788,7 @@ public class DataHandler {
                 if (genres.exists()){
                     switch ((int) genres.getChildrenCount()) {
                         case 1 :
-                            holder.getStyle1().setText(genres.child("0").getValue().toString());
+                            holder.getStyle1().setText(genres.getKey());
                             holder.getStyle1().setVisibility(View.VISIBLE);
                             break;
                         case 2 :

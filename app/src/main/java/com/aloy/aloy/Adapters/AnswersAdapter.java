@@ -47,7 +47,7 @@ public class AnswersAdapter {
     public AnswersAdapter(Context context, QuestionDetailsPresenter presenter, String questionId, AppCompatActivity activity) {
         this.answerRef = MainActivity.getDataHandler().getRefAnswers(questionId);
         options = new FirebaseRecyclerOptions.Builder<Answer>()
-                .setQuery(answerRef, Answer.class)
+                .setQuery(answerRef.orderByChild("upvotes/number"), Answer.class)
                 .setLifecycleOwner(activity)
                 .build();
         this.context = context;
@@ -81,12 +81,12 @@ public class AnswersAdapter {
                 MainActivity.getDataHandler().getUpvote(questionId,answer.getId(),holder.upvote);
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                CoverFlowAdapter adapter = new CoverFlowAdapter(context,answerRef.child(answer.getId()),activity);
-                holder.items.setLayoutManager(layoutManager);
-                holder.items.setAdapter(adapter.getAdapter());
+                CoverFlowAdapter adapter = new CoverFlowAdapter(context,answerRef.child(answer.getId()),activity,holder.getItems());
+                holder.getItems().setLayoutManager(layoutManager);
+                holder.getItems().setAdapter(adapter.getAdapter());
+                holder.getItems().setOnFlingListener(null);
                 SnapHelper snapHelper = new LinearSnapHelper();
-                holder.items.setOnFlingListener(null);
-                snapHelper.attachToRecyclerView(holder.items);
+                snapHelper.attachToRecyclerView(holder.getItems());
 
                 holder.upvote.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -123,21 +123,22 @@ public class AnswersAdapter {
         TextView username;
         CircleImageView profilePic;
         ImageButton upvote;
-        ImageView cover1;
-        ImageView cover2;
-        RecyclerView items;
+        private RecyclerView items;
          AnswerHolder(View view,Context context) {
              super(view);
              body = (TextView) view.findViewById(R.id.answerBody);
              username = (TextView) view.findViewById(R.id.answerUsername);
              profilePic = (CircleImageView) view.findViewById(R.id.answerProfilePic);
              upvote = (ImageButton) view.findViewById(R.id.upvote);
-             items = (RecyclerView) view.findViewById(R.id.answer_recycler);
+             this.items = (RecyclerView) view.findViewById(R.id.answer_recycler);
+         }
 
-
-             //view.setOnClickListener(this);
+          public RecyclerView getItems(){
+             return this.items;
           }
         }
+
+
 
 
 
