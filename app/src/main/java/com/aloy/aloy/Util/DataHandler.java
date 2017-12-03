@@ -1,24 +1,12 @@
 package com.aloy.aloy.Util;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewOutlineProvider;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.aloy.aloy.Adapters.AnswersAdapter;
 import com.aloy.aloy.Adapters.InterestsAdapter;
-import com.aloy.aloy.Adapters.CoverFlowAdapter;
-import com.aloy.aloy.Adapters.QuestionFeedAdapter;
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
 import com.aloy.aloy.Fragments.Feed;
@@ -28,29 +16,19 @@ import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Models.QuestionHolder;
 import com.aloy.aloy.Models.SpotifyItem;
 import com.aloy.aloy.R;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.models.Album;
-import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
@@ -786,21 +764,22 @@ public class DataHandler {
             @Override
             public void onDataChange(DataSnapshot genres) {
                 if (genres.exists()){
+                    Iterator<DataSnapshot> iterator = genres.getChildren().iterator();
                     switch ((int) genres.getChildrenCount()) {
                         case 1 :
-                            holder.getStyle1().setText(genres.getKey());
+                            holder.getStyle1().setText(iterator.next().getKey());
                             holder.getStyle1().setVisibility(View.VISIBLE);
                             break;
                         case 2 :
-                            holder.getStyle1().setText(genres.child("0").getValue().toString());
-                            holder.getStyle2().setText(genres.child("1").getValue().toString());
+                            holder.getStyle1().setText(iterator.next().getKey());
+                            holder.getStyle2().setText(iterator.next().getKey());
                             holder.getStyle1().setVisibility(View.VISIBLE);
                             holder.getStyle2().setVisibility(View.VISIBLE);
                             break;
                         default:
-                            holder.getStyle1().setText(genres.child("0").getValue().toString());
-                            holder.getStyle2().setText(genres.child("1").getValue().toString());
-                            holder.getStyle3().setText(genres.child("2").getValue().toString());
+                            holder.getStyle1().setText(iterator.next().getKey());
+                            holder.getStyle2().setText(iterator.next().getKey());
+                            holder.getStyle3().setText(iterator.next().getKey());
                             holder.getStyle1().setVisibility(View.VISIBLE);
                             holder.getStyle2().setVisibility(View.VISIBLE);
                             holder.getStyle3().setVisibility(View.VISIBLE);
@@ -820,5 +799,20 @@ public class DataHandler {
         });
 
 
+    }
+
+    public void checkItems(final RecyclerView items, String id) {
+        refQuestionFeed.child(id).child("items").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists())
+                    items.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

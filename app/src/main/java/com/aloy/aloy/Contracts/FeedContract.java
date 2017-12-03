@@ -1,7 +1,6 @@
 package com.aloy.aloy.Contracts;
 
 import com.aloy.aloy.Models.Question;
-import com.aloy.aloy.Util.BaseView;
 import com.google.firebase.database.Query;
 
 /**
@@ -10,7 +9,9 @@ import com.google.firebase.database.Query;
 
 public interface FeedContract {
 
-    interface View extends BaseView<Presenter> {
+    interface View {
+        void setPresenter(Presenter presenter);
+
         void showAddQuestion();
         void setupRecyclerView(android.view.View feedView);
         void showAnswerQuestion(String questionId);

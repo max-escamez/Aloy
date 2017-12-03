@@ -14,6 +14,7 @@ import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Models.QuestionHolder;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.DataHandler;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -27,13 +28,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by tldonne on 29/10/2017.
  */
 
-public class QuestionFeedAdapter {
+public class FeedAdapter {
     private Context context;
     private Feed feedView;
     private static FirebaseRecyclerOptions<Question> options;
+    private DataHandler dataHandler;
 
 
-    public QuestionFeedAdapter(Context context, Feed feedView){
+    public FeedAdapter(Context context, Feed feedView){
         DatabaseReference feedRef = FirebaseDatabase.getInstance().getReference("questions");
         options = new FirebaseRecyclerOptions.Builder<Question>()
                 .setQuery(feedRef, Question.class)
@@ -41,6 +43,7 @@ public class QuestionFeedAdapter {
                 .build();
         this.context=context;
         this.feedView=feedView;
+        this.dataHandler=new DataHandler(context);
 
     }
 
@@ -62,12 +65,10 @@ public class QuestionFeedAdapter {
 
                 }
 
-
-                MainActivity.getDataHandler().getUrl(question.getUsername(),holder.getProfilePic(),context);
-                MainActivity.getDataHandler().getItems(question.getId(), holder,context);
-                //MainActivity.getDataHandler().getItems(question.getId(),holder.cover1,holder.cover2,holder.cover3,holder.textCover1,holder.textCover2,holder.textCover3,holder.items,context);
-                MainActivity.getDataHandler().getStyles(question.getId(),holder,context);
-                MainActivity.getDataHandler().getFollow(question.getId(),holder.getFollowButton());
+                dataHandler.getUrl(question.getUsername(),holder.getProfilePic(),context);
+                dataHandler.getItems(question.getId(), holder,context);
+                dataHandler.getStyles(question.getId(),holder,context);
+                dataHandler.getFollow(question.getId(),holder.getFollowButton());
 
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +89,7 @@ public class QuestionFeedAdapter {
                 holder.getFollowButton().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MainActivity.getDataHandler().follow(question.getId());
+                        dataHandler.follow(question.getId());
                     }
                 });
 

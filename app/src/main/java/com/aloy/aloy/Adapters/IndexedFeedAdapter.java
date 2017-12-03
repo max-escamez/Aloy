@@ -86,10 +86,10 @@ public class IndexedFeedAdapter {
 
                 //Picasso.with(context).load(user.getPhotoUrl().toString()).into(holder.profilePic);
                 //Picasso.with(context).load(model.getPic()).into(holder.profilePic);
-                MainActivity.getDataHandler().getItems(model.getId(), holder,context);
-                MainActivity.getDataHandler().getStyles(model.getId(),holder,context);
-                MainActivity.getDataHandler().getUrl(model.getUsername(),holder.getProfilePic(),context);
-                MainActivity.getDataHandler().getFollow(model.getId(),holder.getFollowButton());
+                dataHandler.getItems(model.getId(), holder,context);
+                dataHandler.getStyles(model.getId(),holder,context);
+                dataHandler.getUrl(model.getUsername(),holder.getProfilePic(),context);
+                dataHandler.getFollow(model.getId(),holder.getFollowButton());
 
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +109,7 @@ public class IndexedFeedAdapter {
                 holder.getFollowButton().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MainActivity.getDataHandler().follow(model.getId());
+                        dataHandler.follow(model.getId());
                     }
                 });
 

@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private int previousTab;
     public static SpotifyService service;
     private static boolean countdownIsRunning;
+    private FloatingActionButton addQuestionFab;
     private FirebaseAuth mAuth;
     private SharedPreferenceHelper mSharedPreferenceHelper;
 
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static SpotifyHandler getSpotifyHandler() { return spotifyHandler;}
 
+
     @Override
     public void onBackPressed() {
         if (previousTab!=viewPager.getCurrentItem()) {
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(token);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         //viewPager.setCurrentItem(profileTabId);
-        final FloatingActionButton addQuestionFab = (FloatingActionButton) findViewById(R.id.main_fab);
+        addQuestionFab = (FloatingActionButton) findViewById(R.id.main_fab);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
@@ -159,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
             countdownIsRunning = true;
         }
     }
+
+
 
     @Override
     protected void onResume() {

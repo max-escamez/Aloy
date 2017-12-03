@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.aloy.aloy.Adapters.QuestionFeedAdapter;
+import com.aloy.aloy.Adapters.FeedAdapter;
 import com.aloy.aloy.Contracts.FeedContract;
 import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.Question;
@@ -34,14 +34,14 @@ public class Feed extends Fragment implements FeedContract.View {
     public static final String TAG = Feed.class.getSimpleName();
     private FeedContract.Presenter feedPresenter;
     private Query query;
-    private QuestionFeedAdapter questionFeedAdapter;
+    private FeedAdapter feedAdapter;
     private ArrayList<Question> adapterQuestions;
     private ArrayList<String> adapterKeys;
     private LinearLayoutManager layoutManager;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("questions");
+    private FloatingActionButton addQuestionFab;
     public static final String EXTRA_QUESTION = "question";
     public static final String EXTRA_QUESTION_TRANSITION_NAME = "question_transition_name";
+    private int position;
 
 
 
@@ -57,7 +57,7 @@ public class Feed extends Fragment implements FeedContract.View {
         feedPresenter = new FeedPresenter(this,MainActivity.getDataHandler());
         query = feedPresenter.getQuery();
         setupRecyclerView(feedView);
-        FloatingActionButton addQuestionFab = (FloatingActionButton) getActivity().findViewById(R.id.main_fab);
+        addQuestionFab = (FloatingActionButton) getActivity().findViewById(R.id.main_fab);
         addQuestionFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,13 +72,24 @@ public class Feed extends Fragment implements FeedContract.View {
     @Override
     public void setupRecyclerView(View feedView) {
         RecyclerView recyclerView = (RecyclerView) feedView.findViewById(R.id.feedRecyclerView);
-        //questionFeedAdapter = new QuestionFeedAdapter(myRef, adapterQuestions, adapterKeys,getContext(),this);
-        QuestionFeedAdapter questionAdapter = new QuestionFeedAdapter(getContext(),this);
+        //feedAdapter = new FeedAdapter(myRef, adapterQuestions, adapterKeys,getContext(),this);
+        FeedAdapter questionAdapter = new FeedAdapter(getContext(),this);
         layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(questionAdapter.getAdapter());
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                if (dy > 0)
+                    addQuestionFab.hide(true);
+                else if (dy < 0)
+                    addQuestionFab.show(true);
+            }
+        });
+
     }
 
 

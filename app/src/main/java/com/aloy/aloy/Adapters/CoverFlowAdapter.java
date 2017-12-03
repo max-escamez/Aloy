@@ -31,6 +31,7 @@ public class CoverFlowAdapter {
     private static FirebaseRecyclerOptions<SpotifyItem> options;
     private DatabaseReference entry;
     private RecyclerView items;
+    private boolean isEmpty;
 
 
     public CoverFlowAdapter(Context context, DatabaseReference reference, AppCompatActivity activity, RecyclerView items){
@@ -41,6 +42,7 @@ public class CoverFlowAdapter {
         this.context=context;
         this.entry=reference;
         this.items=items;
+        this.isEmpty=true;
     }
 
     public RecyclerView.Adapter getAdapter() {
@@ -71,15 +73,14 @@ public class CoverFlowAdapter {
                         holder.artist.setText(model.getArtist());
                         break;
                     default :
-                        items.setVisibility(View.GONE);
                 }
+
 
                 holder.cover.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getUri()));
                         context.startActivity(intent);
-                        //MainActivity.getDataHandler().openUri(entry,position);
                     }
                 });
             }

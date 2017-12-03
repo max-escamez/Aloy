@@ -20,6 +20,7 @@ import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.DataHandler;
 import com.firebase.ui.database.*;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,12 +41,13 @@ public class AnswersAdapter {
     private DatabaseReference answerRef;
     private String questionId;
     private static FirebaseRecyclerOptions<Answer> options;
-    private int itemCount = -1;
     private AppCompatActivity activity;
+    private DataHandler dataHandler;
 
 
     public AnswersAdapter(Context context, QuestionDetailsPresenter presenter, String questionId, AppCompatActivity activity) {
-        this.answerRef = MainActivity.getDataHandler().getRefAnswers(questionId);
+        dataHandler=new DataHandler(context);
+        this.answerRef = dataHandler.getRefAnswers(questionId);
         options = new FirebaseRecyclerOptions.Builder<Answer>()
                 .setQuery(answerRef.orderByChild("upvotes/number"), Answer.class)
                 .setLifecycleOwner(activity)
@@ -77,8 +79,8 @@ public class AnswersAdapter {
                     holder.username.setText(answer.getName());
                 }
                 //questionDetailsPresenter.getUpvotes(question,answer.getId(),holder.upvote);
-                MainActivity.getDataHandler().getUrl(answer.getUsername(),holder.profilePic,context);
-                MainActivity.getDataHandler().getUpvote(questionId,answer.getId(),holder.upvote);
+                dataHandler.getUrl(answer.getUsername(),holder.profilePic,context);
+                dataHandler.getUpvote(questionId,answer.getId(),holder.upvote);
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                 CoverFlowAdapter adapter = new CoverFlowAdapter(context,answerRef.child(answer.getId()),activity,holder.getItems());
@@ -104,16 +106,13 @@ public class AnswersAdapter {
 
 
                         }
-                        MainActivity.getDataHandler().upvote(answerRef,answer.getId());
+                        dataHandler.upvote(answerRef,answer.getId());
 
                     }
                 });
 
             }
 
-            public void setItemCount(int count){
-
-            }
 
         };
     }

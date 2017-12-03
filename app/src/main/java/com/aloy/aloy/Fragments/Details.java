@@ -28,6 +28,7 @@ import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 import com.tmall.ultraviewpager.UltraViewPager;
@@ -38,9 +39,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Details extends AppCompatActivity implements QuestionDetailsContract.View {
     private QuestionDetailsPresenter questionDetailsPresenter;
-    private ArrayList<Answer> adapterAnswer;
-    private ArrayList<String> adapterKeys;
     private CircleImageView profilePic;
+    private DataHandler dataHandler;
     private TextView username;
     private ImageButton request;
     private ImageButton answer;
@@ -57,8 +57,11 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_question_details);
         supportPostponeEnterTransition();
-        questionDetailsPresenter = new QuestionDetailsPresenter(this, MainActivity.getDataHandler());
+
+        dataHandler=new DataHandler(this);
+        questionDetailsPresenter = new QuestionDetailsPresenter(this, dataHandler);
         SharedPreferenceHelper mSharedPreferenceHelper = new SharedPreferenceHelper(this);
+
         Bundle extras = getIntent().getExtras();
         final Question question = extras.getParcelable(Feed.EXTRA_QUESTION);
         String transitionName = extras.getString(Feed.EXTRA_QUESTION_TRANSITION_NAME);
@@ -101,7 +104,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.getDataHandler().follow(question.getId());
+                dataHandler.follow(question.getId());
                 if (follow.getTag().equals(R.drawable.ic_playlist_add)){
                     follow.setImageResource(R.drawable.ic_playlist_add_check);
                     follow.setTag(R.drawable.ic_playlist_add_check);
@@ -111,7 +114,7 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
                     follow.setTag(R.drawable.ic_playlist_add);
 
                 }
-                //MainActivity.getDataHandler().getFollow(question.getId(),follow);
+                //dataHandler.getFollow(question.getId(),follow);
             }
         });
 
@@ -163,8 +166,8 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
         }else{
             username.setText(question.getName());
         }
-        MainActivity.getDataHandler().getUrl(question.getUsername(),profilePic,context);
-        MainActivity.getDataHandler().getFollow(question.getId(),follow);
+        dataHandler.getUrl(question.getUsername(),profilePic,context);
+        dataHandler.getFollow(question.getId(),follow);
         setupCoverFlow(question);
         //Picasso.with(this).load(question.getPic()).into(profilePic);
         questionView = findViewById(R.id.questionDetail);
@@ -173,7 +176,8 @@ public class Details extends AppCompatActivity implements QuestionDetailsContrac
 
     private void setupCoverFlow(Question question) {
         RecyclerView items = (RecyclerView) findViewById(R.id.detail_recycler);
-        CoverFlowAdapter adapter = new CoverFlowAdapter(this,MainActivity.getDataHandler().getRefQuestionFeed().child(question.getId()),this, items);
+        dataHandler.checkItems(items,question.getId());
+        CoverFlowAdapter adapter = new CoverFlowAdapter(this,dataHandler.getRefQuestionFeed().child(question.getId()),this, items);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         items.setLayoutManager(layoutManager);
         items.setAdapter(adapter.getAdapter());

@@ -7,7 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.aloy.aloy.Adapters.InboxAdapter;
+import com.aloy.aloy.Adapters.SimpleTabAdapter;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.AchievementsHandler;
 import com.squareup.picasso.Picasso;
@@ -94,7 +94,7 @@ public class Profile extends AppCompatActivity {
         Fragment answers = new IndexedFeed();
         answers.setArguments(answersArgs);
 
-        InboxAdapter profileAdapter = new InboxAdapter(getSupportFragmentManager());
+        SimpleTabAdapter profileAdapter = new SimpleTabAdapter(getSupportFragmentManager());
         profileAdapter.addFragments(questions,"Questions");
         profileAdapter.addFragments(answers,"Answers");
         viewPager.setAdapter(profileAdapter);

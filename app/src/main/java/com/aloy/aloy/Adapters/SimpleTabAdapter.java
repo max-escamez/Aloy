@@ -10,12 +10,12 @@ import java.util.List;
  * Created by madmax on 08/11/2017.
  */
 
-public class InboxAdapter extends SmartFragmentStatePagerAdapter {
+public class SimpleTabAdapter extends SmartFragmentStatePagerAdapter {
 
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> fragmentsTitle = new ArrayList<>();
 
-    public InboxAdapter(FragmentManager fragmentManager) {
+    public SimpleTabAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 

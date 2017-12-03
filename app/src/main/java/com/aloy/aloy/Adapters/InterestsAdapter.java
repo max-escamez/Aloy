@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -76,7 +75,7 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
         Fragment interests = new IndexedFeed();
         interests.setArguments(interestsArgs);
 
-        InboxAdapter interestsAdapter = new InboxAdapter(fragmentManager);
+        SimpleTabAdapter interestsAdapter = new SimpleTabAdapter(fragmentManager);
         interestsAdapter.addFragments(interests,"Interests");
         viewPager.setAdapter(interestsAdapter);
 

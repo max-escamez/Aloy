@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.aloy.aloy.Adapters.InboxAdapter;
+import com.aloy.aloy.Adapters.SimpleTabAdapter;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
 
@@ -19,7 +19,7 @@ import com.aloy.aloy.Util.SharedPreferenceHelper;
  */
 public class Inbox extends Fragment {
 
-    private InboxAdapter inboxAdapter;
+    private SimpleTabAdapter simpleTabAdapter;
     private SharedPreferenceHelper mSharedPreferenceHelper;
 
     public Inbox() {
@@ -64,11 +64,11 @@ public class Inbox extends Fragment {
         requests.setArguments(requestsArgs);
         follows.setArguments(followsArgs);
 
-        inboxAdapter = new InboxAdapter(getChildFragmentManager());
-        inboxAdapter.addFragments(follows,"Following");
-        inboxAdapter.addFragments(requests,"Requests");
-        inboxAdapter.addFragments(new Chat(),"Chat");
-        viewPager.setAdapter(inboxAdapter);
+        simpleTabAdapter = new SimpleTabAdapter(getChildFragmentManager());
+        simpleTabAdapter.addFragments(follows,"Following");
+        simpleTabAdapter.addFragments(requests,"Requests");
+        simpleTabAdapter.addFragments(new Chat(),"Chat");
+        viewPager.setAdapter(simpleTabAdapter);
 
     }
 

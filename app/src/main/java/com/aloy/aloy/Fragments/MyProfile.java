@@ -7,12 +7,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.aloy.aloy.Adapters.InboxAdapter;
-import com.aloy.aloy.MainActivity;
+import com.aloy.aloy.Adapters.SimpleTabAdapter;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.AchievementsHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
@@ -163,7 +160,7 @@ public class MyProfile extends Fragment {
         Fragment answers = new IndexedFeed();
         answers.setArguments(answersArgs);
 
-        InboxAdapter profileAdapter = new InboxAdapter(getChildFragmentManager());
+        SimpleTabAdapter profileAdapter = new SimpleTabAdapter(getChildFragmentManager());
         profileAdapter.addFragments(questions,"Questions");
         profileAdapter.addFragments(answers,"Answers");
         viewPager.setAdapter(profileAdapter);
