@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -86,8 +87,8 @@ public class LoginActivity extends Activity {
         refresh_token = mSharedPreferenceHelper.getCurrentSpotifyToken();
         final String token = CredentialsHandler.getAccessToken(this);
 
-        if (token==null) {
-            if(refresh_token==null) {
+        if (token==null||a==1) {
+            if(refresh_token==null||a==1) {
                 Log.i("Token State","Never logged in");
                 setContentView(R.layout.activity_login);
             }else{
@@ -148,8 +149,7 @@ public class LoginActivity extends Activity {
                                                     if (!dataSnapshot.exists()) {
                                                         spotifyHandler.createMainUser();
                                                     }
-                                                    FirebaseMessaging.getInstance().subscribeToTopic("my_questions");
-                                                    FirebaseMessaging.getInstance().subscribeToTopic("following");
+                                                    FirebaseDatabase.getInstance().getReference("users").child(mSharedPreferenceHelper.getCurrentUserId()).child("notificationTokens").child(FirebaseInstanceId.getInstance().getToken()).setValue("true");
                                                     startMainActivity(CredentialsHandler.getAccessToken(LoginActivity.this), CredentialsHandler.getExpiresAt(LoginActivity.this));
                                                 }
                                                 @Override
