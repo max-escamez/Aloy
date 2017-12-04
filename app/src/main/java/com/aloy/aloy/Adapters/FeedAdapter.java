@@ -5,12 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.aloy.aloy.Fragments.Feed;
-import com.aloy.aloy.MainActivity;
+import com.aloy.aloy.Views.Feed;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Models.QuestionHolder;
 import com.aloy.aloy.R;
@@ -20,9 +16,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.aloy.aloy.Fragments;
+package com.aloy.aloy.Views;
 
 
 import android.app.Activity;
@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
-import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
 

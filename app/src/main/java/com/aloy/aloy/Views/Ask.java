@@ -1,4 +1,4 @@
-package com.aloy.aloy.Fragments;
+package com.aloy.aloy.Views;
 
 
 import android.app.Activity;
@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.aloy.aloy.Contracts.AskContract;
-import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Presenters.AskPresenter;
 import com.aloy.aloy.R;
 

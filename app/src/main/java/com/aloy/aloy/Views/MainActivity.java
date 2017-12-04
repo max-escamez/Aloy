@@ -1,4 +1,4 @@
-package com.aloy.aloy;
+package com.aloy.aloy.Views;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.aloy.aloy.Adapters.BottomBarAdapter;
-import com.aloy.aloy.Fragments.Feed;
-import com.aloy.aloy.Fragments.Inbox;
-import com.aloy.aloy.Fragments.Interests;
-import com.aloy.aloy.Fragments.MyProfile;
+import com.aloy.aloy.R;
 import com.aloy.aloy.Util.CredentialsHandler;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.NoSwipePager;

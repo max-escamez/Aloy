@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.aloy.aloy.Fragments.IndexedFeed;
+import com.aloy.aloy.Views.IndexedFeed;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;

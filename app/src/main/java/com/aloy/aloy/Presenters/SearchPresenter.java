@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
-import com.aloy.aloy.Fragments.Search;
+import com.aloy.aloy.Views.Search;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SpotifyHandler;
 

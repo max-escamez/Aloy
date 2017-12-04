@@ -121,48 +121,66 @@ public class AchievementsHandler {
             public void onDataChange(final DataSnapshot achievementSnapshot) {
                 switch (achievement) {
                     case "questions" :
-                        if (achievementSnapshot.exists()) {
-                            Toast.makeText(activity, "You asked " + achievementSnapshot.getValue(Integer.class) + " questions", Toast.LENGTH_SHORT).show();
+                        if (achievementSnapshot.exists() && achievementSnapshot.getValue(Integer.class)>0 ) {
+                            if (achievementSnapshot.getValue(Integer.class)==1)
+                                Toast.makeText(activity, "You asked " + achievementSnapshot.getValue(Integer.class) + " question", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(activity, "You asked " + achievementSnapshot.getValue(Integer.class) + " questions", Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            Toast.makeText(activity, "You asked " + 0 + " questions", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "You never asked a question", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case "answers" :
-                        if (achievementSnapshot.exists()) {
-                            Toast.makeText(activity, "You answered " + achievementSnapshot.getValue(Integer.class) + " questions", Toast.LENGTH_SHORT).show();
+                        if (achievementSnapshot.exists() && achievementSnapshot.getValue(Integer.class)>0 ) {
+                            if (achievementSnapshot.getValue(Integer.class)==1)
+                                Toast.makeText(activity, "You published " + achievementSnapshot.getValue(Integer.class) + " answer", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(activity, "You published " + achievementSnapshot.getValue(Integer.class) + " answers", Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            Toast.makeText(activity, "You answered " + 0 + " questions", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "You never answered a question", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case "requests" :
-                        if (achievementSnapshot.exists()) {
-                            Toast.makeText(activity, "You requested " + achievementSnapshot.getValue(Integer.class) + " persons", Toast.LENGTH_SHORT).show();
+                        if (achievementSnapshot.exists() && achievementSnapshot.getValue(Integer.class)>0) {
+                            if (achievementSnapshot.getValue(Integer.class)==1)
+                                Toast.makeText(activity, "You requested " + achievementSnapshot.getValue(Integer.class) + " person", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(activity, "You requested " + achievementSnapshot.getValue(Integer.class) + " persons", Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            Toast.makeText(activity, "You requested " + 0 + " person", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "You never requested someone", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case "answersVIP" :
-                        if (achievementSnapshot.exists()) {
-                            Toast.makeText(activity, "You got answered " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
+                        if (achievementSnapshot.exists() && achievementSnapshot.getValue(Integer.class)>0) {
+                            if (achievementSnapshot.getValue(Integer.class)==1)
+                                Toast.makeText(activity, "You got answered " + achievementSnapshot.getValue(Integer.class) + " time", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(activity, "You got answered " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(activity, "You never got answered", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case "upvotesVIP" :
-                        if (achievementSnapshot.exists()) {
-                            Toast.makeText(activity, "You got upvoted " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
+                        if (achievementSnapshot.exists() && achievementSnapshot.getValue(Integer.class)>0) {
+                            if (achievementSnapshot.getValue(Integer.class)==1)
+                                Toast.makeText(activity, "You got upvoted " + achievementSnapshot.getValue(Integer.class) + " time", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(activity, "You got upvoted " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(activity, "You never got upvoted", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case "requestsVIP" :
-                        if (achievementSnapshot.exists()) {
-                            Toast.makeText(activity, "You got requested " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
+                        if (achievementSnapshot.exists() && achievementSnapshot.getValue(Integer.class)>0) {
+                            if (achievementSnapshot.getValue(Integer.class)==1)
+                                Toast.makeText(activity, "You got requested " + achievementSnapshot.getValue(Integer.class) + " time", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(activity, "You got requested " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(activity, "You never got requested", Toast.LENGTH_SHORT).show();
@@ -170,7 +188,10 @@ public class AchievementsHandler {
                         break;
                     case "followersVIP" :
                         if (achievementSnapshot.exists() && achievementSnapshot.getValue(Integer.class)>0) {
-                            Toast.makeText(activity, "Your questions got followed " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
+                            if (achievementSnapshot.getValue(Integer.class)==1)
+                                Toast.makeText(activity, "Your questions got followed " + achievementSnapshot.getValue(Integer.class) + " time", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(activity, "Your questions got followed " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(activity, "Your questions never got followed", Toast.LENGTH_SHORT).show();
@@ -178,7 +199,10 @@ public class AchievementsHandler {
                         break;
                     case "followersTOP" :
                         if (achievementSnapshot.exists() && achievementSnapshot.getValue(Integer.class)>0) {
-                            Toast.makeText(activity, "One of your questions got followed " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
+                            if (achievementSnapshot.getValue(Integer.class)==1)
+                                Toast.makeText(activity, "Your most followed question has " + achievementSnapshot.getValue(Integer.class) + " follower", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(activity, "Your most followed question has " + achievementSnapshot.getValue(Integer.class) + " followers", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(activity, "Your questions never got followed", Toast.LENGTH_SHORT).show();
@@ -186,7 +210,10 @@ public class AchievementsHandler {
                         break;
                     case "answersTOP" :
                         if (achievementSnapshot.exists() && achievementSnapshot.getValue(Integer.class)>0) {
-                            Toast.makeText(activity, "One of your questions got answered " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
+                            if (achievementSnapshot.getValue(Integer.class)==1)
+                                Toast.makeText(activity, "Your most answered question has " + achievementSnapshot.getValue(Integer.class) + " answer", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(activity, "Your most answered question has " + achievementSnapshot.getValue(Integer.class) + " answers", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(activity, "Your questions never got answered", Toast.LENGTH_SHORT).show();
@@ -194,7 +221,10 @@ public class AchievementsHandler {
                         break;
                     case "upvotesTOP" :
                         if (achievementSnapshot.exists() && achievementSnapshot.getValue(Integer.class)>0) {
-                            Toast.makeText(activity, "One of your answers got upvoted " + achievementSnapshot.getValue(Integer.class) + " times", Toast.LENGTH_SHORT).show();
+                            if (achievementSnapshot.getValue(Integer.class)==1)
+                                Toast.makeText(activity, "Your most upvoted answer has " + achievementSnapshot.getValue(Integer.class) + " upvote", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(activity, "Your most upvoted answer has " + achievementSnapshot.getValue(Integer.class) + " upvotes", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(activity, "Your answers never got upvoted", Toast.LENGTH_SHORT).show();

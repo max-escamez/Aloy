@@ -1,41 +1,30 @@
-package com.aloy.aloy.Fragments;
+package com.aloy.aloy.Views;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.aloy.aloy.Adapters.AnswersAdapter;
 import com.aloy.aloy.Adapters.CoverFlowAdapter;
 import com.aloy.aloy.Contracts.QuestionDetailsContract;
-import com.aloy.aloy.MainActivity;
-import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Presenters.QuestionDetailsPresenter;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.AchievementsHandler;
 import com.aloy.aloy.Util.DataHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
-import com.squareup.picasso.Picasso;
-import com.tmall.ultraviewpager.UltraViewPager;
-import com.tmall.ultraviewpager.transformer.UltraDepthScaleTransformer;
 
-import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Details extends AppCompatActivity implements QuestionDetailsContract.View {

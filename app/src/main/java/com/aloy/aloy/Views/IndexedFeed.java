@@ -1,4 +1,4 @@
-package com.aloy.aloy.Fragments;
+package com.aloy.aloy.Views;
 
 
 import android.content.Intent;
@@ -17,8 +17,8 @@ import com.aloy.aloy.Adapters.IndexedFeedAdapter;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.R;
 
-import static com.aloy.aloy.Fragments.Feed.EXTRA_QUESTION;
-import static com.aloy.aloy.Fragments.Feed.EXTRA_QUESTION_TRANSITION_NAME;
+import static com.aloy.aloy.Views.Feed.EXTRA_QUESTION;
+import static com.aloy.aloy.Views.Feed.EXTRA_QUESTION_TRANSITION_NAME;
 
 /**
  * A simple {@link Fragment} subclass.

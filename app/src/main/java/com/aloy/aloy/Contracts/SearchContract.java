@@ -4,8 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
-import com.aloy.aloy.Fragments.Ask;
-import com.aloy.aloy.Fragments.Interests;
+import com.aloy.aloy.Views.Ask;
 
 /**
  * Created by tldonne on 01/11/2017.

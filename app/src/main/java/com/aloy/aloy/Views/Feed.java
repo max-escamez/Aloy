@@ -1,4 +1,4 @@
-package com.aloy.aloy.Fragments;
+package com.aloy.aloy.Views;
 
 
 import android.content.Intent;
@@ -15,15 +15,9 @@ import android.view.ViewGroup;
 
 import com.aloy.aloy.Adapters.FeedAdapter;
 import com.aloy.aloy.Contracts.FeedContract;
-import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Models.Question;
-import com.aloy.aloy.Presenters.FeedPresenter;
 import com.aloy.aloy.R;
 import com.github.clans.fab.FloatingActionButton;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import java.util.ArrayList;
 
 
 /**
@@ -80,6 +74,7 @@ public class Feed extends Fragment implements FeedContract.View {
                     addQuestionFab.show(true);
             }
         });
+        //recyclerView.scrollToPosition(7);
 
     }
 
