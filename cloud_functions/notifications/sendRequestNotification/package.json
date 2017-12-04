@@ -1,0 +1,8 @@
+{
+  "name":"sendAnswersNotification",
+  "description": "Send FCM notifications Firebase Functions sample",
+  "dependencies": {
+    "firebase-admin": "5.5.1",
+    "firebase-functions": "0.7.3"
+  }
+}
