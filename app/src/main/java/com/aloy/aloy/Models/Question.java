@@ -16,10 +16,6 @@ public class Question implements Parcelable {
     private String name;
     private String date;
     private String questionId;
-    @Exclude
-    private String cover1;
-    @Exclude
-    private String cover2;
 
     public Question() {
     }
@@ -40,8 +36,6 @@ public class Question implements Parcelable {
         body = in.readString();
         pic = in.readString();
         name = in.readString();
-        cover1 = in.readString();
-        cover2 = in.readString();
     }
 
     @SuppressWarnings("unused")
@@ -69,21 +63,6 @@ public class Question implements Parcelable {
         return pic;
     }
 
-    public String getCover1() {
-        return cover1;
-    }
-
-    public String getCover2() {
-        return cover2;
-    }
-
-    public void setCover1(String url){
-        cover1=url;
-    }
-
-    public void setCover2(String url){
-        cover2=url;
-    }
 
     public void setId(String id) {
         this.questionId=id;
@@ -108,8 +87,6 @@ public class Question implements Parcelable {
         dest.writeString(body);
         dest.writeString(pic);
         dest.writeString(name);
-        dest.writeString(cover1);
-        dest.writeString(cover2);
 
 
     }
