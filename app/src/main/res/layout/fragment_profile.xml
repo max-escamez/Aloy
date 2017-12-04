@@ -62,6 +62,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="32dp"
                 android:text="Username"
+                android:textColor="@color/light_body_Aloy"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/profilePicture"
