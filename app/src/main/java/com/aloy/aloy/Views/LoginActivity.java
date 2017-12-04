@@ -88,8 +88,8 @@ public class LoginActivity extends Activity {
         final String token = CredentialsHandler.getAccessToken(this);
 
 
-        if (token==null) {
-            if(refresh_token==null) {
+        if (token==null||a==1) {
+            if(refresh_token==null||a==1) {
 
                 Log.i("Token State","Never logged in");
                 setContentView(R.layout.activity_login);
@@ -135,6 +135,7 @@ public class LoginActivity extends Activity {
                         CredentialsHandler.setAccessToken(this, access_token, 3600, TimeUnit.SECONDS);
                         dataHandler = new DataHandler(this);
                         spotifyHandler = new SpotifyHandler(CredentialsHandler.getAccessToken(this),this);
+                        spotifyHandler.getMyInfo();
                         mAuth.signInWithCustomToken(firebase_token)
                                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                     @Override
@@ -147,11 +148,9 @@ public class LoginActivity extends Activity {
                                             mUsersReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    spotifyHandler.getMyInfo();
                                                     if (!dataSnapshot.exists()) {
                                                         spotifyHandler.createMainUser();
                                                     }
-                                                    FirebaseDatabase.getInstance().getReference("users").child(mSharedPreferenceHelper.getCurrentUserId()).child("notificationTokens").child(FirebaseInstanceId.getInstance().getToken()).setValue("true");
                                                     startMainActivity(CredentialsHandler.getAccessToken(LoginActivity.this), CredentialsHandler.getExpiresAt(LoginActivity.this));
                                                 }
                                                 @Override

@@ -59,6 +59,7 @@ public class SpotifyHandler {
             public void success(UserPrivate u, Response response) {
                 sharedPreferenceHelper.saveCurrentUserId(u.id);
                 sharedPreferenceHelper.saveName(u.display_name);
+
                 //dataHandler.saveProfilePicture(u.images.get(0).url);
                 if (!u.images.isEmpty())
                     sharedPreferenceHelper.saveProfilePicture(u.images.get(0).url);

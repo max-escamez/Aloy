@@ -219,8 +219,10 @@ public class DataHandler {
 
     }
 
-    public void updateData(String username){
+    public void updateData(String username ){
         refUser.child(username).child("pic").setValue(sharedPreferenceHelper.getProfilePicture());
+        refUser.child(username).child("name").setValue(sharedPreferenceHelper.getCurrentUserName());
+        refUser.child(username).child("id").setValue(sharedPreferenceHelper.getCurrentUserId());
     }
 
     public DatabaseReference pushAnswerRef(String questionId) {
