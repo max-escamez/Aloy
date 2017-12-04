@@ -797,7 +797,7 @@ public class DataHandler {
 
                 }
                 else {
-                    holder.getStyles().setVisibility(View.GONE);
+                    //holder.getStyles().setVisibility(View.GONE);
                 }
             }
 
