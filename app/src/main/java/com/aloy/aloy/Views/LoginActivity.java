@@ -90,6 +90,7 @@ public class LoginActivity extends Activity {
 
         if (token==null) {
             if(refresh_token==null) {
+
                 Log.i("Token State","Never logged in");
                 setContentView(R.layout.activity_login);
             }else{

@@ -69,10 +69,6 @@ public class AskPresenter implements AskContract.Presenter {
         DatabaseReference myRef = dataHandler.pushQuestionRef();
         //String url = dataHandler.getUrl(sharedPreferenceHelper.getProfilePicture());
         Question newQuestion = new Question(id,sharedPreferenceHelper.getProfilePicture(),body,name,(dateFormat.format(date)),myRef.getKey());
-        if (tracksSelected.size()>=2) {
-            newQuestion.setCover1(new ArrayList<>(tracksSelected.values()).get(0).album.images.get(0).url );
-            newQuestion.setCover2(new ArrayList<>(tracksSelected.values()).get(1).album.images.get(0).url );
-        }
         dataHandler.saveQuestion(newQuestion,tracksSelected,artistsSelected,albumsSelected,genreSelected,myRef);
     }
 
