@@ -63,9 +63,7 @@
         android:layout_height="35dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/profile_white"
         android:visibility="invisible"
-        app:civ_border_color="@color/accent_material_dark_Aloy"
         app:civ_border_width="2dp"
         app:civ_shadow="true"
         app:civ_shadow_color="@color/navbar_dark"
@@ -81,7 +79,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/questionBody">

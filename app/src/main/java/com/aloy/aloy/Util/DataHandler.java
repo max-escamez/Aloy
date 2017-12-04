@@ -708,6 +708,7 @@ public class DataHandler {
                             holder.getTextCover1().setText(items.child("0").child("artist").getValue().toString());
                             holder.getCover1().setVisibility(View.VISIBLE);
                             holder.getTextCover1().setVisibility(View.VISIBLE);
+                            holder.getItems().setVisibility(View.VISIBLE);
                             break;
                         case 2 :
                             Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(holder.getCover1());
@@ -718,6 +719,8 @@ public class DataHandler {
                             holder.getTextCover1().setVisibility(View.VISIBLE);
                             holder.getCover2().setVisibility(View.VISIBLE);
                             holder.getTextCover2().setVisibility(View.VISIBLE);
+                            holder.getItems().setVisibility(View.VISIBLE);
+
                             break;
                         case 3:
                             Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(holder.getCover1());
@@ -732,6 +735,8 @@ public class DataHandler {
                             holder.getTextCover2().setVisibility(View.VISIBLE);
                             holder.getCover3().setVisibility(View.VISIBLE);
                             holder.getTextCover3().setVisibility(View.VISIBLE);
+                            holder.getItems().setVisibility(View.VISIBLE);
+
                             break;
                         default:
                             Picasso.with(context).load(items.child("0").child("cover").getValue().toString()).into(holder.getCover1());
@@ -747,12 +752,12 @@ public class DataHandler {
                             holder.getCover3().setVisibility(View.VISIBLE);
                             holder.getTextCover3().setVisibility(View.VISIBLE);
                             holder.getMoreItems().setVisibility(View.VISIBLE);
+                            holder.getItems().setVisibility(View.VISIBLE);
                             break;
 
                     }
                 }
                 else {
-                    holder.getItems().setVisibility(View.GONE);
                     holder.getMoreItems().setVisibility(View.GONE);
                 }
             }
