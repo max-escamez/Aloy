@@ -1,4 +1,4 @@
-package com.aloy.aloy.Fragments;
+package com.aloy.aloy.Views;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +17,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,13 +28,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.aloy.aloy.Fragments.Feed.TAG;
+import static com.aloy.aloy.Views.Feed.TAG;
 
 /**
  * Created by madmax on 11/11/2017.

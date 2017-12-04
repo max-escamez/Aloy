@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by madmax on 08/11/2017.
+ * Adapter that manages simple View Pager, navigating through tabs.
  */
 
 public class SimpleTabAdapter extends SmartFragmentStatePagerAdapter {

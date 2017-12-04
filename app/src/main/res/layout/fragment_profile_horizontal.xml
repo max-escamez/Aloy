@@ -1,22 +1,25 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/profile_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.aloy.aloy.Views.MyProfile">
+    android:layout_height="match_parent">
 
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
+        android:id="@+id/left"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:scrollbars="vertical">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/profileHeader"
-            android:layout_width="match_parent"
+            android:layout_width="275dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -83,7 +86,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/achievements"
-            android:layout_width="0dp"
+            android:layout_width="275dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
@@ -97,8 +100,8 @@
                 android:id="@+id/achievement_1"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/question_nb"
                 android:padding="3dp"
+                android:src="@drawable/question_nb"
                 app:civ_border_width="2dp"
                 app:civ_shadow="true"
                 app:civ_shadow_color="@color/navbar_dark"
@@ -113,11 +116,11 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="3dp"
+                android:src="@drawable/answers_nb"
                 app:civ_border_width="2dp"
                 app:civ_shadow="true"
                 app:civ_shadow_color="@color/navbar_dark"
                 app:civ_shadow_radius="10"
-                android:src="@drawable/answers_nb"
                 app:layout_constraintBottom_toTopOf="@+id/achievement_7"
                 app:layout_constraintEnd_toStartOf="@+id/achievement_3"
                 app:layout_constraintStart_toEndOf="@+id/achievement_1"
@@ -128,11 +131,11 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="3dp"
+                android:src="@drawable/requests_nb"
                 app:civ_border_width="2dp"
                 app:civ_shadow="true"
                 app:civ_shadow_color="@color/navbar_dark"
                 app:civ_shadow_radius="10"
-                android:src="@drawable/requests_nb"
                 app:layout_constraintBottom_toTopOf="@+id/achievement_8"
                 app:layout_constraintEnd_toStartOf="@+id/achievement_4"
                 app:layout_constraintStart_toEndOf="@+id/achievement_2"
@@ -143,11 +146,11 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="3dp"
+                android:src="@drawable/vip_reply"
                 app:civ_border_width="2dp"
                 app:civ_shadow="true"
                 app:civ_shadow_color="@color/navbar_dark"
                 app:civ_shadow_radius="10"
-                android:src="@drawable/vip_reply"
                 app:layout_constraintBottom_toTopOf="@+id/achievement_9"
                 app:layout_constraintEnd_toStartOf="@+id/achievement_5"
                 app:layout_constraintStart_toEndOf="@+id/achievement_3"
@@ -173,11 +176,11 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="3dp"
+                android:src="@drawable/top_follow"
                 app:civ_border_width="2dp"
                 app:civ_shadow="true"
                 app:civ_shadow_color="@color/navbar_dark"
                 app:civ_shadow_radius="10"
-                android:src="@drawable/top_follow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/achievement_7"
                 app:layout_constraintStart_toStartOf="parent"
@@ -188,11 +191,11 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="3dp"
+                android:src="@drawable/top_reply"
                 app:civ_border_width="2dp"
                 app:civ_shadow="true"
                 app:civ_shadow_color="@color/navbar_dark"
                 app:civ_shadow_radius="10"
-                android:src="@drawable/top_reply"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/achievement_8"
                 app:layout_constraintStart_toEndOf="@+id/achievement_6"
@@ -203,11 +206,11 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="3dp"
+                android:src="@drawable/top_fav"
                 app:civ_border_width="2dp"
                 app:civ_shadow="true"
                 app:civ_shadow_color="@color/navbar_dark"
                 app:civ_shadow_radius="10"
-                android:src="@drawable/top_fav"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/achievement_9"
                 app:layout_constraintStart_toEndOf="@+id/achievement_7"
@@ -218,11 +221,11 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="3dp"
+                android:src="@drawable/vip_request"
                 app:civ_border_width="2dp"
                 app:civ_shadow="true"
                 app:civ_shadow_color="@color/navbar_dark"
                 app:civ_shadow_radius="10"
-                android:src="@drawable/vip_request"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/achievement_10"
                 app:layout_constraintStart_toEndOf="@+id/achievement_8"
@@ -233,11 +236,11 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="3dp"
+                android:src="@drawable/vip_follow"
                 app:civ_border_width="2dp"
                 app:civ_shadow="true"
                 app:civ_shadow_color="@color/navbar_dark"
                 app:civ_shadow_radius="10"
-                android:src="@drawable/vip_follow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/achievement_9"
@@ -246,14 +249,26 @@
 
         </android.support.constraint.ConstraintLayout>
 
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/right"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/left"
+        app:layout_constraintTop_toTopOf="parent">
+
         <android.support.design.widget.TabLayout
             android:id="@+id/profile_tabs"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/achievements"
+            app:layout_constraintTop_toTopOf="parent"
             app:tabGravity="center">
 
             <android.support.design.widget.TabItem
@@ -283,5 +298,4 @@
             app:layout_constraintTop_toBottomOf="@+id/profile_tabs" />
 
     </android.support.constraint.ConstraintLayout>
-
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

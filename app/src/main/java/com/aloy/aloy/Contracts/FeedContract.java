@@ -10,8 +10,6 @@ import com.google.firebase.database.Query;
 public interface FeedContract {
 
     interface View {
-        void setPresenter(Presenter presenter);
-
         void showAddQuestion();
         void setupRecyclerView(android.view.View feedView);
         void showAnswerQuestion(String questionId);
@@ -19,7 +17,6 @@ public interface FeedContract {
     }
 
     interface Presenter {
-        void addQuestion();
-        Query getQuery();
+
     }
 }

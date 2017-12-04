@@ -1,5 +1,6 @@
-package com.aloy.aloy.Fragments;
+package com.aloy.aloy.Views;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.aloy.aloy.Adapters.SimpleTabAdapter;
+import com.aloy.aloy.Contracts.QuestionDetailsContract;
 import com.aloy.aloy.R;
 import com.aloy.aloy.Util.AchievementsHandler;
 import com.aloy.aloy.Util.SharedPreferenceHelper;
@@ -23,6 +25,7 @@ public class MyProfile extends Fragment {
     //String username = service.getMe().id;
 
     private SharedPreferenceHelper mSharedPreferenceHelper;
+    private View profileView;
 
     public MyProfile(){
 
@@ -32,7 +35,11 @@ public class MyProfile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
+        if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE) {
+            profileView = inflater.inflate(R.layout.fragment_profile_horizontal, container, false);
+        } else if(this.getResources().getConfiguration().orientation==Configuration.ORIENTATION_PORTRAIT) {
+            profileView = inflater.inflate(R.layout.fragment_profile, container, false);
+        }
 
         mSharedPreferenceHelper = new SharedPreferenceHelper(getContext());
         final AchievementsHandler mAchievementsHandler = new AchievementsHandler(getContext(),mSharedPreferenceHelper.getCurrentUserId());
@@ -56,6 +63,8 @@ public class MyProfile extends Fragment {
             username.setText(mSharedPreferenceHelper.getCurrentUserName());
         }
         Picasso.with(getContext()).load(mSharedPreferenceHelper.getProfilePicture()).into(profilePicture);
+        final AchievementsHandler achievementsHandler = new AchievementsHandler(getContext(),mSharedPreferenceHelper.getCurrentUserId());
+        achievementsHandler.setProfilePicBorder(profilePicture);
 
         mAchievementsHandler.getAchievements(achievement1,"questions");
         mAchievementsHandler.getAchievements(achievement2,"answers");
@@ -73,6 +82,13 @@ public class MyProfile extends Fragment {
         // Set Tabs inside Toolbar
         TabLayout tabs = (TabLayout) profileView.findViewById(R.id.profile_tabs);
         tabs.setupWithViewPager(profileViewPager);
+
+        profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                achievementsHandler.getScore(getActivity());
+            }
+        });
 
 
         achievement1.setOnClickListener(new View.OnClickListener() {

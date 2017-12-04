@@ -37,6 +37,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Body"
+        android:textAppearance="@android:style/TextAppearance.Material.Body2"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/items"
         app:layout_constraintEnd_toStartOf="@+id/side"

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@xml/rounded_shape"
     android:elevation="10dp"
-    tools:context="com.aloy.aloy.Fragments.Search">
+    tools:context="com.aloy.aloy.Views.Search">
 
 
     <EditText

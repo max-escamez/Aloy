@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 import com.aloy.aloy.Adapters.InterestsAdapter;
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
-import com.aloy.aloy.Fragments.Feed;
+import com.aloy.aloy.Views.Feed;
 import com.aloy.aloy.Models.Answer;
 import com.aloy.aloy.Models.MainUser;
 import com.aloy.aloy.Models.Question;

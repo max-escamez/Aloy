@@ -2,35 +2,21 @@ package com.aloy.aloy.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.aloy.aloy.Fragments.IndexedFeed;
-import com.aloy.aloy.MainActivity;
+import com.aloy.aloy.Views.IndexedFeed;
 import com.aloy.aloy.Models.Question;
 import com.aloy.aloy.Models.QuestionHolder;
 import com.aloy.aloy.R;
+import com.aloy.aloy.Util.AchievementsHandler;
 import com.aloy.aloy.Util.DataHandler;
-import com.aloy.aloy.Util.SharedPreferenceHelper;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
@@ -64,6 +50,13 @@ public class IndexedFeedAdapter {
     }
 
 
+    /**
+     *This method is used to create a FirebaseRecyclerAdapter, loading specific questions from the
+     *feed based on a indexed list specified by variable keyRef.
+     *Binds every data stored in a Question into an QuestionHolder.
+     * @return the FirebaseRecyclerAdapter
+     */
+
     public RecyclerView.Adapter getAdapter(){
         return new FirebaseRecyclerAdapter<Question,QuestionHolder>(options) {
 
@@ -89,6 +82,8 @@ public class IndexedFeedAdapter {
                 dataHandler.getItems(model.getId(), holder,context);
                 dataHandler.getStyles(model.getId(),holder,context);
                 dataHandler.getUrl(model.getUsername(),holder.getProfilePic(),context);
+                AchievementsHandler achievementsHandler = new AchievementsHandler(context,model.getUsername());
+                achievementsHandler.setProfilePicBorder(holder.getProfilePic());
                 dataHandler.getFollow(model.getId(),holder.getFollowButton());
 
 

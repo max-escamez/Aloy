@@ -15,11 +15,16 @@ import com.google.firebase.database.Query;
 public interface QuestionDetailsContract {
 
     interface View  {
+        void openProfile(Question question);
+
         void setupAnswers(String questionId);
 
         void setupQuestion(Question question, String transitionName, Context context);
 
         QuestionDetailsPresenter getPresenter();
+
+        void setupCoverFlow(Question question);
+
         void showRequest(String questionId);
         void showAnswerQuestion(String questionId);
     }

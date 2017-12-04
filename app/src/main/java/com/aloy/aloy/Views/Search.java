@@ -1,4 +1,4 @@
-package com.aloy.aloy.Fragments;
+package com.aloy.aloy.Views;
 
 
 import android.app.Activity;
@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.aloy.aloy.Adapters.SearchAdapter;
 import com.aloy.aloy.Contracts.SearchContract;
-import com.aloy.aloy.MainActivity;
 import com.aloy.aloy.Presenters.SearchPresenter;
 import com.aloy.aloy.R;
 
@@ -127,7 +126,6 @@ public class Search extends DialogFragment implements SearchContract.View {
             }
         });
 
-
         validateSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,9 +135,6 @@ public class Search extends DialogFragment implements SearchContract.View {
                 hideSearch();
             }
         });
-
-
-
 
         return searchView;
     }
