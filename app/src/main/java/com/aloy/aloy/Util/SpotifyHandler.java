@@ -74,7 +74,7 @@ public class SpotifyHandler {
     }
 
     public void createMainUser() {
-        mainUser = new MainUser(sharedPreferenceHelper.getCurrentUserName(), sharedPreferenceHelper.getProfilePicture());
+        mainUser = new MainUser(sharedPreferenceHelper.getCurrentUserName(), sharedPreferenceHelper.getProfilePicture(),sharedPreferenceHelper.getCurrentUserId());
         dataHandler.saveUser(mainUser);
     }
 

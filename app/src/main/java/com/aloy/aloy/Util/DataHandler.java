@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -413,6 +414,7 @@ public class DataHandler {
     }
 
     public void follow(final String questionId){
+
         final DatabaseReference mFollowersReference = refQuestionFeed.child(questionId).child("following").child("users");
         final DatabaseReference mFollowingReference = refQuestionFeed.child(questionId).child("following").child("number");
         final DatabaseReference mUserFollow = refUser.child(sharedPreferenceHelper.getCurrentUserId()).child("following");
@@ -427,6 +429,7 @@ public class DataHandler {
                             refQuestionFeed.child(questionId).child("following").child("users").child(sharedPreferenceHelper.getCurrentUserId()).removeValue();
                             mUserFollow.child(questionId).removeValue();
                             updateVipAchievement(refQuestionFeed.child(questionId).child("username"),"followersVIP",false);
+                            refQuestionFeed.child(questionId).child("following").child("notificationTokens").child(FirebaseInstanceId.getInstance().getToken()).removeValue();
 
 
                         }else{
@@ -440,6 +443,7 @@ public class DataHandler {
                                 refQuestionFeed.child(questionId).child("following").child("number").setValue(1);
                             }
                             updateTopAchievement(refQuestionFeed.child(questionId).child("username"),"followersTOP", mFollowersReference);
+                            refQuestionFeed.child(questionId).child("following").child("notificationTokens").child(FirebaseInstanceId.getInstance().getToken()).setValue("true");
 
                         }
                     }
