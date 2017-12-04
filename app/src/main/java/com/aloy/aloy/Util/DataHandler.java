@@ -223,6 +223,7 @@ public class DataHandler {
         refUser.child(username).child("pic").setValue(sharedPreferenceHelper.getProfilePicture());
         refUser.child(username).child("name").setValue(sharedPreferenceHelper.getCurrentUserName());
         refUser.child(username).child("id").setValue(sharedPreferenceHelper.getCurrentUserId());
+        FirebaseDatabase.getInstance().getReference("users").child(sharedPreferenceHelper.getCurrentUserId()).child("notificationTokens").child(FirebaseInstanceId.getInstance().getToken()).setValue("true");
     }
 
     public DatabaseReference pushAnswerRef(String questionId) {
