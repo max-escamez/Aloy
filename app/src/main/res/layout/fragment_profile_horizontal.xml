@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/left"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/profileHeader"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profilePicture"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:adjustViewBounds="false"
+                android:src="@drawable/profile_white"
+                app:civ_border_color="@color/accent_material_dark_Aloy"
+                app:civ_border_width="4dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/navbar_dark"
+                app:civ_shadow_radius="10"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:indeterminate="false"
+                android:progress="25"
+                android:progressTint="@color/accent_material_dark_Aloy"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="32dp"
+                android:text="Username"
+                android:textColor="@color/light_body_Aloy"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/profilePicture"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:text="Title"
+                android:visibility="invisible"
+                app:layout_constraintStart_toEndOf="@+id/profilePicture"
+                app:layout_constraintTop_toBottomOf="@+id/username" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/achievements"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileHeader">
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/achievement_1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                android:src="@drawable/question_nb"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/navbar_dark"
+                app:civ_shadow_radius="10"
+                app:layout_constraintBottom_toTopOf="@+id/achievement_6"
+                app:layout_constraintEnd_toStartOf="@+id/achievement_2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/achievement_2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                android:src="@drawable/answers_nb"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/navbar_dark"
+                app:civ_shadow_radius="10"
+                app:layout_constraintBottom_toTopOf="@+id/achievement_7"
+                app:layout_constraintEnd_toStartOf="@+id/achievement_3"
+                app:layout_constraintStart_toEndOf="@+id/achievement_1"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/achievement_3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                android:src="@drawable/requests_nb"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/navbar_dark"
+                app:civ_shadow_radius="10"
+                app:layout_constraintBottom_toTopOf="@+id/achievement_8"
+                app:layout_constraintEnd_toStartOf="@+id/achievement_4"
+                app:layout_constraintStart_toEndOf="@+id/achievement_2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/achievement_4"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                android:src="@drawable/vip_reply"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/navbar_dark"
+                app:civ_shadow_radius="10"
+                app:layout_constraintBottom_toTopOf="@+id/achievement_9"
+                app:layout_constraintEnd_toStartOf="@+id/achievement_5"
+                app:layout_constraintStart_toEndOf="@+id/achievement_3"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/achievement_5"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                android:src="@drawable/vip_fav"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/navbar_dark"
+                app:civ_shadow_radius="10"
+                app:layout_constraintBottom_toTopOf="@+id/achievement_10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/achievement_4"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/achievement_6"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                android:src="@drawable/top_follow"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/navbar_dark"
+                app:civ_shadow_radius="10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/achievement_7"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/achievement_1" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/achievement_7"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                android:src="@drawable/top_reply"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/navbar_dark"
+                app:civ_shadow_radius="10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/achievement_8"
+                app:layout_constraintStart_toEndOf="@+id/achievement_6"
+                app:layout_constraintTop_toBottomOf="@+id/achievement_2" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/achievement_8"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                android:src="@drawable/top_fav"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/navbar_dark"
+                app:civ_shadow_radius="10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/achievement_9"
+                app:layout_constraintStart_toEndOf="@+id/achievement_7"
+                app:layout_constraintTop_toBottomOf="@+id/achievement_3" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/achievement_9"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                android:src="@drawable/vip_request"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/navbar_dark"
+                app:civ_shadow_radius="10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/achievement_10"
+                app:layout_constraintStart_toEndOf="@+id/achievement_8"
+                app:layout_constraintTop_toBottomOf="@+id/achievement_4" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/achievement_10"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                android:src="@drawable/vip_follow"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/navbar_dark"
+                app:civ_shadow_radius="10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/achievement_9"
+                app:layout_constraintTop_toBottomOf="@+id/achievement_5" />
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/right"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/left"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/profile_tabs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabGravity="center">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/profile_questions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Questions" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/profile_answers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Answers" />
+
+        </android.support.design.widget.TabLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/profile_view_pager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_tabs" />
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

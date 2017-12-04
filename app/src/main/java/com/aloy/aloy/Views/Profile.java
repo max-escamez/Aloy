@@ -1,5 +1,6 @@
 package com.aloy.aloy.Views;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -22,7 +23,11 @@ public class Profile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportPostponeEnterTransition();
-        setContentView(R.layout.fragment_profile);
+        if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE) {
+            setContentView(R.layout.fragment_profile_horizontal);
+        } else if(this.getResources().getConfiguration().orientation==Configuration.ORIENTATION_PORTRAIT) {
+            setContentView(R.layout.fragment_profile);
+        }
         //profilePresenter = new ProfilePresenter(this, MainActivity.getDataHandler());
         Bundle extras = getIntent().getExtras();
         String usernameTransitionName = extras.getString(Details.USERNAME_TRANSITION_NAME);
