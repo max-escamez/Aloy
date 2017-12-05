@@ -84,7 +84,11 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         mSharedPreferenceHelper = new SharedPreferenceHelper(this);
-        refresh_token = mSharedPreferenceHelper.getCurrentSpotifyToken();
+        if(mSharedPreferenceHelper.getCurrentSpotifyToken().isEmpty()){
+            refresh_token=null;
+        }else{
+            refresh_token=mSharedPreferenceHelper.getCurrentSpotifyToken();
+        }
         final String token = CredentialsHandler.getAccessToken(this);
 
 
@@ -189,7 +193,7 @@ public class LoginActivity extends Activity {
         Toast.makeText(this, "Error: " + msg, Toast.LENGTH_SHORT).show();
         Log.e(TAG, msg);
     }
-    
+
 
     //Asyncronous tasks
     public static class codeToRefresh extends AsyncTask<String, Void, String> {
