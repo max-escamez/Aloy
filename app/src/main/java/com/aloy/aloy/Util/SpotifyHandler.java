@@ -59,8 +59,6 @@ public class SpotifyHandler {
             public void success(UserPrivate u, Response response) {
                 sharedPreferenceHelper.saveCurrentUserId(u.id);
                 sharedPreferenceHelper.saveName(u.display_name);
-
-                //dataHandler.saveProfilePicture(u.images.get(0).url);
                 if (!u.images.isEmpty())
                     sharedPreferenceHelper.saveProfilePicture(u.images.get(0).url);
                 else
@@ -82,21 +80,6 @@ public class SpotifyHandler {
         dataHandler.saveUser(mainUser);
     }
 
-
-    /*public void setTrackCount(String query, final SearchPresenter searchPresenter) {
-        service.searchTracks(query, new SpotifyCallback<TracksPager>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e("Tracks", "Could not get tracks");
-            }
-            @Override
-            public void success(TracksPager p, Response response) {
-                searchPresenter.setCount(p.tracks.items.size());
-
-            }
-
-        });
-    }*/
 
     public void setupSearchRecyclerTracks(final RecyclerView recyclerView, final Context context, final SearchPresenter searchPresenter, final String searchQuery, final String type) {
         service.searchTracks(searchQuery, new SpotifyCallback<TracksPager>() {
