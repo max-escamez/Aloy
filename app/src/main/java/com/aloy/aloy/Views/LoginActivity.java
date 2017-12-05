@@ -84,13 +84,16 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         mSharedPreferenceHelper = new SharedPreferenceHelper(this);
-        refresh_token = mSharedPreferenceHelper.getCurrentSpotifyToken();
+        if(mSharedPreferenceHelper.getCurrentSpotifyToken().isEmpty()){
+            refresh_token=null;
+        }else{
+            refresh_token=mSharedPreferenceHelper.getCurrentSpotifyToken();
+        }
         final String token = CredentialsHandler.getAccessToken(this);
 
 
         if (token==null) {
             if(refresh_token==null) {
-
                 Log.i("Token State","Never logged in");
                 setContentView(R.layout.activity_login);
             }else{
@@ -191,20 +194,6 @@ public class LoginActivity extends Activity {
         Log.e(TAG, msg);
     }
 
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            // Log exception
-            return null;
-        }
-    }
 
     //Asyncronous tasks
     public static class codeToRefresh extends AsyncTask<String, Void, String> {
