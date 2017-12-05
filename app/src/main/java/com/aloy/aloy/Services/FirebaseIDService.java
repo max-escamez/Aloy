@@ -21,8 +21,9 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
         // Get updated InstanceID token.
         sharedPreferenceHelper=new SharedPreferenceHelper(getBaseContext());
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        FirebaseDatabase.getInstance().getReference("users").child(sharedPreferenceHelper.getCurrentUserId()).child("notificationTokens").child(refreshedToken).setValue("true");
-        // TODO: Implement this method to send any registration to your app's servers.
+        if(!sharedPreferenceHelper.getCurrentUserId().isEmpty()) {
+            FirebaseDatabase.getInstance().getReference("users").child(sharedPreferenceHelper.getCurrentUserId()).child("notificationTokens").child(refreshedToken).setValue("true");
+        }
         sendRegistrationToServer(refreshedToken);
     }
 
