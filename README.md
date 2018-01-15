@@ -18,7 +18,7 @@ Firebase and Google Cloud Platform are used to handle user's data, login scheme 
 ## Login
 When first launching Aloy, you'll be greeted with this : <br />
 <br />
-![picture alt](images/login.png) <br />
+![picture alt](images/login.png =250x250 ) <br />
 <br />
 When tapping Spotify button, you'll be asked your Spotify credentials. If you are already logged in on your Spotify android app, you'll just have to accept to log into this one as well. Now that you are logged in, you shouldn't have to log in anymore. We made sure that your access token is always refreshed using Google Cloud Platform. Your experience should now be seamless !
 
